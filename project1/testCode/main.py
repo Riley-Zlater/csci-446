@@ -1,8 +1,8 @@
 import puzzleImporter as puz
-import bruteSearch as brute
+import backtrackSolve as bt
 
 test1 = puz.importPuzzle("..\\testPuzzles\\Easy-P1.csv")
-brute.displayPuzzle(test1)
-brute.bruteSolve(test1)
+bt.displayPuzzle(test1)
+bt.recursiveBacktrackSolve(test1)
 print()
-brute.displayPuzzle(test1)
+bt.displayPuzzle(test1)
