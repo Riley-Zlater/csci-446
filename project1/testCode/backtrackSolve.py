@@ -1,4 +1,4 @@
-# https://stackoverflow.com/questions/1697334/algorithm-for-solving-sudoku
+
 
 # Find the next empty square on the puzzle denoted by 0
 def nextEmptySquare(puzzle):
@@ -12,9 +12,21 @@ def nextEmptySquare(puzzle):
 # This function applies the three rules of Sudoku
 #   scans rows, columns, then 3x3 sector for conflicts with k
 def validator(puzzle, i, j, k):
-    rowCheck = all([k != puzzle[i][x] for x in range(9)])
+    rowCheck = True
+    for v in range(9):
+        if k == puzzle[i][v]:
+            rowCheck = False
+
+#    rowCheck = all([k != puzzle[i][v] for v in range(9)])
+
     if rowCheck:
-        columnCheck = all([k != puzzle[x][j] for x in range(9)])
+        columnCheck = True
+        for v in range(9):
+            if k == puzzle[v][j]:
+                columnCheck = False
+
+#        columnCheck = all([k != puzzle[v][j] for v in range(9)])
+
         if columnCheck:
             # Top left coords of the sector containing x, y
             topX, topY = 3 * (i // 3), 3 * (j // 3)
