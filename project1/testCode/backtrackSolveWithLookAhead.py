@@ -37,7 +37,7 @@ def validator(puzzle, i, j, k):
         columnCheck = True
         for v in range(9):
             if k == puzzle[v][j]:
-                columnCheck = False 
+                columnCheck = False
         if columnCheck:
             # check 3x3 sections if row and column pass
             # Top left coords of the section containing x, y
@@ -51,7 +51,6 @@ def validator(puzzle, i, j, k):
 
 
 def forwardChecking(puzzle, i, j, k):
-
     global sections
 
     puzzle[i][j] = k
@@ -85,7 +84,7 @@ def forwardChecking(puzzle, i, j, k):
 
             # remove the elements in col n
             colCheck = set()
-            for y in range (9):
+            for y in range(9):
                 colCheck.add(puzzle[y][trackingItem[1]])
             remaining = remaining.difference(colCheck)
 
@@ -97,16 +96,17 @@ def forwardChecking(puzzle, i, j, k):
                     check.append((trackingItem[0], trackingItem[1], value))
     return check
 
+
 # Undo the forward checking algorithm
 def resetForwardChecking(puzzle, check):
     for i in range(len(check)):
         puzzle[check[i][0]][check[i][1]] = 0
     return
 
+
 # This function fills in the missing squares
 # and makes inferences where it can
 def recursiveBacktrackSolve(puzzle, i=0, j=0):
-
     global resets
 
     i, j = nextEmptySquare(puzzle)
@@ -119,7 +119,7 @@ def recursiveBacktrackSolve(puzzle, i=0, j=0):
             puzzle[i][j] = k
 
             check = forwardChecking(puzzle, i, j, k)
-            
+
             if recursiveBacktrackSolve(puzzle, i, j):
                 return True
 
