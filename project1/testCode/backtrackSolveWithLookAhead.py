@@ -1,38 +1,46 @@
 # Written by Riley Slater and Cooper Strahan
-# basic backtracking/brute-force approach to solving Sudoku
+# basic backtracking for forward checking to solve Sudoku
 
-# Variable to track the number of times this method backtracks
+# variable to track the number of times this method backtracks
 resets = 0
 
-# Find the next empty square on the puzzle denoted by 0
+sections = [[0, 3, 0, 3],
+            [3, 6, 0, 3],
+            [6, 9, 0, 3],
+            [0, 3, 3, 6],
+            [3, 6, 3, 6],
+            [6, 9, 3, 6],
+            [0, 3, 6, 9],
+            [3, 6, 6, 9],
+            [6, 9, 6, 9]]
+
+
+# Find the next empty cell on the puzzle denoted by 0
 def nextEmptySquare(puzzle):
-    for x in range(0, 9):
-        for y in range(0, 9):
-            if puzzle[x][y] == 0:
-                return x, y
+    for i in range(0, 9):
+        for j in range(0, 9):
+            if puzzle[i][j] == 0:
+                return i, j
     return -1, -1
 
 
 # This function applies the three rules of Sudoku
 #   scans rows, columns, then 3x3 sector for conflicts with k
 def validator(puzzle, i, j, k):
+    # Checks row
     rowCheck = True
     for v in range(9):
         if k == puzzle[i][v]:
             rowCheck = False
-
-#    rowCheck = all([k != puzzle[i][v] for v in range(9)])
-
     if rowCheck:
+        # Checks column if row passes
         columnCheck = True
         for v in range(9):
             if k == puzzle[v][j]:
-                columnCheck = False
-
-#        columnCheck = all([k != puzzle[v][j] for v in range(9)])
-
+                columnCheck = False 
         if columnCheck:
-            # Top left coords of the sector containing x, y
+            # check 3x3 sections if row and column pass
+            # Top left coords of the section containing x, y
             topX, topY = 3 * (i // 3), 3 * (j // 3)
             for x in range(topX, topX + 3):
                 for y in range(topY, topY + 3):
@@ -42,8 +50,64 @@ def validator(puzzle, i, j, k):
     return False
 
 
+def forwardChecking(puzzle, i, j, k):
+
+    global sections
+
+    puzzle[i][j] = k
+    check = [(i, j, k)]
+
+    for v in range(len(sections)):
+
+        tracking = []
+        domain = {1, 2, 3, 4, 5, 6, 7, 8, 9}
+
+        # find the missing cells in the sections
+        for x in range(sections[v][0], sections[v][1]):
+            for y in range(sections[v][2], sections[v][3]):
+                if puzzle[x][y] != 0:
+                    domain.remove(puzzle[x][y])
+
+        # attach the domain to each empty cell
+        for x in range(sections[v][0], sections[v][1]):
+            for y in range(sections[v][2], sections[v][3]):
+                if puzzle[x][y] == 0:
+                    tracking.append([x, y, domain.copy()])
+
+        for n in range(len(tracking)):
+            trackingItem = tracking[n]
+
+            # remove the elements in row n
+            rowCheck = set()
+            for x in range(9):
+                rowCheck.add(puzzle[trackingItem[0]][x])
+            remaining = trackingItem[2].difference(rowCheck)
+
+            # remove the elements in col n
+            colCheck = set()
+            for y in range (9):
+                colCheck.add(puzzle[y][trackingItem[1]])
+            remaining = remaining.difference(colCheck)
+
+            # check for duplicates of the domain
+            if len(remaining) == 1:
+                value = remaining.pop()
+                if validator(puzzle, trackingItem[0], trackingItem[1], value):
+                    puzzle[trackingItem[0]][trackingItem[1]] = value
+                    check.append((trackingItem[0], trackingItem[1], value))
+    return check
+
+# Undo the forward checking algorithm
+def resetForwardChecking(puzzle, check):
+    for i in range(len(check)):
+        puzzle[check[i][0]][check[i][1]] = 0
+    return
+
 # This function fills in the missing squares
+# and makes inferences where it can
 def recursiveBacktrackSolve(puzzle, i=0, j=0):
+
+    global resets
 
     i, j = nextEmptySquare(puzzle)
     if i == -1 and j == -1:
@@ -53,11 +117,16 @@ def recursiveBacktrackSolve(puzzle, i=0, j=0):
         # Test different k values
         if validator(puzzle, i, j, k):
             puzzle[i][j] = k
+
+            check = forwardChecking(puzzle, i, j, k)
+            
             if recursiveBacktrackSolve(puzzle, i, j):
                 return True
 
+            # track the number of backtracks
             resets += 1
-            puzzle[i][j] = 0
+            # if we get to here it means we have to backtrack
+            resetForwardChecking(puzzle, check)
 
     return False
 
@@ -67,5 +136,3 @@ def displayPuzzle(puzzle):
         print(row)
     print("The number of backtracks required for this method is", resets)
     return
-
-
