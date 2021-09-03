@@ -1,11 +1,10 @@
 # Written by Riley Slater and Cooper Strahan
 # basic backtracking/brute-force approach to solving Sudoku
 
-# variable to track the number of times this method backtracks
+# Variable to track the number of times this method backtracks
 resets = 0
 
-
-# Find the next empty cell on the puzzle denoted by 0
+# Find the next empty square on the puzzle denoted by 0
 def nextEmptySquare(puzzle):
     for x in range(0, 9):
         for y in range(0, 9):
@@ -17,19 +16,22 @@ def nextEmptySquare(puzzle):
 # This function applies the three rules of Sudoku
 #   scans rows, columns, then 3x3 sector for conflicts with k
 def validator(puzzle, i, j, k):
-    # Checks row
     rowCheck = True
     for v in range(9):
         if k == puzzle[i][v]:
             rowCheck = False
+
+#    rowCheck = all([k != puzzle[i][v] for v in range(9)])
+
     if rowCheck:
-        # Checks column if row passes
         columnCheck = True
         for v in range(9):
             if k == puzzle[v][j]:
-                columnCheck = False 
+                columnCheck = False
+
+#        columnCheck = all([k != puzzle[v][j] for v in range(9)])
+
         if columnCheck:
-            # check 3x3 sector if row and column pass
             # Top left coords of the sector containing x, y
             topX, topY = 3 * (i // 3), 3 * (j // 3)
             for x in range(topX, topX + 3):
@@ -43,8 +45,6 @@ def validator(puzzle, i, j, k):
 # This function fills in the missing squares
 def recursiveBacktrackSolve(puzzle, i=0, j=0):
 
-    global resets
-
     i, j = nextEmptySquare(puzzle)
     if i == -1 and j == -1:
         return True
@@ -56,9 +56,7 @@ def recursiveBacktrackSolve(puzzle, i=0, j=0):
             if recursiveBacktrackSolve(puzzle, i, j):
                 return True
 
-            # track the number of backtracks
             resets += 1
-            # if we get to here it means we had to backtrack
             puzzle[i][j] = 0
 
     return False
@@ -69,3 +67,5 @@ def displayPuzzle(puzzle):
         print(row)
     print("The number of backtracks required for this method is", resets)
     return
+
+
