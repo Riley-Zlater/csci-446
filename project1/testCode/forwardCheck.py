@@ -4,7 +4,6 @@
 from toolsLib import nextEmptySquare, validator
 
 def forwardChecking(puzzle, i, j, k):
-    global sections
 
     puzzle[i, j] = k
     check = [(i, j, k)]

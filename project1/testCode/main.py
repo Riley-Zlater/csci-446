@@ -1,9 +1,10 @@
+#Written by Riley Slater and Cooper Strahan
+
 import puzzleImporter as puz
 import backtrackSolve as bt
 
 
-
-test1 = puz.importPuzzle("..\\testPuzzles\\Easy-P2.csv")
+test1 = puz.importPuzzle("..\\testPuzzles\\Easy-P4.csv")
 
 selection = input("Select an algorithm to test:\n"+
                   "1. backtrack solve\n"+
