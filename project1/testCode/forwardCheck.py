@@ -3,9 +3,6 @@
 
 from toolsLib import nextEmptySquare, validator
 
-# variable to track the number of times this method backtracks
-resets = 0
-
 def forwardChecking(puzzle, i, j, k):
     global sections
 
@@ -66,38 +63,4 @@ def forwardChecking(puzzle, i, j, k):
 def resetForwardChecking(puzzle, check):
     for i in range(len(check)):
         puzzle[check[i][0], check[i][1]] = 0
-    return
-
-
-# This function fills in the missing squares
-# and makes inferences where it can
-def recursiveBacktrackSolve(puzzle, i=0, j=0):
-    global resets
-
-    i, j = nextEmptySquare(puzzle)
-    if i == -1 and j == -1:
-        return True
-
-    for k in range(1, 10):
-        # Test different k values
-        if validator(puzzle, i, j, k):
-            puzzle[i][j] = k
-
-            check, domains = forwardChecking(puzzle, i, j, k)
-
-            if recursiveBacktrackSolve(puzzle, i, j):
-                return True
-
-            # track the number of backtracks
-            resets += 1
-            # if we get to here it means we have to backtrack
-            resetForwardChecking(puzzle, check)
-
-    return False
-
-
-def displayPuzzle(puzzle):
-    for row in puzzle:
-        print(row)
-    print("\nThe number of backtracks required for this method is", resets)
     return
