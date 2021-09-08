@@ -1,46 +1,10 @@
 # Written by Riley Slater and Cooper Strahan
 # basic backtracking for forward checking to solve Sudoku
 
+from toolsLib import nextEmptySquare, validator
+
 # variable to track the number of times this method backtracks
 resets = 0
-
-
-
-
-# Find the next empty cell on the puzzle denoted by 0
-def nextEmptySquare(puzzle):
-    for i in range(0, 9):
-        for j in range(0, 9):
-            if puzzle[i, j] == 0:
-                return i, j
-    return -1, -1
-
-
-# This function applies the three rules of Sudoku
-#   scans rows, columns, then 3x3 sector for conflicts with k
-def validator(puzzle, i, j, k):
-    # Checks row
-    rowCheck = True
-    for v in range(9):
-        if k == puzzle[i, v]:
-            rowCheck = False
-    if rowCheck:
-        # Checks column if row passes
-        columnCheck = True
-        for v in range(9):
-            if k == puzzle[v, j]:
-                columnCheck = False
-        if columnCheck:
-            # check 3x3 sections if row and column pass
-            # Top left coords of the section containing x, y
-            topX, topY = 3 * (i // 3), 3 * (j // 3)
-            for x in range(topX, topX + 3):
-                for y in range(topY, topY + 3):
-                    if puzzle[x, y] == k:
-                        return False
-            return True
-    return False
-
 
 def forwardChecking(puzzle, i, j, k):
     global sections

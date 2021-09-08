@@ -22,14 +22,14 @@ def recursiveBacktrackSolve(puzzle, i=0, j=0):
     for k in range(1, 10):
         # Test different k values
         if validator(puzzle, i, j, k):
-            puzzle[i][j] = k
+            puzzle[i, j] = k
             if recursiveBacktrackSolve(puzzle, i, j):
                 return True
 
             # track the number of backtracks
             resets += 1
             # if we get to here it means we had to backtrack
-            puzzle[i][j] = 0
+            puzzle[i, j] = 0
 
     return False
 
@@ -43,5 +43,5 @@ def displayPuzzle(puzzle):
     """
     for row in puzzle:
         print(row)
-    print("The number of backtracks required for this method is", resets)
+    print("\nThe number of backtracks required for this method is", resets)
     return
