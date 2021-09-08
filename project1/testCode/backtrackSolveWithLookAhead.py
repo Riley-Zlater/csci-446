@@ -4,15 +4,7 @@
 # variable to track the number of times this method backtracks
 resets = 0
 
-sections = [[0, 3, 0, 3],
-            [3, 6, 0, 3],
-            [6, 9, 0, 3],
-            [0, 3, 3, 6],
-            [3, 6, 3, 6],
-            [6, 9, 3, 6],
-            [0, 3, 6, 9],
-            [3, 6, 6, 9],
-            [6, 9, 6, 9]]
+
 
 
 # Find the next empty cell on the puzzle denoted by 0
@@ -55,8 +47,17 @@ def forwardChecking(puzzle, i, j, k):
 
     puzzle[i][j] = k
     check = [(i, j, k)]
+    sections = [[0, 3, 0, 3],
+                [3, 6, 0, 3],
+                [6, 9, 0, 3],
+                [0, 3, 3, 6],
+                [3, 6, 3, 6],
+                [6, 9, 3, 6],
+                [0, 3, 6, 9],
+                [3, 6, 6, 9],
+                [6, 9, 6, 9]]
 
-    for v in range(len(sections)):
+    for v in range(9):
 
         tracking = []
         domain = {1, 2, 3, 4, 5, 6, 7, 8, 9}
@@ -77,15 +78,15 @@ def forwardChecking(puzzle, i, j, k):
             trackingItem = tracking[n]
 
             # remove the elements in row n
-            rowCheck = set()
+            rowCheck = []
             for x in range(9):
-                rowCheck.add(puzzle[trackingItem[0]][x])
+                rowCheck.append(puzzle[trackingItem[0]][x])
             remaining = trackingItem[2].difference(rowCheck)
 
             # remove the elements in col n
-            colCheck = set()
+            colCheck = []
             for y in range(9):
-                colCheck.add(puzzle[y][trackingItem[1]])
+                colCheck.append(puzzle[y][trackingItem[1]])
             remaining = remaining.difference(colCheck)
 
             # check for duplicates of the domain
@@ -134,5 +135,5 @@ def recursiveBacktrackSolve(puzzle, i=0, j=0):
 def displayPuzzle(puzzle):
     for row in puzzle:
         print(row)
-    print("The number of backtracks required for this method is", resets)
+    print("\nThe number of backtracks required for this method is", resets)
     return
