@@ -3,15 +3,17 @@
 
 
 
-def arc(prop, removals=None, queue=None):
-    if queue is None:
-        queue = [(Xi, Xk) for Xi in 
+def arc(emptyCells, domains, con1, con2):
+    for x in emptyCells:
+        domains[x] = {
+    
+    
 
 
 def forwardChecking(puzzle, i, j, k):
     global sections
 
-    puzzle[i][j] = k
+    puzzle[i, j] = k
     check = [(i, j, k)]
     sections = [[0, 3, 0, 3],
                 [3, 6, 0, 3],
@@ -31,13 +33,13 @@ def forwardChecking(puzzle, i, j, k):
         # find the missing cells in the sections
         for x in range(sections[v][0], sections[v][1]):
             for y in range(sections[v][2], sections[v][3]):
-                if puzzle[x][y] != 0:
-                    domain.remove(puzzle[x][y])
+                if puzzle[x, y] != 0:
+                    domain.remove(puzzle[x, y])
 
         # attach the domain to each empty cell
         for x in range(sections[v][0], sections[v][1]):
             for y in range(sections[v][2], sections[v][3]):
-                if puzzle[x][y] == 0:
+                if puzzle[x, y] == 0:
                     tracking.append([x, y, domain.copy()])
 
         for n in range(len(tracking)):
@@ -46,19 +48,19 @@ def forwardChecking(puzzle, i, j, k):
             # remove the elements in row n
             rowCheck = []
             for x in range(9):
-                rowCheck.append(puzzle[trackingItem[0]][x])
+                rowCheck.append(puzzle[trackingItem[0], x])
             remaining = trackingItem[2].difference(rowCheck)
 
             # remove the elements in col n
             colCheck = []
             for y in range(9):
-                colCheck.append(puzzle[y][trackingItem[1]])
+                colCheck.append(puzzle[y, trackingItem[1]])
             remaining = remaining.difference(colCheck)
 
             # check for duplicates of the domain
             if len(remaining) == 1:
                 value = remaining.pop()
                 if validator(puzzle, trackingItem[0], trackingItem[1], value):
-                    puzzle[trackingItem[0]][trackingItem[1]] = value
+                    puzzle[trackingItem[0], trackingItem[1]] = value
                     check.append((trackingItem[0], trackingItem[1], value))
-    return tracking
+    return check, tracking
