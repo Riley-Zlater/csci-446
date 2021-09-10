@@ -35,13 +35,41 @@ def construct_csp(puzzle):
 
 
 def count_conflicts(node, k):
+    conflicts = 0
+
     letter = node[0]
     number = node[1]
 
-    for r in range(0,9):
+    for v in range(0,9):
+        temp = letter + str(v)
+        if temp == node:
+            continue
+        if csp[temp] == k:
+            conflicts += 1
 
+    for l in letters:
+        temp = l + str(number)
+        if temp == node:
+            continue
+        if csp[temp] == k:
+            conflicts += 1
 
-    return
+    i = letters.index(letter)
+    i = 3 * (i // 3)
+
+    j = 3 * (int(number) // 3)
+
+    split_array = letters[i:i+3]
+    
+    for l in split_array:
+        for v in range(j, j+3):
+            temp = l + str(v)
+            if temp == node:
+                continue
+            if csp[temp] == k:
+                conflicts +=1
+    
+    return conflicts
     
 
 def find_min_conflict(node):
