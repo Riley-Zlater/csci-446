@@ -7,7 +7,7 @@ import csv
 #   main change is replacing "?" with 0
 #   returns as a 2d-array of integers
 def importPuzzle(file):
-    rawPuzzle = np.array(list(csv.reader(open(file, "r"))))
+    rawPuzzle = np.array(list(csv.reader(open(file, "r",encoding='utf-8-sig'))))
 
     numRows, numCols = rawPuzzle.shape
 

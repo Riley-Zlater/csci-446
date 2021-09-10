@@ -2,9 +2,11 @@
 
 import puzzleImporter as puz
 import backtrackSolve as bt
+import SimAnneal as sa
 
 
-test1 = puz.importPuzzle("..\\testPuzzles\\Easy-P4.csv")
+# test1 = puz.importPuzzle("..\\testPuzzles\\Easy-P4.csv")
+test1 = puz.importPuzzle("/Users/cooperstrahan/School/csci-446/project1/testPuzzles/Easy-P5.csv")
 
 selection = input("Select an algorithm to test:\n"+
                   "1. backtrack solve\n"+
@@ -29,7 +31,13 @@ elif (selection == '2'):
     
 ##elif (selection == '3'):
 ##
-##elif (selection == '4'):
-##
+elif (selection == '4'):
+    # sa.assert_random_values(test1)
+    # sa.display_puzzle(test1)
+    print(sa.simulate_annealing(test1))
+    print()
+    print( puz.importPuzzle("/Users/cooperstrahan/School/csci-446/project1/testPuzzles/Easy-P5.csv"))
+
+    # print(test1)
 ##elif (selection == '5'):
 
