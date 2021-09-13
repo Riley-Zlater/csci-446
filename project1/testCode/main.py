@@ -3,10 +3,13 @@
 import puzzleImporter as puz
 import backtrackSolve as bt
 import SimAnneal as sa
+from graph import Graph
+import forwardCheck as fc
 
 
-# test1 = puz.importPuzzle("..\\testPuzzles\\Easy-P4.csv")
-test1 = puz.importPuzzle("/Users/cooperstrahan/School/csci-446/project1/testPuzzles/Easy-P5.csv")
+test1 = puz.importPuzzle("..\\testPuzzles\\Hard-P1.csv")
+
+#test1 = puz.importPuzzle("/Users/cooperstrahan/School/csci-446/project1/testPuzzles/Easy-P5.csv")
 
 selection = input("Select an algorithm to test:\n"+
                   "1. backtrack solve\n"+
@@ -18,15 +21,16 @@ selection = input("Select an algorithm to test:\n"+
 
 
 if (selection == '1'):
-    bt.recursiveBacktrackSolve(test1, selection)
+    bt.recursiveBacktrackSolve(test1)
     print()
     bt.displayPuzzle(test1)
     print()
     
 elif (selection == '2'):
-    bt.recursiveBacktrackSolve(test1, selection)
+    puzzle = Graph(test1)
+    fc.rBackSolve(puzzle, 0, 0)
     print()
-    bt.displayPuzzle(test1)
+    #bt.displayPuzzle(test1)
     print()
     
 ##elif (selection == '3'):

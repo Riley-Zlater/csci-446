@@ -1,65 +1,74 @@
 # Written by Riley Slater and Cooper Strahan
-# basic backtracking for forward checking to solve Sudoku
+# basic backtracking/brute-force approach to solving Sudoku
 
-from toolsLib import nextEmptySquare, validator
+import forwardCheck as fc
 
-def forwardChecking(puzzle, i, j, k):
+resets = 0
 
-    puzzle[i, j] = k
-    check = [(i, j, k)]
-    sections = [[0, 3, 0, 3],
-                [3, 6, 0, 3],
-                [6, 9, 0, 3],
-                [0, 3, 3, 6],
-                [3, 6, 3, 6],
-                [6, 9, 3, 6],
-                [0, 3, 6, 9],
-                [3, 6, 6, 9],
-                [6, 9, 6, 9]]
+def rBackSolve(puzzle, i, j):
+    """
+    Fill in the missing cells by checking which values pass the validator
+    :param puzzle: 2-D array representing the Sudoku board
+    :param i: x coordinate of the empty cell
+    :param j: y coordinate of the empty cell
+    :rtype: boolean
+    """
+    global resets
+    
+    if puzzle.solved() and puzzle.validator():
+        fc.displayPuzzle(puzzle)
+        return True
+    
+    if puzzle.getVertex(i,j).getTrueValue()!= 0:
+        [i, j] = puzzle.nextEmptySquare(i,j)
+        if i == -1 and j == -1:
+            return True
+        
+    target = puzzle.getVertex(i,j)
+    if target.numValues()==0:
+        return False
+    
+    valList = [x for x in target.getValueList()]
+    for k in valList: #look at
+        # Test different k values
+        puzzle2 = puzzle.copyGraph()
+        puzzle2.getVertex(i, j).setTrueValue(k)
+        puzzle2.prune()
+        resets += 1
+        if not puzzle2.validator(): #if the puzzle is invalid
+            target.removeValue(k)
+            resets+=1
+        elif not rBackSolve(puzzle2, i, j): #if puzzle is valid run rBacksolve on new puzzle and returns if
+            target.removeValue(k)
+            if puzzle2.getVertex(i,j).numValues == 0:
+                return False
+        else:
+            puzzle=puzzle2
+            return True
+        if target.numValues() == 0:
+            return False
 
-    for v in range(9):
+        if puzzle2.solved():
+            puzzle = puzzle2
+            return True
 
-        tracking = []
-        domain = {1, 2, 3, 4, 5, 6, 7, 8, 9}
-
-        # find the missing cells in the sections
-        for x in range(sections[v][0], sections[v][1]):
-            for y in range(sections[v][2], sections[v][3]):
-                if puzzle[x, y] != 0:
-                    domain.remove(puzzle[x, y])
-
-        # attach the domain to each empty cell
-        for x in range(sections[v][0], sections[v][1]):
-            for y in range(sections[v][2], sections[v][3]):
-                if puzzle[x, y] == 0:
-                    tracking.append([x, y, domain.copy()])
-
-        for n in range(len(tracking)):
-            trackingItem = tracking[n]
-
-            # remove the elements in row n
-            rowCheck = []
-            for x in range(9):
-                rowCheck.append(puzzle[trackingItem[0], x])
-            remaining = trackingItem[2].difference(rowCheck)
-
-            # remove the elements in col n
-            colCheck = []
-            for y in range(9):
-                colCheck.append(puzzle[y, trackingItem[1]])
-            remaining = remaining.difference(colCheck)
-
-            # check for duplicates of the domain
-            if len(remaining) == 1:
-                value = remaining.pop()
-                if validator(puzzle, trackingItem[0], trackingItem[1], value):
-                    puzzle[trackingItem[0], trackingItem[1]] = value
-                    check.append((trackingItem[0], trackingItem[1], value))
-    return check, tracking
+    [i, j] = puzzle.nextEmptySquare(i,j) #might not be necessary
+    if i == -1 and j == -1:
+        return True
+    else:
+        rBackSolve(puzzle, 0, 0)
+    return False
 
 
-# Undo the forward checking algorithm
-def resetForwardChecking(puzzle, check):
-    for i in range(len(check)):
-        puzzle[check[i][0], check[i][1]] = 0
+def displayPuzzle(puzzle):#we changed
+    """
+    Simple function to display the finished puzzle and the algorithms performance
+    :param puzzle: 2-D array representing the Sudoku board
+    :return: prints the board and performance measure, returns nothing
+    """
+    for row in range(9):
+        for col in range(9):
+            print(puzzle.getVertex(col, row).getTrueValue(), end=' ')
+        print()
+    print("\nThe number of backtracks required for this method is", resets)
     return
