@@ -7,6 +7,7 @@ fixed_values = []
 def simulate_annealing(puzzle):
     puzzle = assert_random_values(puzzle)
     T = 1
+    print("thinking...")
     while T > 0:    
         c1 = minimum_cost_function(puzzle)
 
@@ -20,13 +21,13 @@ def simulate_annealing(puzzle):
 
         if c1 > c2:
             puzzle = new_puzzle
-            print(c2)
+            # print(c2)
         elif random.random() < math.exp(-(delta_e/T)):
             puzzle = new_puzzle
-            print(c2)
-        else:
-            print(c1)
-        T -= .0001
+            # print(c2)
+        # else:
+            # print(c1)
+        T -= .000001
        
     return puzzle
 
