@@ -1,112 +1,66 @@
-from collections import OrderedDict
 import random
+import copy
 
-csp = OrderedDict()
-concrete_entries = dict()
-letters = ["A", "B", "C", "D","E","F","G","H","I"]
-
-
-def simulated_annealing(puzzle):
-    construct_csp(puzzle)
-
-    while True:
-        node = letters[random.randint(0,9)] + str(random.randint(0,9))
-        if concrete_entries[node] == 1:
-            continue
-        min_conflict = find_min_conflict(node)
-        csp[node] = min_conflict
-
-    return
-
-# Construct the CSP graph
-# Inserts random values into the graph 
-# where the value is equal to 0
-# Keeps track of start state values 
-# in concrete_entries dictionary
-def construct_csp(puzzle):
-    for x in range(0, 9):
-        for y in range(0, 9):
-            csp_item = letters[x] + str(y)
-            if puzzle[x][y] != 0:
-                csp[csp_item] = puzzle[x][y]
-                concrete_entries[csp_item] = 1
-            else:
-                csp[csp_item] = random.randint(0,9)
-
-
-def count_conflicts(node, k):
-    conflicts = 0
-
-    letter = node[0]
-    number = node[1]
-
-    for v in range(0,9):
-        temp = letter + str(v)
-        if temp == node:
-            continue
-        if csp[temp] == k:
-            conflicts += 1
-
-    for l in letters:
-        temp = l + str(number)
-        if temp == node:
-            continue
-        if csp[temp] == k:
-            conflicts += 1
-
-    i = letters.index(letter)
-    i = 3 * (i // 3)
-
-    j = 3 * (int(number) // 3)
-
-    split_array = letters[i:i+3]
+class LocalSearch:
     
-    for l in split_array:
-        for v in range(j, j+3):
-            temp = l + str(v)
-            if temp == node:
-                continue
-            if csp[temp] == k:
-                conflicts +=1
+    def __init__(self) -> None:
+        self.fixed_values = []
+
     
-    return conflicts
+    def assert_random_values(self, puzzle):
+
+        for r in [0,3,6]:
+            for c in [0,3,6]:
+                nums = [1,2,3,4,5,6,7,8,9]
+
+                for i in range(r, r+3):
+                    for j in range(c, c+3):
+                        if puzzle[i][j] != 0:                    
+                            nums.remove(puzzle[i][j])
+                
+                for i in range(r, r+3):
+                    for j in range(c, c+3):
+                        if puzzle[i][j] != 0:
+                            self.fixed_values.append([i,j])
+                        if puzzle[i][j] == 0:
+                            val = nums[random.randint(0,len(nums)-1)]
+                            puzzle[i][j] = val
+                            nums.remove(val)
+            
+        return puzzle
     
 
-def find_min_conflict(node):
-    conflict_list = {}
-    for k in range(9):
-        conflict_list[k] = count_conflicts(node, k)
-
-    return min(conflict_list, key=conflict_list.get)
-
-def print_csp():
-    for i in csp:
-        print(i, csp[i])
+    def generate_randoms(self, r_sector, c_sector):
+        r = random.randint(r_sector, r_sector+2)
+        c = random.randint(c_sector, c_sector+2)
         
+        while [r,c] in self.fixed_values:
+            r = random.randint(r_sector, r_sector+2)
+            c = random.randint(c_sector, c_sector+2) 
 
-# Assert random values to zero values
-# def random_assign(puzzle):
-#     for x in range(0, 9):
-#         for y in range(0, 9):
-#             if puzzle[x][y] == 0:
-#                 puzzle[x][y] = random.randint(0,9)
-#     return puzzle
+        return [r,c]
 
-# Determine conflicts using arrays
-# def count_conflicts(puzzle, i, j, k):
-#     conflicts = 0
+    def swap_random(self, puzzle):
+        new_puzzle = copy.deepcopy(puzzle)
 
-#     for v in range(9):
-#         if k == puzzle[i][v]:
-#             conflicts += 1
+        r_sector = 3 * random.randint(0,2)
+        c_sector = 3 * random.randint(0,2)
 
-#     for v in range(9):
-#         if k == puzzle[v][j]:
-#             conflicts += 1
+        r1 = self.generate_randoms(r_sector, c_sector)
+        r2 = self.generate_randoms(r_sector, c_sector)
+        
+        while r1 is r2:
+            r1 = self.generate_randoms(r_sector, c_sector)
+            r2 = self.generate_randoms(r_sector, c_sector)
+        
+        temp = new_puzzle[r1[0]][r1[1]]
+        new_puzzle[r1[0]][r1[1]] = new_puzzle[r2[0]][r2[1]]
+        new_puzzle[r2[0]][r2[1]] = temp
 
-#     topX = 3 * (i // 3)
-#     topY = 3 * (j // 3)
-#     for x in range(topX, topX + 3):
-#         for y in range(topY, topY + 3):
-#             if puzzle[x][y] == k:
-#                 conflicts += 1
+        # print("swapped " + str(r1) +" for " + str(r2))
+
+        return new_puzzle
+    
+    def display_puzzle(puzzle):
+        for row in puzzle:
+            print(row)

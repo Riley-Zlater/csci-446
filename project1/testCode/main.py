@@ -2,14 +2,14 @@
 
 import puzzleImporter as puz
 import backtrackSolve as bt
-import SimAnneal as sa
+from SimAnneal import SimAnneal
 from graph import Graph
 import forwardCheck as fc
+from GeneticAlgorithm import GeneticAlgorithm
 
+# test1 = puz.importPuzzle("..\\testPuzzles\\Hard-P1.csv")
 
-test1 = puz.importPuzzle("..\\testPuzzles\\Hard-P1.csv")
-
-#test1 = puz.importPuzzle("/Users/cooperstrahan/School/csci-446/project1/testPuzzles/Easy-P5.csv")
+test1 = puz.importPuzzle("/Users/cooperstrahan/School/csci-446/project1/testPuzzles/Easy-P5.csv")
 
 selection = input("Select an algorithm to test:\n"+
                   "1. backtrack solve\n"+
@@ -36,16 +36,17 @@ elif (selection == '2'):
 ##elif (selection == '3'):
 ##
 elif (selection == '4'):
-    # sa.assert_random_values(test1)
-    # sa.display_puzzle(test1)
-    print( puz.importPuzzle("/Users/cooperstrahan/School/csci-446/project1/testPuzzles/Evil-P1.csv"))
-    print()
+    print(test1)
+    sa = SimAnneal()
     solution = sa.simulate_annealing(test1)
     print()
     print(solution)
     print(sa.minimum_cost_function(solution))
-    # print( puz.importPuzzle("/Users/cooperstrahan/School/csci-446/project1/testPuzzles/Easy-P5.csv"))
 
-    # print(test1)
-##elif (selection == '5'):
+elif (selection == '5'):
+    print(test1)
+    print()
+    ga = GeneticAlgorithm()
+    fitness = ga.genetic_algorithm(test1)
+    print(fitness)
 
