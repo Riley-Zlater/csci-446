@@ -2,11 +2,10 @@
 # basic backtracking/brute-force approach to solving Sudoku
 
 from toolsLib import nextEmptySquare, validator
-from forwardCheck import forwardChecking, resetForwardChecking
 
 resets = 0
 
-def recursiveBacktrackSolve(puzzle, selection, i=0, j=0):
+def recursiveBacktrackSolve(puzzle, i=0, j=0):
     """
     Fill in the missing cells by checking which values pass the validator
     :param puzzle: 2-D array representing the Sudoku board
@@ -25,19 +24,14 @@ def recursiveBacktrackSolve(puzzle, selection, i=0, j=0):
         if validator(puzzle, i, j, k):
             puzzle[i, j] = k
 
-            if (selection == '2'):
-                check, domains = forwardChecking(puzzle, i, j, k)
             
-            if recursiveBacktrackSolve(puzzle, selection, i, j):
+            if recursiveBacktrackSolve(puzzle, i, j):
                 return True
 
             # track the number of backtracks
             resets += 1
             # if we get to here it means we had to backtrack
-            if (selection == '1'):
-                puzzle[i, j] = 0
-            elif (selection == '2'):
-                resetForwardChecking(puzzle, check)
+            puzzle[i, j] = 0
 
     return False
 
