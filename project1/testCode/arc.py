@@ -1,62 +1,69 @@
+# Written by Riley Slater and Cooper Strahan
+
+# global var to track performance
+resets = 0
 
 
+def arc(puzzle, i, j) -> bool:
+    """
+    This function uses the arc consistency version of the pruning
+    function from the Graph object to solve sudoku.
+    :param puzzle: Graph object, 2-D array of vertex objects
+    :param i: x index for the current vertex, typically the next empty vertex
+    :param j: y index for the current vertex
+    :return: boolean
+    """
+    global resets
 
-def arc(variables, domains, constraint1, constraint2):
-    pass
+    # if .solved() and .validator() return true, then puzzle is solved/displayed
+    if puzzle.solved() and puzzle.validator():
+        puzzle.displayGraph()
+        return True
 
+    # only get a new vertex if the value of the current vertex is not 0
+    if puzzle.getVertex(i, j).getTrueValue() != 0:
+        [i, j] = puzzle.nextEmptySquare(i, j)
+        if i == -1 and j == -1:
+            return True
 
+    # assign var target to current vertex
+    target = puzzle.getVertex(i, j)
+    # if the possible values for the current vertex are 0
+    if target.numValues() == 0:
+        return False  # return false and backtrack
 
+    # assign var valList to hold the possible values for the current vertex
+    valList = [x for x in target.getValueList()]
+    for k in valList:  # Test different k values where k is an element of the valList
+        puzzle2 = puzzle.copyGraph()
+        puzzle2.getVertex(i, j).setTrueValue(k)
+        puzzle2.arcPrune()  # prune domains of all vertices in graph
 
+        # if the puzzle is invalid remove k from valList
+        if not puzzle2.validator():
+            target.removeValue(k)
+            resets += 1  # track number of backtracks
 
+        # if puzzle is valid recursively call and continue with backtracking
+        elif not arc(puzzle2, i, j):
+            target.removeValue(k)  # remove the tested k from the current vertex valList
+            # error handling in case we prune all possible values
+            if puzzle2.getVertex(i, j).numValues() == 0:
+                return False
+        else:
+            puzzle = puzzle2  # update original object
+            return True
+        if target.numValues() == 0:  # error handling
+            return False
 
+        # if the puzzle is solved update original object
+        if puzzle2.solved():
+            puzzle = puzzle2
+            return True
 
-
-
-##import forwardChecking as fc
-##
-##def arc(domains):
-##    queue = [getArcs()]
-##    variablse
-##    while not queue.empty():
-##        (Xi, Xj) = queue.pop()
-##        if (checker(Xi, Xj):
-##            if (len(domains[Xi]) == 0):
-##                return False
-##    for Xk in getNeighborhoodArcs():
-##        queue.append((Xk, Xi))
-##    return True
-##
-##def checker(Xi, Xj):
-##    Di = 
-##    
-##def getNeighborhood(Xi):
-##    out = []
-##    for (x, y) in arcs[Xi]:
-##        out.append(y)
-##    return out
-##
-##def getNeighborhoodArcs(i, j):
-##    arcs = {}
-##    emptyCell = [j, i]
-##    topX = (i / 3) * 3
-##    topY = (j / 3) * 3
-##
-##    for x in range(0, 9):
-##        if (x != i):
-##            arcs[(emptyCell, [j, x])] = 1
-##    for y in range(0, 9):
-##        if (y != j):
-##            arcs[(emptyCell, [y, i])] = 1
-##    for x in range(topX, topX+3):
-##        for y in range(topY, topY+3):
-##            if (x != i or y != j):
-##                arcs[(emptyCell, [y, x])] = 1
-##    return arcs
-##
-##def getArcs():
-##    out = []
-##    for x in range(0, 9):
-##        for y in range(0, 9):
-##            out += getNeighborhoodArcs(y, x)
-##    return out
-#https://raw.githubusercontent.com/smallbasic/smallbasic.samples/master/applications/sudoku_solver.bas
+    [i, j] = puzzle.nextEmptySquare(i, j)  # check for an empty cell again
+    if i == -1 and j == -1:
+        return True
+    else:
+        arc(puzzle, 0, 0)
+    return False

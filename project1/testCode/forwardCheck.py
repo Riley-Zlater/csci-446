@@ -1,74 +1,69 @@
 # Written by Riley Slater and Cooper Strahan
-# basic backtracking/brute-force approach to solving Sudoku
 
-import forwardCheck as fc
-
+# global var to track performance
 resets = 0
 
-def rBackSolve(puzzle, i, j):
+
+def forwardCheck(puzzle, i, j) -> bool:
     """
-    Fill in the missing cells by checking which values pass the validator
-    :param puzzle: 2-D array representing the Sudoku board
-    :param i: x coordinate of the empty cell
-    :param j: y coordinate of the empty cell
-    :rtype: boolean
+    This function uses the forward checking version of the pruning function
+    from the Graph object to solve sudoku.
+    :param puzzle: Graph object, 2-D array of vertex objects
+    :param i: x index for the current vertex, typically the next empty vertex
+    :param j: y index for the current vertex
+    :return: boolean
     """
     global resets
-    
+
+    # if .solved() and .validator() return true, then puzzle is solved/displayed
     if puzzle.solved() and puzzle.validator():
-        fc.displayPuzzle(puzzle)
+        puzzle.displayGraph()
         return True
-    
-    if puzzle.getVertex(i,j).getTrueValue()!= 0:
-        [i, j] = puzzle.nextEmptySquare(i,j)
+
+    # only get a new vertex if the value of the current vertex is not 0
+    if puzzle.getVertex(i, j).getTrueValue() != 0:
+        [i, j] = puzzle.nextEmptySquare(i, j)
         if i == -1 and j == -1:
             return True
-        
-    target = puzzle.getVertex(i,j)
-    if target.numValues()==0:
-        return False
-    
+
+    # assign var target to current vertex
+    target = puzzle.getVertex(i, j)
+    # if the possible values for the current vertex are 0
+    if target.numValues() == 0:
+        return False  # return false and backtrack
+
+    # assign var valList to hold the possible values for the current vertex
     valList = [x for x in target.getValueList()]
-    for k in valList: #look at
-        # Test different k values
+    for k in valList:  # Test different k values where k is an element of the valList
         puzzle2 = puzzle.copyGraph()
         puzzle2.getVertex(i, j).setTrueValue(k)
-        puzzle2.prune()
-        resets += 1
-        if not puzzle2.validator(): #if the puzzle is invalid
+        puzzle2.prune()  # prune domains of adjacent vertices to the current vertex
+
+        # if the puzzle is invalid remove k from valList
+        if not puzzle2.validator():
             target.removeValue(k)
-            resets+=1
-        elif not rBackSolve(puzzle2, i, j): #if puzzle is valid run rBacksolve on new puzzle and returns if
-            target.removeValue(k)
-            if puzzle2.getVertex(i,j).numValues == 0:
+            resets += 1  # track number of backtracks
+
+        # if puzzle is valid recursively call and continue with backtracking
+        elif not forwardCheck(puzzle2, i, j):
+            target.removeValue(k)  # remove the tested k from the current vertex valList
+            # error handling in case we prune all possible values
+            if puzzle2.getVertex(i, j).numValues() == 0:
                 return False
         else:
-            puzzle=puzzle2
+            puzzle = puzzle2  # update original object
             return True
-        if target.numValues() == 0:
+        if target.numValues() == 0:  # error handling 
             return False
 
+        # if the puzzle is solved update original object
         if puzzle2.solved():
             puzzle = puzzle2
             return True
 
-    [i, j] = puzzle.nextEmptySquare(i,j) #might not be necessary
+    [i, j] = puzzle.nextEmptySquare(i, j)  # check for an empty cell again
     if i == -1 and j == -1:
         return True
     else:
-        rBackSolve(puzzle, 0, 0)
+        forwardCheck(puzzle, 0, 0)
     return False
-
-
-def displayPuzzle(puzzle):#we changed
-    """
-    Simple function to display the finished puzzle and the algorithms performance
-    :param puzzle: 2-D array representing the Sudoku board
-    :return: prints the board and performance measure, returns nothing
-    """
-    for row in range(9):
-        for col in range(9):
-            print(puzzle.getVertex(col, row).getTrueValue(), end=' ')
-        print()
-    print("\nThe number of backtracks required for this method is", resets)
-    return

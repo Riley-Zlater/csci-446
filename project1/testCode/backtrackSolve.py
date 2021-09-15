@@ -1,49 +1,66 @@
 # Written by Riley Slater and Cooper Strahan
-# basic backtracking/brute-force approach to solving Sudoku
 
-from toolsLib import nextEmptySquare, validator
-
+# global variable to track performance
 resets = 0
 
-def recursiveBacktrackSolve(puzzle, i=0, j=0):
+
+def recursiveBacktrackSolve(puzzle, i, j) -> bool:
     """
-    Fill in the missing cells by checking which values pass the validator
-    :param puzzle: 2-D array representing the Sudoku board
-    :param i: x coordinate of the empty cell
-    :param j: y coordinate of the empty cell
-    :rtype: boolean
+    This function uses the brute-force/backtracking approach to
+    solve sudoku.
+    :param puzzle: Graph object, 2-D array of vertex objects
+    :param i: x index for the current vertex, typically the next empty vertex
+    :param j: y index for the current vertex
+    :return: boolean
     """
     global resets
 
-    i, j = nextEmptySquare(puzzle)
-    if i == -1 and j == -1:
+    # if .solved() and .validator() return true, then puzzle is solved/displayed
+    if puzzle.solved() and puzzle.validator():
+        puzzle.displayGraph()
         return True
 
+    # only get a new vertex if the value of the current vertex is not 0
+    if puzzle.getVertex(i, j).getTrueValue() != 0:
+        [i, j] = puzzle.nextEmptySquare(i, j)
+        if i == -1:
+            return True
+
+    # assign var current to the current vertex
+    current = puzzle.getVertex(i, j)
+    # if the possible values for the current vertex are 0
+    if current.numValues() == 0:
+        return False  # return false and backtrack
+
+    # test values 1-9 for every empty cell in the graph
     for k in range(1, 10):
-        # Test different k values
-        if validator(puzzle, i, j, k):
-            puzzle[i, j] = k
+        puzzle2 = puzzle.copyGraph()
+        puzzle2.getVertex(i, j).setTrueValue(k)  # input k to the graph
 
-            
-            if recursiveBacktrackSolve(puzzle, i, j):
-                return True
+        # test if that k validates, if not remove k
+        if not puzzle2.validator():
+            current.removeValue(k)
+            resets += 1  # track the number of backtracks
 
-            # track the number of backtracks
-            resets += 1
-            # if we get to here it means we had to backtrack
-            puzzle[i, j] = 0
+        # if the possible values for the current vertex are 0
+        elif not recursiveBacktrackSolve(puzzle2, i, j):
+            current.removeValue(k)  # remove the tested k value
+            if puzzle2.getVertex(i, j).numValues == 0:  # error handling
+                return False
+        else:
+            puzzle = puzzle2  # update original object
+            return True
+        if current.numValues() == 0:  # error handling
+            return False
 
+        # if the puzzle is solved update original object
+        if puzzle2.solved():
+            puzzle = puzzle2
+            return True
+
+    [i, j] = puzzle.nextEmptySquare(i, j)  # check for another empty cell
+    if i == -1 and j == -1:
+        return True
+    else:
+        recursiveBacktrackSolve(puzzle, 0, 0)
     return False
-
-
-
-def displayPuzzle(puzzle):
-    """
-    Simple function to display the finished puzzle and the algorithms performance
-    :param puzzle: 2-D array representing the Sudoku board
-    :return: prints the board and performance measure, returns nothing
-    """
-    for row in puzzle:
-        print(row)
-    print("\nThe number of backtracks required for this method is", resets)
-    return
