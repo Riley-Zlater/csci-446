@@ -45,9 +45,8 @@ class Graph:
                 if cell.getTrueValue() != 0:
                     for adj1 in cell.getAdjacent():
                         if adj1.removeValue(cell.getTrueValue()):
-                            for adj2 in adj1.getAdjacent():
-                                if adj2.removeValue(adj1.getTrueValue()):
-                                    pruned = True
+                            pruned = True
+
         if pruned:
             self.arcPrune()
 
@@ -59,8 +58,7 @@ class Graph:
                     for adj in cell.getAdjacent():
                         if adj.removeValue(cell.getTrueValue()):
                             pruned = True
-        if pruned:
-            self.prune()
+
 
     def getVertex(self, i, j):
         return self.puzzle[i][j]

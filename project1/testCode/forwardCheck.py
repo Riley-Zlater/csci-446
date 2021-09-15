@@ -27,7 +27,7 @@ def forwardCheck(puzzle, i, j):
         puzzle2 = puzzle.copyGraph()
         puzzle2.getVertex(i, j).setTrueValue(k)
         puzzle2.prune()
-        resets += 1
+
         if not puzzle2.validator():  # if the puzzle is invalid
             target.removeValue(k)
             resets += 1
