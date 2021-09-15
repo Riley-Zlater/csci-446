@@ -2,7 +2,7 @@ import numpy
 
 class Graph:
     def __init__(self, puzzle):
-        self.nextSquare = (0,0)
+        self.nextSquare = (0, 0)
         self.sections = [[0, 3, 0, 3],
                          [3, 6, 0, 3],
                          [6, 9, 0, 3],
@@ -37,7 +37,19 @@ class Graph:
                 for row2 in range(9):
                     if row != row2:
                         self.puzzle[row][col].addAdjacent(self.puzzle[row2][col])
-        self.prune()
+
+    def arcPrune(self):
+        pruned = False
+        for row in self.puzzle:
+            for cell in row:
+                if cell.getTrueValue() != 0:
+                    for adj1 in cell.getAdjacent():
+                        if adj1.removeValue(cell.getTrueValue()):
+                            for adj2 in adj1.getAdjacent():
+                                if adj2.removeValue(adj1.getTrueValue()):
+                                    pruned = True
+        if pruned:
+            self.arcPrune()
 
     def prune(self):
         pruned = False
@@ -52,19 +64,6 @@ class Graph:
 
     def getVertex(self, i, j):
         return self.puzzle[i][j]
-
-    # def forwardCheck(self, cell):
-    #     possibleValues = cell.getValueList()
-    #     for adj in cells.getAdjacent():
-    #         adj.removeValue(cell.getTrueValue()) #edited removeValue
-    #         if adj.numValues() == 0:
-    #             print("aaaaaaa")
-    #             return False
-    #     if self.validator():
-    #         print("bbbbbbb")
-    #         return True
-    #     print("cccccc")
-    #     return False
 
     def validator(self):
         for row in self.puzzle:
@@ -111,6 +110,14 @@ class Graph:
                 puzzle2.getVertex(row, col).setTrueValue(self.puzzle[row][col].getTrueValue())
                 puzzle2.getVertex(row, col).setCoor((row, col))
         return puzzle2
+
+    def displayGraph(self):
+        for row in range(9):
+            for col in range(9):
+                print(self.puzzle[col][row].getTrueValue(), end=' ')
+            print()
+        return
+
 
 class Vertex(Graph):
     def __init__(self, values, coordiantes):
