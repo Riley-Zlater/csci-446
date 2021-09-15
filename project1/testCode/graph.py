@@ -1,5 +1,3 @@
-import numpy
-
 class Graph:
     def __init__(self, puzzle):
         self.nextSquare = (0, 0)
@@ -59,7 +57,6 @@ class Graph:
                         if adj.removeValue(cell.getTrueValue()):
                             pruned = True
 
-
     def getVertex(self, i, j):
         return self.puzzle[i][j]
 
@@ -79,24 +76,22 @@ class Graph:
                     return False
         return self.validator()
 
-    def nextEmptySquare(self,i,j): #nnnnn
+    def nextEmptySquare(self, i, j):
         """
         Find the next empty cell on the puzzle, denoted by 0
         :return: The (x, y) coordinate of the empty cell
         :rtype: int, 2-tuple
         """
-        #print("its ",i ," ", j)
         for x in range(i, 9):
             for y in range(0, 9):
                 if x != i or y > j:
-                    #print(x, " ", y)
                     if self.puzzle[x][y].getTrueValue() == 0:
-                        return (x,y)
+                        return x, y
         for x in range(0, i):
             for y in range(0, 9):
                 if x < i or y <= j:
                     if self.puzzle[x][y].getTrueValue() == 0:
-                        return (x,y)
+                        return x, y
         return -1, -1
 
     def copyGraph(self):
@@ -118,9 +113,9 @@ class Graph:
 
 
 class Vertex(Graph):
-    def __init__(self, values, coordiantes):
+    def __init__(self, values, coordinates):
         self.pValues = [values]
-        self.coor = coordiantes
+        self.coor = coordinates
         self.adjList = []
         self.tvalue = values
 
