@@ -1,7 +1,13 @@
+# Written by Riley Slater and Cooper Strahan
+
 class Graph:
     def __init__(self, puzzle):
-        self.nextSquare = (0, 0)
-        self.sections = [[0, 3, 0, 3],
+        """
+        Constructor for the Graph object.
+        :param puzzle: 2-D array of integers/numpy.int32
+        """
+        self.nextSquare = (0, 0)  # potential starting index
+        self.sections = [[0, 3, 0, 3],  # indices of all the 3x3 sections
                          [3, 6, 0, 3],
                          [6, 9, 0, 3],
                          [0, 3, 3, 6],
@@ -11,11 +17,16 @@ class Graph:
                          [3, 6, 6, 9],
                          [6, 9, 6, 9]]
 
+        # construct the Graph object as a 2-D array of Vertex objects
         self.puzzle = [[Vertex(puzzle[i][j], (i, j)) for i in range(9)] for j in range(9)]
+
+        # assign [1-9] as the domain of empty cells
         for row in self.puzzle:
             for cell in row:
                 if cell.getValueList() == [0]:
                     cell.setValueList([1, 2, 3, 4, 5, 6, 7, 8, 9])
+
+        # make the adjacency list for the 3x3 sections
         for v in range(9):
             for rows in range(self.sections[v][0], self.sections[v][1]):
                 for cols in range(self.sections[v][2], self.sections[v][3]):
@@ -24,12 +35,14 @@ class Graph:
                             if rows2 != rows or cols2 != cols:
                                 self.puzzle[rows][cols].addAdjacent(self.puzzle[rows2][cols2])
 
+        # include the row in the adjacency list
         for row in range(9):
             for col in range(9):
                 for col2 in range(9):
                     if col != col2:
                         self.puzzle[row][col].addAdjacent(self.puzzle[row][col2])
 
+        # include the column in the adjacency list
         for col in range(9):
             for row in range(9):
                 for row2 in range(9):
@@ -37,6 +50,10 @@ class Graph:
                         self.puzzle[row][col].addAdjacent(self.puzzle[row2][col])
 
     def arcPrune(self):
+        """
+        This function recursively prunes every Vertex in the Graph
+        based on adjacency.
+        """
         pruned = False
         for row in self.puzzle:
             for cell in row:
@@ -49,6 +66,10 @@ class Graph:
             self.arcPrune()
 
     def prune(self):
+        """
+        This function only prunes the Vertices adjacent to the current
+        Vertex in the Graph.
+        """
         pruned = False
         for row in self.puzzle:
             for cell in row:
@@ -57,10 +78,22 @@ class Graph:
                         if adj.removeValue(cell.getTrueValue()):
                             pruned = True
 
-    def getVertex(self, i, j):
+    def getVertex(self, i, j) -> object:
+        """
+        A getter function for the current Vertex.
+        :param i: x index of the current Vertex
+        :param j: y index of the current Vertex
+        :return: Vertex at position (i, j)
+        :rtype: object
+        """
         return self.puzzle[i][j]
 
-    def validator(self):
+    def validator(self) -> bool:
+        """
+        This function tests to see if the current puzzle valid.
+        :return: if the puzzle is valid according to the sudoku constraints
+        :rtype: boolean
+        """
         for row in self.puzzle:
             for cell in row:
                 if cell.getTrueValue() != 0:
@@ -69,7 +102,12 @@ class Graph:
                             return False
         return True
 
-    def solved(self):
+    def solved(self) -> bool:
+        """
+        This function tests to see if the whole puzzle is solved.
+        :return: if not false, test with the validator
+        :rtype: boolean
+        """
         for row in self.puzzle:
             for cell in row:
                 if cell.getTrueValue() == 0:
@@ -78,7 +116,7 @@ class Graph:
 
     def nextEmptySquare(self, i, j):
         """
-        Find the next empty cell on the puzzle, denoted by 0
+        Find the next empty cell on the puzzle, denoted by 0.
         :return: The (x, y) coordinate of the empty cell
         :rtype: int, 2-tuple
         """
@@ -94,7 +132,12 @@ class Graph:
                         return x, y
         return -1, -1
 
-    def copyGraph(self):
+    def copyGraph(self) -> object:
+        """
+        This function copies the current Graph object
+        :return: A copy of the current Graph
+        :rtype: object
+        """
         puzzle2 = Graph([[1 for i in range(9)] for j in range(9)])
 
         for row in range(9):
@@ -105,6 +148,9 @@ class Graph:
         return puzzle2
 
     def displayGraph(self):
+        """
+        Simple function to display the current Graph.
+        """
         for row in range(9):
             for col in range(9):
                 print(self.puzzle[col][row].getTrueValue(), end=' ')
@@ -112,37 +158,81 @@ class Graph:
         return
 
 
+# Vertex, child class of Graph
 class Vertex(Graph):
     def __init__(self, values, coordinates):
+        """
+        this is the constructor for the Vertex, child object of Graph.
+        :param values: potential values the current Vertex could have
+        :param coordinates: index of the current Vertex
+        """
         self.pValues = [values]
         self.coor = coordinates
         self.adjList = []
         self.tvalue = values
 
     def setValueList(self, values):
+        """
+        Setter function for the potential values of the current Vertex.
+        :param values: list of integers
+        """
         self.pValues = values
 
     def setTrueValue(self, value):
+        """
+        Setter function for the true value of the current Vertex.
+        :param value: the value that's being tested/the final value for a Vertex
+        """
         self.tvalue = value
         for adj in self.adjList:
             adj.removeValue(value)
 
     def setCoor(self, coordinates):
+        """
+        A setter function for setting the coordinates of a Vertex.
+        :param coordinates: (x, y) coordinates, 2-tuple
+        """
         self.coor = coordinates
 
-    def getValueList(self):
+    def getValueList(self) -> list:
+        """
+        A getter function for getting the potential values of a Vertex.
+        :return: the potential values for the Vertex
+        :rtype: list
+        """
         return self.pValues
 
-    def getTrueValue(self):
+    def getTrueValue(self) -> int:
+        """
+        Getter function the gets the true value of the current Vertex.
+        :return: the true value of the Vertex
+        :rtype: int
+        """
         return self.tvalue
 
-    def getCoordinates(self):
+    def getCoordinates(self) -> tuple:
+        """
+        Getter function for getting the coordinates of the Vertex.
+        :return: (x, y) coordinate of the Vertex
+        :rtype: tuple
+        """
         return self.coor
 
-    def numValues(self):
+    def numValues(self) -> int:
+        """
+        Getter function for getting the number of potential values of the Vertex.
+        :return: the length of the potential values list
+        :rtype: int
+        """
         return len(self.pValues)
 
-    def removeValue(self, k):
+    def removeValue(self, k) -> bool:
+        """
+        Remove the value k from the potential values of the Vertex.
+        :param k: tested value
+        :return: after removing the values
+        :rtype: boolean
+        """
         removed = False
         for vals in self.pValues:
             if vals == k:
@@ -153,7 +243,16 @@ class Vertex(Graph):
         return removed
 
     def addAdjacent(self, vertex):
+        """
+        This function adds Vertices to the adjacency list.
+        :param vertex: Vertex object to append to the adjacency list
+        """
         self.adjList.append(vertex)
 
-    def getAdjacent(self):
+    def getAdjacent(self) -> list:
+        """
+        This function gets the adjacency list for the current Vertex.
+        :return: the adjacency list of the Vertex
+        :rtype: list
+        """
         return self.adjList
