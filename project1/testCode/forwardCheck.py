@@ -51,3 +51,4 @@ def forwardCheck(puzzle, i, j):
     else:
         forwardCheck(puzzle, 0, 0)
     return False
+

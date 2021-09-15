@@ -6,13 +6,10 @@ import csv
 # This function receives the raw Sudoku csv and re-formats it
 #   main change is replacing "?" with 0
 #   returns as a 2d-array of integers
-
-
 def importPuzzle(file):
-    rawPuzzle = np.array(list(csv.reader(open(file, "r", encoding='utf-8-sig'))))
+    rawPuzzle = np.array(list(csv.reader(open(file, "r",encoding='utf-8-sig'))))
 
     numRows, numCols = rawPuzzle.shape
-
 
     for j in range(numCols):
         for i in range(numRows):
