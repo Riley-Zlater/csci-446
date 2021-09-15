@@ -1,5 +1,6 @@
 import random
 import copy
+from operator import itemgetter
 
 class LocalSearch:
     
@@ -31,8 +32,11 @@ class LocalSearch:
     
 
     def generate_randoms(self, r_sector, c_sector):
+
         r = random.randint(r_sector, r_sector+2)
         c = random.randint(c_sector, c_sector+2)
+
+        print(self.fixed_values)
         
         while [r,c] in self.fixed_values:
             r = random.randint(r_sector, r_sector+2)
