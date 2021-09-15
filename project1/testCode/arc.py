@@ -1,62 +1,49 @@
 
+resets = 0
 
+def arc(puzzle, i, j):
 
-def arc(variables, domains, constraint1, constraint2):
-    pass
+    global resets
 
+    if puzzle.solved() and puzzle.validator():
+        puzzle.displayGraph()
+        return True
 
+    if puzzle.getVertex(i, j).getTrueValue() != 0:
+        [i, j] = puzzle.nextEmptySquare(i, j)
+        if i == -1 and j == -1:
+            return True
 
+    target = puzzle.getVertex(i, j)
+    if target.numValues() == 0:
+        return False
 
+    valList = [x for x in target.getValueList()]
+    for k in valList:
+        puzzle2 = puzzle.copyGraph()
+        puzzle2.getVertex(i, j).setTrueValue(k)
+        puzzle2.arcPrune()
 
+        if not puzzle2.validator():
+            target.removeValue(k)
+            resets += 1
+        elif not arc(puzzle2, i, j):
+            target.removeValue(k)
+            if puzzle2.getVertex(i, j).numValues() == 0:
+                return False
+        else:
+            puzzle = puzzle2
+            return True
+        if target.numValues() == 0:
+            return False
 
+        if puzzle2.solved():
+            puzzle = puzzle2
+            return True
 
-
-
-##import forwardChecking as fc
-##
-##def arc(domains):
-##    queue = [getArcs()]
-##    variablse
-##    while not queue.empty():
-##        (Xi, Xj) = queue.pop()
-##        if (checker(Xi, Xj):
-##            if (len(domains[Xi]) == 0):
-##                return False
-##    for Xk in getNeighborhoodArcs():
-##        queue.append((Xk, Xi))
-##    return True
-##
-##def checker(Xi, Xj):
-##    Di = 
-##    
-##def getNeighborhood(Xi):
-##    out = []
-##    for (x, y) in arcs[Xi]:
-##        out.append(y)
-##    return out
-##
-##def getNeighborhoodArcs(i, j):
-##    arcs = {}
-##    emptyCell = [j, i]
-##    topX = (i / 3) * 3
-##    topY = (j / 3) * 3
-##
-##    for x in range(0, 9):
-##        if (x != i):
-##            arcs[(emptyCell, [j, x])] = 1
-##    for y in range(0, 9):
-##        if (y != j):
-##            arcs[(emptyCell, [y, i])] = 1
-##    for x in range(topX, topX+3):
-##        for y in range(topY, topY+3):
-##            if (x != i or y != j):
-##                arcs[(emptyCell, [y, x])] = 1
-##    return arcs
-##
-##def getArcs():
-##    out = []
-##    for x in range(0, 9):
-##        for y in range(0, 9):
-##            out += getNeighborhoodArcs(y, x)
-##    return out
-#https://raw.githubusercontent.com/smallbasic/smallbasic.samples/master/applications/sudoku_solver.bas
+    [i, j] = puzzle.nextEmptySquare(i, j)  # might not be necessary
+    if i == -1 and j == -1:
+        return True
+    else:
+        arc(puzzle, 0, 0)
+    return False
