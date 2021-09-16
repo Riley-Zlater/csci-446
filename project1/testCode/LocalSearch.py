@@ -2,13 +2,26 @@ import random
 import copy
 from operator import itemgetter
 
+from numpy import empty
+
 class LocalSearch:
     
     def __init__(self) -> None:
         self.fixed_values = []
 
+    def generate_fixed_values(self, puzzle):     
+        for i in range(0, 9):
+            for j in range(0, 9):
+                if puzzle[i][j] != 0:
+                    self.fixed_values.append([i,j])
+            
+        return puzzle
+
     
     def assert_random_values(self, puzzle):
+
+        if not self.fixed_values:
+            self.generate_fixed_values(puzzle)
 
         for r in [0,3,6]:
             for c in [0,3,6]:
@@ -21,8 +34,6 @@ class LocalSearch:
                 
                 for i in range(r, r+3):
                     for j in range(c, c+3):
-                        if puzzle[i][j] != 0:
-                            self.fixed_values.append([i,j])
                         if puzzle[i][j] == 0:
                             val = nums[random.randint(0,len(nums)-1)]
                             puzzle[i][j] = val
@@ -35,8 +46,6 @@ class LocalSearch:
 
         r = random.randint(r_sector, r_sector+2)
         c = random.randint(c_sector, c_sector+2)
-
-        print(self.fixed_values)
         
         while [r,c] in self.fixed_values:
             r = random.randint(r_sector, r_sector+2)
