@@ -10,7 +10,7 @@ from GeneticAlgorithm import GeneticAlgorithm
 
 # test1 = puz.importPuzzle("..\\testPuzzles\\Med-P1.csv")
 # puzzle1 = Graph(test1)
-test1 = puz.importPuzzle("/Users/cooperstrahan/School/csci-446/project1/testPuzzles/Med-P5.csv")
+test1 = puz.importPuzzle("/Users/cooperstrahan/School/csci-446/project1/testPuzzles/Easy-P5.csv")
 puzzle1 = Graph(test1)
 
 selection = input("Select an algorithm to test:\n" +
@@ -50,8 +50,11 @@ while selection != '6':
         print(test1)
         print()
         ga = GeneticAlgorithm()
-        fitness = ga.genetic_algorithm(test1)
-        print(fitness)
+        solution = ga.genetic_algorithm(test1)
+        print(solution)
+
+        g = Graph(solution)
+        print(g.validator())
 
     selection = input("Select an algorithm to test:\n" +
                       "1. backtrack solve\n" +

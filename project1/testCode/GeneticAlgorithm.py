@@ -16,17 +16,13 @@ class GeneticAlgorithm(LocalSearch):
     
     def genetic_algorithm(self, puzzle):
 
-        
-
         for _ in range(0,self.pop_size):
             self.population.append( self.assert_random_values(copy.deepcopy(puzzle)))
         
         iter = 0
 
-        # print(self.fixed_values)
         print("Genetic Alg thinking...")
 
-        # print(self.population)
         best_fit_metric = self.evaluate_fitness(self.population[0]) 
         best_fit = self.population[0]
 
