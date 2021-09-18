@@ -1,3 +1,4 @@
+import copy
 import numpy as np
 from scipy import stats
 import puzzleImporter as puz
@@ -42,27 +43,37 @@ easy_backtrack_forwardtrack_results = []
 easy_backtrack_arc_consistency_results = []
 
 easy_simulated_annealing_results = []
+easy_simulated_annealing_iterations = []
 easy_genetic_algorithm_results = []
+easy_genetic_algorithm_iterations = []
 
 med_simple_backtrack_results = []
 med_backtrack_forwardtrack_results = []
 med_backtrack_arc_consistency_results = []
 
 med_simulated_annealing_results = []
+med_simulated_annealing_iterations = []
 med_genetic_algorithm_results = []
+med_genetic_algorithm_iterations = []
+
 
 hard_backtrack_forwardtrack_results = []
 hard_backtrack_arc_consistency_results = []
 
 hard_simulated_annealing_results = []
+hard_simulated_annealing_iterations = []
 hard_genetic_algorithm_results = []
+hard_genetic_algorithm_iterations = []
 
-# evil_simple_backtrack_results = []
+
 evil_backtrack_forwardtrack_results = []
 evil_backtrack_arc_consistency_results = []
 
 evil_simulated_annealing_results = []
+evil_simulated_annealing_iterations = []
 evil_genetic_algorithm_results = []
+evil_genetic_algorithm_iterations = []
+
 
 
 for _ in range(0,10):
@@ -76,8 +87,13 @@ for _ in range(0,10):
         arc.arc(graph, 0, 0)
         easy_backtrack_arc_consistency_results.append(arc.resets)
         sa = SimAnneal()
-        solution = sa.simulate_annealing(easy_sudoku)
+        solution = sa.simulate_annealing(copy.deepcopy(easy_sudoku))
         easy_simulated_annealing_results.append(sa.minimum_cost_function(solution))
+        easy_simulated_annealing_iterations.append(sa.iterations)
+        ga = GeneticAlgorithm()
+        solution = ga.genetic_algorithm(copy.deepcopy(easy_sudoku))
+        easy_genetic_algorithm_results.append(ga.evaluate_fitness(solution))
+        easy_genetic_algorithm_iterations.append(ga.evaluate_fitness(solution))
 
     for med_sudoku in med_puzzles:
         graph = Graph(med_sudoku)
@@ -88,8 +104,13 @@ for _ in range(0,10):
         arc.arc(graph, 0, 0)
         med_backtrack_arc_consistency_results.append(arc.resets)
         sa = SimAnneal()
-        solution = sa.simulate_annealing(med_sudoku)
+        solution = sa.simulate_annealing(copy.deepcopy(med_sudoku))
         med_simulated_annealing_results.append(sa.minimum_cost_function(solution))
+        med_simulated_annealing_iterations.append(sa.iterations)
+        ga = GeneticAlgorithm()
+        solution = ga.genetic_algorithm(copy.deepcopy(med_sudoku))
+        med_genetic_algorithm_results.append(ga.evaluate_fitness(solution))
+        med_genetic_algorithm_iterations.append(ga.evaluate_fitness(solution))
 
     for hard_sudoku in hard_puzzles:
         graph = Graph(hard_sudoku)
@@ -98,8 +119,13 @@ for _ in range(0,10):
         arc.arc(graph, 0, 0)
         hard_backtrack_arc_consistency_results.append(arc.resets)
         sa = SimAnneal()
-        solution = sa.simulate_annealing(hard_sudoku)
+        solution = sa.simulate_annealing(copy.deepcopy(hard_sudoku))
         hard_simulated_annealing_results.append(sa.minimum_cost_function(solution))
+        hard_simulated_annealing_iterations.append(sa.iterations)
+        ga = GeneticAlgorithm()
+        solution = ga.genetic_algorithm(copy.deepcopy(hard_sudoku))
+        hard_genetic_algorithm_results.append(ga.evaluate_fitness(solution))
+        hard_genetic_algorithm_iterations.append(ga.evaluate_fitness(solution))
 
     for evil_sudoku in evil_puzzles:
         graph = Graph(evil_sudoku)
@@ -108,45 +134,75 @@ for _ in range(0,10):
         arc.arc(graph, 0, 0)
         evil_backtrack_arc_consistency_results.append(arc.resets)
         sa = SimAnneal()
-        solution = sa.simulate_annealing(evil_sudoku)
+        solution = sa.simulate_annealing(copy.deepcopy(evil_sudoku))
         evil_simulated_annealing_results.append(sa.minimum_cost_function(solution))
+        evil_simulated_annealing_iterations.append(sa.iterations)
+        ga = GeneticAlgorithm()
+        solution = ga.genetic_algorithm(copy.deepcopy(evil_sudoku))
+        evil_genetic_algorithm_results.append(ga.evaluate_fitness(solution))
+        evil_genetic_algorithm_iterations.append(ga.evaluate_fitness(solution))
 
 easy_simple_backtrack_results = np.array(easy_simple_backtrack_results)
 easy_backtrack_forwardtrack_results = np.array(easy_backtrack_forwardtrack_results)
 easy_backtrack_arc_consistency_results = np.array(easy_backtrack_arc_consistency_results)
 easy_simulated_annealing_results = np.array(easy_simulated_annealing_results)
+easy_simulated_annealing_iterations = np.array(easy_simulated_annealing_iterations)
+easy_genetic_algorithm_results = np.array(easy_genetic_algorithm_results)
+easy_genetic_algorithm_iterations = np.array(easy_genetic_algorithm_iterations)
+
 
 med_simple_backtrack_results = np.array(med_simple_backtrack_results)
 med_backtrack_forwardtrack_results = np.array(med_backtrack_forwardtrack_results)
 med_backtrack_arc_consistency_results = np.array(med_backtrack_arc_consistency_results)
 med_simulated_annealing_results = np.array(med_simulated_annealing_results)
+med_simulated_annealing_iterations = np.array(med_simulated_annealing_iterations)
+med_genetic_algorithm_results = np.array(med_genetic_algorithm_results)
+med_genetic_algorithm_iterations = np.array(med_genetic_algorithm_iterations)
 
 hard_backtrack_forwardtrack_results = np.array(hard_backtrack_forwardtrack_results)
 hard_backtrack_arc_consistency_results = np.array(hard_backtrack_arc_consistency_results)
 hard_simulated_annealing_results = np.array(hard_simulated_annealing_results)
+hard_simulated_annealing_iterations = np.array(hard_simulated_annealing_iterations)
+hard_genetic_algorithm_results = np.array(hard_genetic_algorithm_results)
+hard_genetic_algorithm_iterations = np.array(hard_genetic_algorithm_iterations)
 
 evil_backtrack_forwardtrack_results = np.array(evil_backtrack_forwardtrack_results)
 evil_backtrack_arc_consistency_results = np.array(evil_backtrack_arc_consistency_results)
 evil_simulated_annealing_results = np.array(evil_simulated_annealing_results)
+evil_simulated_annealing_iterations = np.array(evil_simulated_annealing_iterations)
+evil_genetic_algorithm_results = np.array(evil_genetic_algorithm_results)
+evil_genetic_algorithm_iterations = np.array(evil_genetic_algorithm_iterations)
 
 print("Easy Results")
 print(stats.describe(easy_simple_backtrack_results))
 print(stats.describe(easy_backtrack_forwardtrack_results))
 print(stats.describe(easy_backtrack_arc_consistency_results))
 print(stats.describe(easy_simulated_annealing_results))
+print(stats.describe(easy_simulated_annealing_iterations))
+print(stats.describe(easy_genetic_algorithm_results))
+print(stats.describe(easy_genetic_algorithm_iterations))
 
 print("Medium Results")
 print(stats.describe(med_simple_backtrack_results))
 print(stats.describe(med_backtrack_forwardtrack_results))
 print(stats.describe(med_backtrack_arc_consistency_results))
 print(stats.describe(med_simulated_annealing_results))
+print(stats.describe(med_simulated_annealing_iterations))
+print(stats.describe(med_genetic_algorithm_results))
+print(stats.describe(med_genetic_algorithm_iterations))
 
 print("Hard Results")
 print(stats.describe(hard_backtrack_forwardtrack_results))
 print(stats.describe(hard_backtrack_arc_consistency_results))
 print(stats.describe(hard_simulated_annealing_results))
+print(stats.describe(hard_simulated_annealing_iterations))
+print(stats.describe(hard_genetic_algorithm_results))
+print(stats.describe(hard_genetic_algorithm_iterations))
 
 print("Evil Results")
 print(stats.describe(evil_backtrack_forwardtrack_results))
 print(stats.describe(evil_backtrack_arc_consistency_results))
 print(stats.describe(evil_simulated_annealing_results))
+print(stats.describe(evil_simulated_annealing_iterations))
+print(stats.describe(evil_genetic_algorithm_results))
+print(stats.describe(evil_genetic_algorithm_iterations))

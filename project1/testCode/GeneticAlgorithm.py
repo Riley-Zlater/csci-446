@@ -11,15 +11,38 @@ class GeneticAlgorithm(LocalSearch):
         self.T = 1
         self.S = .01
         self.h = 0.75
+        self.iter = 0
         super().__init__()
 
     
     def genetic_algorithm(self, puzzle):
+        """
+        Accepts a sudoku puzzle as input.
+        Generates a population of randomized puzzles based on the tuned population size. 
+        Iterates through the population determining if a correct solution exists.
+
+        Runs tournament selection on random sets of the population. 
+
+        Accepts two winners of tournament selection and "breeds" them to create
+        two new puzzles.
+
+        Randomly mutate the "bred" winners with a low probability to introduce variability
+        and help prevent getting stuck at a local maximum.
+
+        Each iteration uses generational replacement to create an entirely new
+        population based on the "bred" winners of tournament selection.
+
+        Lower the cooling temperature and increase the Selection pressure for the 
+        tournament selection.
+
+        If a solution is found, return the solved puzzle. If not return the best
+        puzzle after a predetermined number of iterations.
+        """
 
         for _ in range(0,self.pop_size):
             self.population.append( self.assert_random_values(copy.deepcopy(puzzle)))
         
-        iter = 0
+        
 
         print("Genetic Alg thinking...")
 
@@ -37,8 +60,8 @@ class GeneticAlgorithm(LocalSearch):
                 if current_fit_metric == 1.0:
                     return A
 
-            iter += 1
-            print("Current iteration: " + str(iter))
+            self.iter += 1
+            print("Current iteration: " + str(self.iter))
             print("Current Best Fit: " + str(best_fit_metric))
             print()
 
@@ -67,6 +90,14 @@ class GeneticAlgorithm(LocalSearch):
         return best_fit
     
     def tournament_select(self):
+        """
+        Selects a subset of the population based on a random number generator. 
+        Compares the values against one another to determine the fittest puzzle.
+        Fitter puzzles are accepted with a probability P corresponding to the 
+        fitness score and the current Temperature. (The Selection Pressure) The
+        Selection pressure increases as the population gets closer to a solution.
+        Returns the winning puzzle from the tournament.
+        """
         sample_index = random.randint(1,self.pop_size)
         # print(sample_index)
 
@@ -85,6 +116,17 @@ class GeneticAlgorithm(LocalSearch):
         return fittest_sample
     
     def evaluate_fitness(self, puzzle):
+        """
+        Accepts a sudoku puzzle as input.
+        Generates a fitness heuristic corresponding to
+        how many duplicate values exist in each column. 
+        If duplicates exist in a row/column it scores lower than
+        9. If duplicates do not exist the row/column scores a 9.
+        The final score for all rows and columns is added and
+        divided by 162 (The potential max score). To
+        determine the puzzle's fitness score.
+        Returns a fitness score.
+        """
         row_fit = 0
         col_fit = 0
 
@@ -106,6 +148,13 @@ class GeneticAlgorithm(LocalSearch):
             
     
     def cross_pollinate(self, sample_1, sample_2):
+        """
+        Accepts two sudoku puzzles as inputs.
+        Generates a selection for the subsqare of both puzzles.
+        Swaps a value from each puzzle with the other. 
+        Corrects duplicates created from value swapping.
+        Returns two updated puzzles.
+        """
         sample_1_copy = copy.deepcopy(sample_1)
         sample_2_copy = copy.deepcopy(sample_2)
 
@@ -132,6 +181,14 @@ class GeneticAlgorithm(LocalSearch):
         return sample_1_copy, sample_2_copy
 
     def correct_sub_box(self, s1, s2, r_s, c_s, r1, r2):
+        """
+        Accepts two sudoku puzzles, a row sector and column sector value, and
+        indices for swapping. 
+        Uses the swapped indices to identify the value for which a duplicate
+        may exist.
+        Swaps puzzle 1's duplicate value for puzzle 2's duplicate value.
+        Returns two updated puzzles
+        """
         val1 = s1[r1[0]][r1[1]]
         val2 = s2[r2[0]][r2[1]]
 

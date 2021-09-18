@@ -9,7 +9,13 @@ class LocalSearch:
     def __init__(self) -> None:
         self.fixed_values = []
 
-    def generate_fixed_values(self, puzzle):     
+    def generate_fixed_values(self, puzzle):  
+        """
+        Iterates through a starting puzzle and creates an array
+        based on the sudoku's given values
+        This array is used to prevent swaps with original puzzle
+        values
+        """   
         for i in range(0, 9):
             for j in range(0, 9):
                 if puzzle[i][j] != 0:
@@ -19,6 +25,13 @@ class LocalSearch:
 
     
     def assert_random_values(self, puzzle):
+        """
+        This function accepts a sudoku puzzle and asserts random values
+        onto the puzzle's empty spaces. 
+
+        The puzzle inserts the values [1-9] into each "sub-square" such that
+        we create pseudo random puzzles with the 3x3 constraint already fulfilled
+        """
 
         if not self.fixed_values:
             self.generate_fixed_values(puzzle)
@@ -43,6 +56,13 @@ class LocalSearch:
     
 
     def generate_randoms(self, r_sector, c_sector):
+        """
+        Accepts two parameters determining the sector for selection
+        Selects two random indices [i,j] within a subsquare
+        Prevents the selection of indices matching those in the fixed
+        values array.
+        Returns the selected indices
+        """
 
         r = random.randint(r_sector, r_sector+2)
         c = random.randint(c_sector, c_sector+2)
@@ -54,6 +74,13 @@ class LocalSearch:
         return [r,c]
 
     def swap_random(self, puzzle):
+        """
+        Accepts a sudoku puzzle as input
+        Generates a selection for the subsquare in which
+        swapping will occur. 
+        Swaps the values of the two cells.
+        Returns an updated puzzle
+        """
         new_puzzle = copy.deepcopy(puzzle)
 
         r_sector = 3 * random.randint(0,2)
