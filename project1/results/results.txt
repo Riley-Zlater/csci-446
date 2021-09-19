@@ -19,7 +19,9 @@ Easy Simulate Annealing Counts
 [[ 0 18]
  [ 2 26]
  [ 3  2]
- [ 4  4]]Medium Results
+ [ 4  4]]
+ 
+Medium Results
 
 Medium Simple Backtrack
 DescribeResult(nobs=50, minmax=(1763, 63530), mean=32169.9, variance=342097479.68367344, skewness=0.0004914934781367038, kurtosis=-1.2076579553382931)
@@ -44,7 +46,7 @@ Medium Simulate Annealing Counts
  [ 5  3]
  [ 6  2]]
  
- Hard Results
+Hard Results
 
 Hard Forward Checking Backtrack
 DescribeResult(nobs=50, minmax=(19, 2420), mean=1222.1, variance=582502.5408163265, skewness=-2.092359653951082e-06, kurtosis=-1.2233496373022696)
