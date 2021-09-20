@@ -96,7 +96,6 @@ for _ in range(0,10):
         
 
     for med_sudoku in med_puzzles:
-        i+=1
         graph = Graph(med_sudoku)
         bt.recursiveBacktrackSolve(graph, 0, 0)
         med_simple_backtrack_results.append(bt.resets)
