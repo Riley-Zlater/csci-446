@@ -75,9 +75,8 @@ evil_genetic_algorithm_results = []
 evil_genetic_algorithm_iterations = []
 
 
-
 for _ in range(0,10):
-
+    
     for easy_sudoku in easy_puzzles:
         graph = Graph(easy_sudoku)
         bt.recursiveBacktrackSolve(graph, 0, 0)
@@ -97,6 +96,7 @@ for _ in range(0,10):
         
 
     for med_sudoku in med_puzzles:
+        i+=1
         graph = Graph(med_sudoku)
         bt.recursiveBacktrackSolve(graph, 0, 0)
         med_simple_backtrack_results.append(bt.resets)
@@ -177,8 +177,8 @@ evil_simulated_annealing_iterations = np.array(evil_simulated_annealing_iteratio
 evil_genetic_algorithm_results = np.array(evil_genetic_algorithm_results)
 evil_genetic_algorithm_iterations = np.array(evil_genetic_algorithm_iterations)
 
-f = open("results.txt", "w")
-# f = open("genetic_results.txt", "w")
+f = open("results/results.txt", "w")
+# f = open("results/genetic_results.txt", "w")
 
 f.write("Easy Results\n")
 f.write("\n")
@@ -237,7 +237,7 @@ f.write("Medium Genetic Algorithm Iterations\n")
 f.write(str(stats.describe(med_genetic_algorithm_iterations)))
 f.write("\n\n")
 f.write("Medium Genetic Algorithm Counts\n")
-f.write(str(stats.itemfreq(hard_genetic_algorithm_results)))
+f.write(str(stats.itemfreq(med_genetic_algorithm_results)))
 
 f.write("Hard Results\n")
 
