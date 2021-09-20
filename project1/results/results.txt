@@ -1,0 +1,91 @@
+Easy Results
+
+Easy Simple Backtrack
+DescribeResult(nobs=50, minmax=(46, 57930), mean=29044.5, variance=339838245.1530612, skewness=-1.3505968353757405e-06, kurtosis=-1.2237539461921063)
+
+Easy Forward Checking Backtrack
+DescribeResult(nobs=50, minmax=(0, 2368), mean=1184.1, variance=582290.2959183673, skewness=-1.1135033246173725e-10, kurtosis=-1.2242413944663286)
+
+Easy Arc Consistency Backtrack
+DescribeResult(nobs=50, minmax=(0, 711), mean=355.5, variance=52539.0306122449, skewness=0.0, kurtosis=-1.2242424242424241)
+
+Easy Simulate Annealing
+DescribeResult(nobs=50, minmax=(0, 4), mean=1.48, variance=1.560816326530612, skewness=0.1727404203381376, kurtosis=-0.7753453195847406)
+
+Easy Simulate Annealing Iterations
+DescribeResult(nobs=50, minmax=(3100, 10001), mean=8779.0, variance=3504774.2040816327, skewness=-1.2947511012241604, kurtosis=0.51925599878335)
+
+Easy Simulate Annealing Counts
+[[ 0 18]
+ [ 2 26]
+ [ 3  2]
+ [ 4  4]]
+ 
+Medium Results
+
+Medium Simple Backtrack
+DescribeResult(nobs=50, minmax=(1763, 63530), mean=32169.9, variance=342097479.68367344, skewness=0.0004914934781367038, kurtosis=-1.2076579553382931)
+
+Medium Forward Checking Backtrack
+DescribeResult(nobs=50, minmax=(3, 2386), mean=1198.1, variance=582326.2142857143, skewness=-6.42545204258465e-07, kurtosis=-1.2240903746452738)
+
+Medium Arc Consistency Backtrack
+DescribeResult(nobs=50, minmax=(0, 715), mean=357.9, variance=52541.316326530614, skewness=-9.859660035968109e-08, kurtosis=-1.2241359118670472)
+
+Medium Simulate Annealing
+DescribeResult(nobs=50, minmax=(0, 6), mean=2.82, variance=1.7424489795918365, skewness=0.49651852305671074, kurtosis=-0.021601086589537744)
+
+Medium Simulate Annealing Iterations
+DescribeResult(nobs=50, minmax=(6211, 10001), mean=9899.18, variance=317108.8853061225, skewness=-5.985046019426606, kurtosis=35.74790389476658)
+
+Medium Simulate Annealing Counts
+[[ 0  2]
+ [ 2 27]
+ [ 3  4]
+ [ 4 12]
+ [ 5  3]
+ [ 6  2]]
+ 
+Hard Results
+
+Hard Forward Checking Backtrack
+DescribeResult(nobs=50, minmax=(19, 2420), mean=1222.1, variance=582502.5408163265, skewness=-2.092359653951082e-06, kurtosis=-1.2233496373022696)
+
+Hard Arc Consistency Backtrack
+DescribeResult(nobs=50, minmax=(4, 720), mean=361.5, variance=52545.15306122449, skewness=5.134677182486605e-07, kurtosis=-1.2239571735296215)
+
+Hard Simulate Annealing
+DescribeResult(nobs=50, minmax=(0, 7), mean=3.24, variance=2.9616326530612245, skewness=0.39971412410192214, kurtosis=-0.3152395493096094)
+
+Hard Simulate Annealing Iterations
+DescribeResult(nobs=50, minmax=(8748, 10001), mean=9946.96, variance=58550.08, skewness=-4.530783191990371, kurtosis=18.958818091825478)
+
+Hard Simulate Annealing Counts
+[[ 0  3]
+ [ 2 20]
+ [ 3  4]
+ [ 4 15]
+ [ 6  6]
+ [ 7  2]]
+ 
+ Evil Results
+
+Evil Forward Checking Backtrack
+DescribeResult(nobs=50, minmax=(95, 2630), mean=1362.5, variance=585890.0510204082, skewness=0.0, kurtosis=-1.209293017414267)
+
+Evil Arc Consistency Backtrack
+DescribeResult(nobs=50, minmax=(23, 790), mean=406.5, variance=52939.0306122449, skewness=0.0, kurtosis=-1.205886122712609)
+
+Evil Simulate Annealing
+DescribeResult(nobs=50, minmax=(0, 6), mean=3.32, variance=2.9975510204081637, skewness=-0.07405620705834377, kurtosis=-0.8003438848306219)
+
+Evil Simulate Annealing Iterations
+DescribeResult(nobs=50, minmax=(6765, 10001), mean=9844.46, variance=382417.02897959185, skewness=-4.082630401655358, kurtosis=15.634996014778167)
+
+Evil Simulate Annealing Counts
+[[ 0  4]
+ [ 2 17]
+ [ 3  4]
+ [ 4 12]
+ [ 5  6]
+ [ 6  7]]
