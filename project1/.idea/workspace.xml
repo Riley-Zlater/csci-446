@@ -2,13 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7bd09f5c-a877-4113-9e24-b5a6b77b508a" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.name" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.name" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/testCode/arc.py" beforeDir="false" afterPath="$PROJECT_DIR$/testCode/arc.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/testCode/backtrackSolve.py" beforeDir="false" afterPath="$PROJECT_DIR$/testCode/backtrackSolve.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/testCode/forwardCheck.py" beforeDir="false" afterPath="$PROJECT_DIR$/testCode/forwardCheck.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/testCode/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/testCode/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -126,6 +120,26 @@
           <url>file://$PROJECT_DIR$/testCode/arc.py</url>
           <line>36</line>
           <option name="timeStamp" value="12" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/testCode/SimAnneal.py</url>
+          <line>41</line>
+          <option name="timeStamp" value="13" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/testCode/LocalSearch.py</url>
+          <line>83</line>
+          <option name="timeStamp" value="19" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/testCode/GeneticAlgorithm.py</url>
+          <line>115</line>
+          <option name="timeStamp" value="21" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/testCode/GeneticAlgorithm.py</url>
+          <line>73</line>
+          <option name="timeStamp" value="22" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
