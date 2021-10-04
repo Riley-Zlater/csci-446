@@ -42,11 +42,11 @@ def arc(puzzle, i, j) -> bool:
         # if the puzzle is invalid remove k from valList
         if not puzzle2.validator():
             target.removeValue(k)
-            resets += 1  # track number of backtracks
 
         # if puzzle is valid recursively call and continue with backtracking
         elif not arc(puzzle2, i, j):
             target.removeValue(k)  # remove the tested k from the current vertex valList
+            resets += 1  # track number of backtracks
             # error handling in case we prune all possible values
             if puzzle2.getVertex(i, j).numValues() == 0:
                 return False

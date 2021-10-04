@@ -40,11 +40,11 @@ def recursiveBacktrackSolve(puzzle, i, j) -> bool:
         # test if that k validates, if not remove k
         if not puzzle2.validator():
             current.removeValue(k)
-            resets += 1  # track the number of backtracks
 
         # if the possible values for the current vertex are 0
         elif not recursiveBacktrackSolve(puzzle2, i, j):
             current.removeValue(k)  # remove the tested k value
+            resets += 1  # track the number of backtracks
             if puzzle2.getVertex(i, j).numValues == 0:  # error handling
                 return False
         else:

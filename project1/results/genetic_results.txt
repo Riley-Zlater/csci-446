@@ -1,0 +1,53 @@
+Easy Results
+
+
+Easy Genetic Algorithm Results
+DescribeResult(nobs=50, minmax=(0.9753086419753086, 1.0), mean=0.9913580246913579, variance=7.46526319718561e-05, skewness=-0.43301270189218205, kurtosis=-0.9687500000000289)
+
+Easy Genetic Algorithm Iterations
+DescribeResult(nobs=50, minmax=(24, 100), mean=79.72, variance=669.5934693877551, skewness=-0.6906772029667521, kurtosis=-1.2042685967020852)
+
+Easy Genetic Algorithm Counts
+[[ 0.97530864  6.        ]
+ [ 0.98148148  2.        ]
+ [ 0.98765432 20.        ]
+ [ 1.         22.        ]]
+Medium Genetic Algorithm Results
+DescribeResult(nobs=50, minmax=(0.9753086419753086, 1.0), mean=0.9837037037037036, variance=4.939515815471111e-05, skewness=0.266299128551953, kurtosis=-0.4185452607401534)
+
+Medium Genetic Algorithm Iterations
+DescribeResult(nobs=50, minmax=(64, 100), mean=98.16, variance=55.03510204081634, skewness=-3.8137685015091645, kurtosis=12.862105168817251)
+
+Medium Genetic Algorithm Counts
+[[ 0.97530864 17.        ]
+ [ 0.98148148  4.        ]
+ [ 0.98765432 26.        ]
+ [ 1.          3.        ]]
+ 
+Hard Results
+
+Hard Genetic Algorithm Results
+DescribeResult(nobs=50, minmax=(0.9691358024691358, 1.0), mean=0.9825925925925926, variance=5.861786872956749e-05, skewness=0.30255787736356654, kurtosis=-0.5173867809483812)
+
+Hard Genetic Algorithm Iterations
+DescribeResult(nobs=50, minmax=(53, 100), mean=97.92, variance=84.9322448979592, skewness=-4.484224947236937, kurtosis=18.581169151729668)
+
+Hard Genetic Algorithm Counts
+[[ 0.9691358   2.        ]
+ [ 0.97530864 19.        ]
+ [ 0.98148148  3.        ]
+ [ 0.98765432 23.        ]
+ [ 1.          3.        ]]
+Evil Genetic Algorithm Results
+DescribeResult(nobs=50, minmax=(0.9629629629629629, 1.0), mean=0.9808641975308641, variance=5.3267763438251124e-05, skewness=0.044900548434791444, kurtosis=-0.5030635622568846)
+
+Evil Genetic Algorithm Iterations
+DescribeResult(nobs=50, minmax=(89, 100), mean=99.78, variance=2.4200000000000004, skewness=-6.857142857142858, kurtosis=45.02040816326531)
+
+Evil Genetic Algorithm Counts
+[[ 0.96296296  1.        ]
+ [ 0.9691358   2.        ]
+ [ 0.97530864 22.        ]
+ [ 0.98148148  3.        ]
+ [ 0.98765432 21.        ]
+ [ 1.          1.        ]]
