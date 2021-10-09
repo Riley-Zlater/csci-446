@@ -1,5 +1,5 @@
 
-from project2.pythonCode.GameBoard import GameBoard
+from GameBoard import GameBoard
 from SimpleExplorer import SimpleExplorer
 
 
@@ -12,3 +12,10 @@ class Explorer(SimpleExplorer):
         self.arrows = simple_explorer.arrows
         self.simple_board = GameBoard(board_size)
         super().__init__(self.position, self.arrows)
+    
+
+    def getCurrentState(self):
+        i = self.position[0]
+        j = self.position[1]
+        return self.simple_board.getCell(j, i).getState()
+    

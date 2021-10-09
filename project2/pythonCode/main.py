@@ -10,4 +10,6 @@ wumpus.displayBoard(boardSize)
 
 jerry = SimpleExplorer([3,3], 1)
 
-jerry2 = Explorer(jerry)
+explorer = Explorer(jerry, boardSize)
+
+print(explorer.getCurrentState())
