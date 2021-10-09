@@ -22,15 +22,8 @@ class GameBoard:
 
     # TODO
     def setStates(self, size, pitp, wumpusp, obstp):  # use the probabilities to change the states of the cells
-        numPits, numWumpus, numObstacles = 0
+        
 
-        numPits = ceil(size * pitp)
-        numWumpus = ceil(size * wumpusp)
-        numObstacles = ceil(size * obstp)
-
-        self.setAdjList(size)
-
-    # TODO
     def setAdjList(self, size):  # this fn will make the adjacency lists for each cell
         for i in range(size):  # if current cell is (2, 2) adjList: [(1, 2), (2, 1), (3, 2), (2, 3)]
             for j in range(size):
@@ -61,9 +54,20 @@ class Cell(GameBoard):
     def getIndex(self):  # returns the current index as (col, row)
         return self.index
 
-    # TODO
-    def setState(self, numPits, numWumpus, numObstacles):  # this fn will change the state of the current cell
-        pitCounter, wumpusCounter, obstacleCounter = 0
+    def setStatePit(self):
+        self.state['Pit'] = True
+
+    def setStateObs(self):
+        self.state['Obstacle'] = True
+
+    def setStateWumpus(self):
+        self.state['Wumpus'] = True
+    
+    def setStateBreeze(self):
+        self.state['Breeze'] = True
+
+    def setStateStench(self):
+        self.state['Stench'] = True
 
     def getState(self):  # return this cells state
         return self.state
