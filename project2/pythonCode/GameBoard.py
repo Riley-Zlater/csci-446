@@ -34,11 +34,11 @@ class GameBoard:
     def setAdjList(self, size):  # this fn will make the adjacency lists for each cell
         for i in range(size):  # if current cell is (2, 2) adjList: [(1, 2), (2, 1), (3, 2), (2, 3)]
             for j in range(size):
-                if i + 1 <= 5:
+                if i + 1 <= size:
                     self.board[i][j].addAdjacent(self.board[i+1][j])
                 if i - 1 > 0:
                     self.board[i][j].addAdjacent(self.board[i-1][j])
-                if j + 1 <= 5:
+                if j + 1 <= size:
                     self.board[i][j].addAdjacent(self.board[i][j+1])
                 if j - 1 > 0:
                     self.board[i][j].addAdjacent(self.board[i][j-1])
