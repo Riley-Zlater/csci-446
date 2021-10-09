@@ -11,8 +11,10 @@ class GameBoard:
         self.obstp = obstp
 
         self.board = self.makeWorld(self.size)
+        self.setAdjList(self.size)
 
-        # self.setAdjList(size)
+        if pitp != 0 and wumpusp != 0 and obstp != 0:
+            self.setStates(size, pitp, wumpusp, obstp)
 
     @staticmethod
     def makeWorld(dim):
@@ -59,8 +61,8 @@ class GameBoard:
                 probW -= 1
 
     def setAdjList(self, size):  # this fn will make the adjacency lists for each cell
-        for i in range(size):  # if current cell is (2, 2) adjList: [(1, 2), (2, 1), (3, 2), (2, 3)]
-            for j in range(size):
+        for i in range(1, size):  # if current cell is (2, 2) adjList: [(1, 2), (2, 1), (3, 2), (2, 3)]
+            for j in range(1, size):
                 if i + 1 <= size:
                     self.board[i][j].addAdjacent(self.board[i+1][j])
                 if i - 1 > 0:
