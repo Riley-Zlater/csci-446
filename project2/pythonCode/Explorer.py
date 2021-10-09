@@ -48,15 +48,15 @@ class Explorer(SimpleExplorer):
             for c in adj_list:
                 pot_wumpus_list[c.getIndex()] = c.getState()['potW']
 
-        copy_pot_wupus_list = copy.deepcopy(pot_wumpus_list)
+        copy_pot_wumpus_list = copy.deepcopy(pot_wumpus_list)
         
         for pot_wumpus_index, pot_wumpus_val in pot_wumpus_list:
             if pot_wumpus_index in false_wumpus_list.keys():
-                del copy_pot_wupus_list[pot_wumpus_index]
+                del copy_pot_wumpus_list[pot_wumpus_index]
         
 
-        if len(copy_pot_wupus_list) == 1:
-            cell_index = list(copy_pot_wupus_list.keys()[0])
+        if len(copy_pot_wumpus_list) == 1:
+            cell_index = list(copy_pot_wumpus_list.keys()[0])
             wumpus_cell = self.simple_board.getCell(cell_index) 
             wumpus_cell.setStateWumpus()
             return True
