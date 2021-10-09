@@ -17,7 +17,7 @@ class GameBoard:
     def makeWorld(dim):
         return [[Cell(i, j) for i in range(1, dim)] for j in range(1, dim)]
 
-    def getCell(self, j, i):
+    def getCell(self, i, j):
         return self.board[i][j]
 
     # TODO
@@ -47,8 +47,8 @@ class GameBoard:
 
 
 class Cell(GameBoard):
-    def __init__(self, j, i):
-        self.index = (j, i)
+    def __init__(self, i, j):
+        self.index = (i, j)
         self.adjList = []
         self.state = {'Pit': False, 'Wumpus': False, 'Obstacle': False,
                       'Breeze': False, 'Stench': False}  # Maybe leave the dict empty when initializing
