@@ -82,6 +82,7 @@ class Cell(GameBoard):
     def __init__(self, i, j):
         self.index = (i, j)
         self.adjList = []
+        self.visited = False
         self.state = {'Pit': False, 'Wumpus': False, 'Obstacle': False,
                       'Breeze': False, 'Stench': False}  # Maybe leave the dict empty when initializing
 
@@ -111,3 +112,9 @@ class Cell(GameBoard):
 
     def getAdjList(self):  # return the adjacency list of the current cell
         return self.adjList
+    
+    def getVisited(self):
+        return self.visited
+    
+    def setVisited(self):
+        self.visited = True
