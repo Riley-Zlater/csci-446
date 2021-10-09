@@ -8,8 +8,8 @@ wumpus = GameBoard(boardSize)
 
 wumpus.displayBoard(boardSize)
 
-jerry = SimpleExplorer([3,3], 1)
+# jerry = SimpleExplorer([3,3], 1)
 
-explorer = Explorer(jerry, boardSize)
+# explorer = Explorer(jerry, boardSize)
 
-print(explorer.getCurrentState())
+# print(explorer.getCurrentState())
