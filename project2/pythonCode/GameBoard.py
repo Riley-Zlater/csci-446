@@ -86,7 +86,8 @@ class Cell(GameBoard):
         self.adjList = []
         self.visited = False
         self.state = {'Pit': False, 'Wumpus': False, 'Obstacle': False,
-                      'Breeze': False, 'Stench': False}  # Maybe leave the dict empty when initializing
+                      'Breeze': False, 'Stench': False, 'potP': False,
+                      'potW': False}  # Maybe leave the dict empty when initializing
 
     def getIndex(self):  # returns the current index as (col, row)
         return self.index
@@ -105,6 +106,16 @@ class Cell(GameBoard):
 
     def setStateStench(self):
         self.state['Stench'] = True
+
+    def setStatePotPit(self):
+        for cell in self.getAdjList():
+            if cell.visted == False:
+                cell.state['potP'] = True
+            
+    def setStatePotWumpus(self):
+        for cell in self.getAdjList():
+            if cell.visited == False:
+                cell.state['potW'] = True
 
     def getState(self):  # return this cells state
         return self.state
