@@ -5,7 +5,7 @@ import random as ran
 
 class GameBoard:
     def __init__(self, size, pitp=0, wumpusp=0, obstp=0):
-        self.size = size + 1
+        self.size = size
         self.pitp = pitp
         self.wumpusp = wumpusp
         self.obstp = obstp
@@ -14,11 +14,17 @@ class GameBoard:
         self.setAdjList(self.size)
 
         if pitp != 0 and wumpusp != 0 and obstp != 0:
-            self.setStates(size, pitp, wumpusp, obstp)
+            self.setStates(size+1, pitp, wumpusp, obstp)
 
     @staticmethod
     def makeWorld(dim):
-        return [[Cell(i, j) for i in range(1, dim)] for j in range(1, dim)]
+        out = [[]]
+        for i in range(1, dim+1):
+            print(i)
+            for j in range(1, dim+1):
+                print(j)
+                out[i][j] = Cell(i, j)
+        return out #[[Cell(i, j) for i in range(1, dim+1)] for j in range(1, dim+1)]
 
     def getCell(self, i, j):
         return self.board[i][j]
@@ -41,7 +47,7 @@ class GameBoard:
                 i = ran.randint(1, size)
                 j = ran.randint(1, size)
             
-            if self.board[i][j].getState()['Obstacle'] == False:
+            if (self.board[i][j].getState()['Obstacle'] == False):
                 self.board[i][j].setStatePit()
                 for cell in self.board[i][j].getAdjList():
                     self.board[i][j].setStateBreeze()
@@ -61,13 +67,13 @@ class GameBoard:
                 probW -= 1
 
     def setAdjList(self, size):  # this fn will make the adjacency lists for each cell
-        for i in range(1, size):  # if current cell is (2, 2) adjList: [(1, 2), (2, 1), (3, 2), (2, 3)]
-            for j in range(1, size):
-                if i + 1 <= size:
+        for i in range(1, size+1):  # if current cell is (2, 2) adjList: [(1, 2), (2, 1), (3, 2), (2, 3)]
+            for j in range(1, size+1):
+                if i + 1 < size:
                     self.board[i][j].addAdjacent(self.board[i+1][j])
                 if i - 1 > 0:
                     self.board[i][j].addAdjacent(self.board[i-1][j])
-                if j + 1 <= size:
+                if j + 1 < size:
                     self.board[i][j].addAdjacent(self.board[i][j+1])
                 if j - 1 > 0:
                     self.board[i][j].addAdjacent(self.board[i][j-1])
