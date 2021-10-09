@@ -1,4 +1,4 @@
-
+import copy
 from GameBoard import GameBoard
 from SimpleExplorer import SimpleExplorer
 
@@ -11,13 +11,17 @@ class Explorer(SimpleExplorer):
         self.position = simple_explorer.position
         self.arrows = simple_explorer.arrows
         self.simple_board = GameBoard(board_size)
+        self.visited_cells = dict()
         super().__init__(self.position, self.arrows)
     
 
-    def getCurrentState(self, board):
+    def getCurrentCell(self, board):
         i = self.position[0]
         j = self.position[1]
-        return board.getCell(j, i).getState()
+        return board.getCell(j, i)
+    
+    def getCurrentState(self, cell):
+        return cell.getState()
     
     
     
@@ -29,10 +33,34 @@ class Explorer(SimpleExplorer):
         if state['Breeze'] == True:
             self.simple_board.getCell(self.position).setStatePotPit()
     
-    def proveWumpus(state):
-        return
+    def proveWumpus(self):
 
-    def provePit(state):
+        false_wumpus_list = dict()
+        pot_wumpus_list = dict()
+
+        for cell in self.visited_cells:
+            adj_list = cell.getAdjacencyList()
+            for c in adj_list:
+                false_wumpus_list[c.getIndex()] = c.getState()['Wumpus']
+        
+        for cell in self.visited_cells:
+            adj_list = cell.getAdjacencyList()
+            for c in adj_list:
+                pot_wumpus_list[c.getIndex()] = c.getState()['potW']
+
+        copy_pot_wupus_list = copy.deepcopy(pot_wumpus_list)
+        
+        for pot_wumpus_index, pot_wumpus_val in pot_wumpus_list:
+            if pot_wumpus_index in false_wumpus_list.keys:
+                del copy_pot_wupus_list[pot_wumpus_index]
+        
+
+        if len(copy_pot_wupus_list) == 1:
+            cell_index = list(copy_pot_wupus_list.keys()[0])
+            wumpus_cell = self.simple_board.getCell(cell_index) 
+            wumpus_cell.setStateWumpus()
+
+    def provePit(self):
         return
     
     def moveForwardAssertState(self, board):
@@ -45,14 +73,17 @@ class Explorer(SimpleExplorer):
         if self.direction == "west":
             self.position = [self.position[0], self.position[1] - 1]
         
-        state = self.getCurrentState(board)
+        
+        cell = self.getCurrentCell(board)
+        self.visited_cells[cell.index] = cell
+
+        state = self.getCurrentState(cell)
         
         self.setPotWumpus(state)
         self.setPotPit(state)
 
-        self.proveWumpus(state)
-
-        self.provePit(state)
+        self.proveWumpus()
+        self.provePit()
 
         self.cost -= 1
         print(self.position)    
