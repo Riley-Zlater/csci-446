@@ -10,7 +10,8 @@ class GameBoard:
         self.obstp = obstp
 
         self.board = self.makeWorld(self.size)
-        self.setAdjList(size)
+
+        # self.setAdjList(size)
 
     @staticmethod
     def makeWorld(dim):
@@ -26,6 +27,8 @@ class GameBoard:
         numPits = ceil(size * pitp)
         numWumpus = ceil(size * wumpusp)
         numObstacles = ceil(size * obstp)
+
+        self.setAdjList(size)
 
     # TODO
     def setAdjList(self, size):  # this fn will make the adjacency lists for each cell
