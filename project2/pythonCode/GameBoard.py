@@ -22,7 +22,7 @@ class GameBoard:
 
     # TODO
     def setStates(self, size, pitp, wumpusp, obstp):  # use the probabilities to change the states of the cells
-        
+        return
 
     def setAdjList(self, size):  # this fn will make the adjacency lists for each cell
         for i in range(size):  # if current cell is (2, 2) adjList: [(1, 2), (2, 1), (3, 2), (2, 3)]
