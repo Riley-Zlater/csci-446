@@ -19,3 +19,10 @@ class Explorer(SimpleExplorer):
         j = self.position[1]
         return self.simple_board.getCell(j, i).getState()
     
+    def proveWumpus(self):
+        return
+    
+    def provePit(self):
+        return
+    
+    

@@ -11,3 +11,5 @@ def test_edge(cell, boardSize, direction):
         return True
     if direction == "west" and j + 1 > boardSize:
         return True
+
+    return False
