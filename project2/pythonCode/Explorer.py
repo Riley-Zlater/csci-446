@@ -48,18 +48,18 @@ class Explorer(SimpleExplorer):
             for c in adj_list:
                 pot_wumpus_list[c.getIndex()] = c.getState()['potW']
 
-        copy_pot_wumpus_list = copy.deepcopy(pot_wumpus_list)
-        
-        for pot_wumpus_index, pot_wumpus_val in pot_wumpus_list:
-            if pot_wumpus_index in false_wumpus_list.keys():
-                del copy_pot_wumpus_list[pot_wumpus_index]
-        
+            copy_pot_wumpus_list = copy.deepcopy(pot_wumpus_list)
+            
+            for pot_wumpus_index in pot_wumpus_list:
+                if pot_wumpus_index in false_wumpus_list.keys():
+                    del copy_pot_wumpus_list[pot_wumpus_index]
+            
 
-        if len(copy_pot_wumpus_list) == 1:
-            cell_index = list(copy_pot_wumpus_list.keys()[0])
-            wumpus_cell = self.simple_board.getCell(cell_index) 
-            wumpus_cell.setStateWumpus()
-            return True
+            if len(copy_pot_wumpus_list) == 1:
+                cell_index = list(copy_pot_wumpus_list.keys()[0])
+                wumpus_cell = self.simple_board.getCell(cell_index) 
+                wumpus_cell.setStateWumpus()
+            
         
         return False
 
@@ -73,22 +73,23 @@ class Explorer(SimpleExplorer):
                 false_pit_list[c.getIndex()] = c.getState()['Pit']
         
         for cell in self.visited_cells:
-            adj_list = cell.getAdjacencyList()
-            for c in adj_list:
-                pot_pit_list[c.getIndex()] = c.getState()['potP']
-
-        copy_pot_pit_list = copy.deepcopy(pot_pit_list)
+            if cell.getStatus()['Breeze']:
+                adj_list = cell.getAdjacencyList()
+                
+                for c in adj_list:
+                    pot_pit_list[c.getIndex()] = c.getState()['potP']
+                
+                copy_pot_pit_list = copy.deepcopy(pot_pit_list)
         
-        for pot_pit_index, pot_pit_val in pot_pit_list:
-            if pot_pit_index in false_pit_list.keys():
-                del copy_pot_pit_list[pot_pit_index]
-        
+                for pot_pit_index in pot_pit_list:
+                    if pot_pit_index in false_pit_list.keys():
+                        del copy_pot_pit_list[pot_pit_index]
 
-        if len(copy_pot_pit_list) == 1:
-            cell_index = list(copy_pot_pit_list.keys()[0])
-            pit_cell = self.simple_board.getCell(cell_index) 
-            pit_cell.setStatePit()
-            return True
+                if len(copy_pot_pit_list) == 1:
+                    cell_index = list(copy_pot_pit_list.keys()[0])
+                    pit_cell = self.simple_board.getCell(cell_index) 
+                    pit_cell.setStatePit()
+        
         
         return False
     
