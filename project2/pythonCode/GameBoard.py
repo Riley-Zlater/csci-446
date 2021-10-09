@@ -22,6 +22,11 @@ class GameBoard:
 
     def getCell(self, i, j):
         return self.board[i][j]
+    
+    def getCell(self, pos):
+        i = pos[0] 
+        j = pos[1]
+        return self.board[i][j]
 
     def setStates(self, size, pitp, wumpusp, obstp):  # use the probabilities to change the states of the cells
         probP = floor((size ** 2) * pitp)
