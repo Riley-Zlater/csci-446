@@ -19,9 +19,6 @@ class GameBoard:
     @staticmethod
     def makeWorld(dim):
         return [[Cell(i, j) for i in range(0, dim)] for j in range(0, dim)]
-
-    def getCell(self, i, j):
-        return self.board[i][j]
     
     def getCell(self, pos):
         i = pos[0] 
@@ -87,12 +84,12 @@ class GameBoard:
 
 class Cell(GameBoard):
     def __init__(self, i, j):
-        self.index = (i, j)
+        self.index = [i, j]
         self.adjList = []
         self.visited = False
         self.state = {'Pit': False, 'Wumpus': False, 'Obstacle': False,
                       'Breeze': False, 'Stench': False, 'potP': False,
-                      'potW': False}  # Maybe leave the dict empty when initializing
+                      'potW': False}
 
     def getIndex(self):  # returns the current index as (col, row)
         return self.index
