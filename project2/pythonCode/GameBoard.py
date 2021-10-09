@@ -1,5 +1,6 @@
 # Written by Riley Slater and Cooper Strahan
-from math import ceil
+from math import floor
+import random as ran
 
 
 class GameBoard:
@@ -20,9 +21,42 @@ class GameBoard:
     def getCell(self, i, j):
         return self.board[i][j]
 
-    # TODO
     def setStates(self, size, pitp, wumpusp, obstp):  # use the probabilities to change the states of the cells
-        
+        probP = floor((size ** 2) * pitp)
+        probW = floor((size ** 2) * wumpusp)
+        probO = floor((size ** 2) * obstp)
+
+        while probO > 0:
+            i = ran.randint(1, size)
+            j = ran.randint(1, size)
+            self.board[i][j].setStateObs()
+            probO -= 1
+
+        while probP > 0:
+            i = ran.randint(1, size)
+            j = ran.randint(1, size)
+            while self.board[i][j].getState()['Obstacle'] == True:
+                i = ran.randint(1, size)
+                j = ran.randint(1, size)
+            
+            if self.board[i][j].getState()['Obstacle'] == False:
+                self.board[i][j].setStatePit()
+                for cell in self.board[i][j].getAdjList():
+                    self.board[i][j].setStateBreeze()
+                probP -= 1
+
+        while probW > 0:
+            i = ran.randint(1, size)
+            j = ran.randint(1, size)
+            while self.board[i][j].getState()['Obstacle'] == True or self.board[i][j].getState()['Pit'] == True:
+                i = ran.randint(1, size)
+                j = ran.randint(1, size)
+            
+            if self.board[i][j].getState()['Obstacle'] == False and self.board[i][j].getState()['Pit'] == False:
+                self.board[i][j].setStateWumpus()
+                for cell in self.board[i][j].getAdjList():
+                    self.board[i][j].setStateStench()
+                probW -= 1
 
     def setAdjList(self, size):  # this fn will make the adjacency lists for each cell
         for i in range(size):  # if current cell is (2, 2) adjList: [(1, 2), (2, 1), (3, 2), (2, 3)]
