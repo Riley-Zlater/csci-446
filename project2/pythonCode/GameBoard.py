@@ -14,7 +14,7 @@ class GameBoard:
         self.setAdjList(self.size)
 
         if pitp != 0 and wumpusp != 0 and obstp != 0:
-            self.setStates(size+1, pitp, wumpusp, obstp)
+            self.setStates(size, pitp, wumpusp, obstp)
 
     @staticmethod
     def makeWorld(dim):
@@ -34,17 +34,17 @@ class GameBoard:
         probO = floor((size ** 2) * obstp)
 
         while probO > 0:
-            i = ran.randint(1, size)
-            j = ran.randint(1, size)
+            i = ran.randint(0, size-1)
+            j = ran.randint(0, size-1)
             self.board[i][j].setStateObs()
             probO -= 1
 
         while probP > 0:
-            i = ran.randint(1, size)
-            j = ran.randint(1, size)
+            i = ran.randint(0, size-1)
+            j = ran.randint(0, size-1)
             while self.board[i][j].getState()['Obstacle'] == True:
-                i = ran.randint(1, size)
-                j = ran.randint(1, size)
+                i = ran.randint(0, size-1)
+                j = ran.randint(0, size-1)
             
             if (self.board[i][j].getState()['Obstacle'] == False):
                 self.board[i][j].setStatePit()
@@ -53,11 +53,11 @@ class GameBoard:
                 probP -= 1
 
         while probW > 0:
-            i = ran.randint(1, size)
-            j = ran.randint(1, size)
+            i = ran.randint(0, size-1)
+            j = ran.randint(0, size-1)
             while self.board[i][j].getState()['Obstacle'] == True or self.board[i][j].getState()['Pit'] == True:
-                i = ran.randint(1, size)
-                j = ran.randint(1, size)
+                i = ran.randint(0, size-1)
+                j = ran.randint(0, size-1)
             
             if self.board[i][j].getState()['Obstacle'] == False and self.board[i][j].getState()['Pit'] == False:
                 self.board[i][j].setStateWumpus()
