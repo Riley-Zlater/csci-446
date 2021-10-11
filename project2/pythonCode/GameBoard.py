@@ -108,6 +108,12 @@ class Cell(GameBoard):
 
     def setStateStench(self):
         self.state['Stench'] = True
+    
+    def setStateNoPotPit(self):
+        self.state['potP'] = False
+    
+    def selfStateNoPotW(self):
+        self.state['potW'] = False
 
     def setStatePotPit(self):
         for cell in self.getAdjList():

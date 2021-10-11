@@ -21,9 +21,7 @@ class Explorer(SimpleExplorer):
         return board.getCell(j, i)
     
     def getCurrentState(self, cell):
-        return cell.getState()
-    
-    
+        return cell.getState()  
     
     def setPotWumpus(self, state):
         if state['Stench'] == True:
@@ -41,7 +39,8 @@ class Explorer(SimpleExplorer):
         for cell in self.visited_cells:
             adj_list = cell.getAdjacencyList()
             for c in adj_list:
-                false_wumpus_list[c.getIndex()] = c.getState()['Wumpus']
+                if c.getState()['Wumpus'] is False:
+                    false_wumpus_list[c.getIndex()] = c.getState()['Wumpus']
         
         for cell in self.visited_cells:
             adj_list = cell.getAdjacencyList()
@@ -59,9 +58,9 @@ class Explorer(SimpleExplorer):
                 cell_index = list(copy_pot_wumpus_list.keys()[0])
                 wumpus_cell = self.simple_board.getCell(cell_index) 
                 wumpus_cell.setStateWumpus()
-            
+                print(wumpus_cell.getIndex())
+
         
-        return False
 
     def provePit(self):
         false_pit_list = dict()
@@ -70,7 +69,8 @@ class Explorer(SimpleExplorer):
         for cell in self.visited_cells:
             adj_list = cell.getAdjacencyList()
             for c in adj_list:
-                false_pit_list[c.getIndex()] = c.getState()['Pit']
+                if c.getState()['Pit'] is False:
+                    false_pit_list[c.getIndex()] = c.getState()['Pit']
         
         for cell in self.visited_cells:
             if cell.getStatus()['Breeze']:
@@ -89,10 +89,69 @@ class Explorer(SimpleExplorer):
                     cell_index = list(copy_pot_pit_list.keys()[0])
                     pit_cell = self.simple_board.getCell(cell_index) 
                     pit_cell.setStatePit()
-        
+                    print(pit_cell.getIndex())
         
         return False
     
+    def safeState(self, state):
+        if state['Pit']:
+            return False
+        if state['Wumpus']:
+            return False
+        
+        return True 
+        
+    def uncertainSafeState(self, state):
+        if state['potP']:
+            return True
+        if state['potW']:
+            return True
+        
+        return False
+    
+    def determineDirection(self, projectedCell):
+        c_i,c_j = self.simple_board.getCell(self.position).getIndex()
+        p_i,p_j = projectedCell.getIndex()
+
+        if c_i - 1 == p_i:
+            self.direction == "north"
+        elif c_i + 1 == p_i: 
+            self.direction == "south"
+        elif c_j + 1 == p_j:
+            self.direction == "east"
+        elif c_j - 1 == p_j:
+            self.direction == "west"
+        
+    def findBestMove(self, board):
+        cell = board.getCurrentCell()
+
+        adj_list = cell.getAdjacencyList()
+
+        safe_cells = []
+
+        for adj_cell in adj_list:
+            state = adj_cell.getState()
+            if self.safeState(state):
+                safe_cells.append(adj_cell)
+        
+        if len(safe_cells) == 0:
+            for adj_cell in adj_list:
+                state = adj_cell.getState()
+                if self.uncertainSafeState(state):
+                    safe_cells.append(adj_cell)
+
+        priority_move = safe_cells[0]
+
+        for safe_cell in safe_cells:
+            if safe_cell.getVisted() == False:
+                priority_move = safe_cell
+        
+
+        self.determineDirection(priority_move)
+
+        self.moveForwardAssertState(board)
+        
+
     def moveForwardAssertState(self, board):
         if self.direction == "north":
             self.position = [self.position[0] - 1, self.position[1]]
