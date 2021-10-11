@@ -77,7 +77,14 @@ class GameBoard:
     def displayBoard(self, dim):  # simple display fn
         for i in range(dim):
             for j in range(dim):
-                print(self.board[i][j].getIndex(), end=' ')
+                if self.getCell([i,j]).getState()['Wumpus']:
+                    print('W', end='      ')
+                elif self.getCell([i,j]).getState()['Pit']:
+                    print('P', end='     ')
+                elif self.getCell([i,j]).getState()['Gold']:
+                    print('G', end='     ')
+                else:
+                    print(self.board[i][j].getIndex(), end=' ')
             print()
         return
 
@@ -89,7 +96,7 @@ class Cell(GameBoard):
         self.visited = False
         self.state = {'Pit': False, 'Wumpus': False, 'Obstacle': False,
                       'Breeze': False, 'Stench': False, 'potP': False,
-                      'potW': False}
+                      'potW': False, 'Gold': False}
 
     def getIndex(self):  # returns the current index as (col, row)
         return self.index
@@ -124,6 +131,14 @@ class Cell(GameBoard):
         for cell in self.getAdjList():
             if cell.visited == False:
                 cell.state['potW'] = True
+    
+    def removeAdjStatePotPit(self):
+        for cell in self.getAdjList():
+            cell.state['potP'] = False
+            
+    def removeAdjStatePotWumpus(self):
+        for cell in self.getAdjList():
+            cell.state['potW'] = False
 
     def getState(self):  # return this cells state
         return self.state

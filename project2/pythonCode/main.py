@@ -8,8 +8,9 @@ wumpus = GameBoard(boardSize, 0.03, 0.2, 0.5)
 
 wumpus.displayBoard(boardSize)
 
-# jerry = SimpleExplorer([3,3], 1)
+jerry = SimpleExplorer([0,0], 3)
 
-# explorer = Explorer(jerry, boardSize)
+explorer = Explorer(jerry, boardSize)
 
+explorer.searchForGold(wumpus)
 # print(explorer.getCurrentState())

@@ -11,14 +11,12 @@ class Explorer(SimpleExplorer):
         self.position = simple_explorer.position
         self.arrows = simple_explorer.arrows
         self.simple_board = GameBoard(board_size)
-        self.visited_cells = dict()
+        self.visited_cells = {}
         super().__init__(self.position, self.arrows)
     
 
     def getCurrentCell(self, board):
-        i = self.position[0]
-        j = self.position[1]
-        return board.getCell(j, i)
+        return board.getCell(self.position)
     
     def getCurrentState(self, cell):
         return cell.getState()  
@@ -31,19 +29,28 @@ class Explorer(SimpleExplorer):
         if state['Breeze'] == True:
             self.simple_board.getCell(self.position).setStatePotPit()
     
+    def removePotPit(self, state):
+        if state['Breeze'] == False:
+            self.simple_board.getCell(self.position).removeAdjStatePotPit()
+
+    def removePotWumpus(self, state):
+        if state['Breeze'] == False:
+            self.simple_board.getCell(self.position).removeAdjStatePotWumpus()
+
+    
     def proveWumpus(self):
 
         false_wumpus_list = dict()
         pot_wumpus_list = dict()
 
         for cell in self.visited_cells:
-            adj_list = cell.getAdjacencyList()
+            adj_list = cell.getAdjList()
             for c in adj_list:
                 if c.getState()['Wumpus'] is False:
                     false_wumpus_list[c.getIndex()] = c.getState()['Wumpus']
         
         for cell in self.visited_cells:
-            adj_list = cell.getAdjacencyList()
+            adj_list = cell.getAdjList()
             for c in adj_list:
                 pot_wumpus_list[c.getIndex()] = c.getState()['potW']
 
@@ -67,14 +74,14 @@ class Explorer(SimpleExplorer):
         pot_pit_list = dict()
 
         for cell in self.visited_cells:
-            adj_list = cell.getAdjacencyList()
+            adj_list = cell.getAdjList()
             for c in adj_list:
                 if c.getState()['Pit'] is False:
                     false_pit_list[c.getIndex()] = c.getState()['Pit']
         
         for cell in self.visited_cells:
             if cell.getStatus()['Breeze']:
-                adj_list = cell.getAdjacencyList()
+                adj_list = cell.getAdjList()
                 
                 for c in adj_list:
                     pot_pit_list[c.getIndex()] = c.getState()['potP']
@@ -123,9 +130,9 @@ class Explorer(SimpleExplorer):
             self.direction == "west"
         
     def findBestMove(self, board):
-        cell = board.getCurrentCell()
+        cell = board.getCell(self.position)
 
-        adj_list = cell.getAdjacencyList()
+        adj_list = cell.getAdjList()
 
         safe_cells = []
 
@@ -140,16 +147,20 @@ class Explorer(SimpleExplorer):
                 if self.uncertainSafeState(state):
                     safe_cells.append(adj_cell)
 
-        priority_move = safe_cells[0]
+        if len(safe_cells) > 0:
+            priority_move = safe_cells[0]
+        
+        else:
+            priority_move = None
 
         for safe_cell in safe_cells:
-            if safe_cell.getVisted() == False:
+            if safe_cell.getVisited() == False:
                 priority_move = safe_cell
         
-
-        self.determineDirection(priority_move)
-
-        self.moveForwardAssertState(board)
+        if priority_move is not None:
+            self.determineDirection(priority_move)
+            self.moveForwardAssertState(board)
+        
         
 
     def moveForwardAssertState(self, board):
@@ -171,8 +182,51 @@ class Explorer(SimpleExplorer):
         self.setPotWumpus(state)
         self.setPotPit(state)
 
+        self.removePotPit(state)
+        self.removePotWumpus(state)
+
         self.proveWumpus()
         self.provePit()
 
         self.cost -= 1
         print(self.position)    
+
+    def determineDeath(self):
+        state = self.getCurrentState()
+
+        if state['Wumpus']:
+            return True
+        elif state['Pit']:
+            return True
+        
+        return False
+
+    def determineWin(self):
+        state = self.getCurrentState()
+
+        if state['Gold']:
+            return True
+        
+        return False
+    
+    
+    def searchForGold(self, board):
+
+        while(True):
+            print(self.position)
+            self.findBestMove(board)
+
+            print(self.position)
+
+            if not self.determineDeath():
+                self.cost -= 1000
+                print("Lost Board")
+                break
+            
+            if self.determineWin():
+                self.cost += 1000
+                print("Won Board")
+                break
+
+            
+        
