@@ -163,9 +163,12 @@ class Cell(GameBoard):
             
     def setStatePotWumpus(self):
         for cell in self.getAdjList():
-            if cell.visited == False:
-                cell.state['potW'] = True
-    
+            for outerCell in cell.getAdjList():
+                if outerCell.state['Stench'] == False:
+                    cell.state['potW'] = False
+                if cell.visited == False:
+                    cell.state['potW'] = True
+
     def removeAdjStatePotPit(self):
         for cell in self.getAdjList():
             cell.state['potP'] = False
