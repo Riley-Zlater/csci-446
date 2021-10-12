@@ -160,8 +160,8 @@ class Explorer(SimpleExplorer):
                 if self.uncertainSafeState(state):
                     safe_cells.append(adj_cell)
             
-            if len(safe_cells) > 0:
-                priority_move = None
+        if len(safe_cells) == 0:
+            priority_move = None
 
         if priority_move != None:
             self.determineDirection(priority_move)
@@ -174,6 +174,9 @@ class Explorer(SimpleExplorer):
 
 
     def moveForwardAssertState(self, board):
+
+        old_position = self.position
+
         if self.direction == "north" and self.position[0] - 1 >= 0:
             self.position = [self.position[0] - 1, self.position[1]]
 
@@ -187,8 +190,15 @@ class Explorer(SimpleExplorer):
             self.position = [self.position[0], self.position[1] - 1]
 
         
+
         cell = board.getCell(self.position)
         simple_cell = self.simple_board.getCell(self.position)
+
+        if cell.getState()['Obstacle'] == True:
+            self.simple_board.getCell(cell.getIndex()).setStateObs()
+            self.position = old_position
+            cell = board.getCell(self.position)
+            simple_cell = self.simple_board.getCell(self.position)
 
         if cell not in self.visited_cells:
             self.visited_cells.append(cell)
@@ -225,6 +235,7 @@ class Explorer(SimpleExplorer):
             # print(state)
             return True
         elif state['Pit'] == True:
+            print("Fell into a pit")
             # print(cell.getIndex())
             # print(state)
             return True
@@ -292,6 +303,8 @@ class Explorer(SimpleExplorer):
 
             # input("Press enter")
             self.findBestMove(board)
+        
+        return self.cost
 
             
         
