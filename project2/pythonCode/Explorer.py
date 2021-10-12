@@ -64,9 +64,9 @@ class Explorer(SimpleExplorer):
 
             if len(copy_pot_wumpus_list) == 1:
                 cell_index = list(copy_pot_wumpus_list.keys())[0]
-                wumpus_cell = self.simple_board.getCell(cell_index) 
-                wumpus_cell.setStateWumpus()
-                # print(wumpus_cell.getIndex())
+                j, i = cell_index
+                self.simple_board.getCell([i,j]).setStateWumpus()
+                print("PROVED WUMPUS")
 
         
 
@@ -94,10 +94,10 @@ class Explorer(SimpleExplorer):
                         del copy_pot_pit_list[pot_pit_index]
 
                 if len(copy_pot_pit_list) == 1:
-                    cell_index = list(copy_pot_pit_list.keys()[0])
-                    pit_cell = self.simple_board.getCell(cell_index) 
-                    pit_cell.setStatePit()
-                    print(pit_cell.getIndex())
+                    cell_index = list(copy_pot_pit_list.keys())[0]
+                    j, i = cell_index
+                    self.simple_board.getCell([i,j]).SetStatePit()
+                    print("PROVED WUMPUS")
         
         return False
     
@@ -183,37 +183,33 @@ class Explorer(SimpleExplorer):
         
 
     def moveForwardAssertState(self, board):
-        if self.direction == "north" and self.position[1] - 1 >= 0:
-            print([self.position[0], self.position[1] - 1])
-            self.position = [self.position[0], self.position[1] - 1]
-            print(self.position)
+        print(self.position)
+        print(board.getCell(self.position).getIndex())
+        print()
 
-        if self.direction == "south" and self.position[1] + 1 <= board.getSize()-1:
-            print([self.position[0], self.position[1] + 1])
-            self.position = [self.position[0], self.position[1] + 1]
-            print(self.position)
-
-        if self.direction == "east" and self.position[0] + 1 <= board.getSize()-1:
-            print([self.position[0] + 1, self.position[1]])
-            self.position = [self.position[0] + 1, self.position[1]]
-            print(self.position)
-
-        if self.direction == "west" and self.position[0] - 1 >= 0:
-            print("true")
-            print([self.position[0] - 1, self.position[1]])
+        if self.direction == "north" and self.position[0] - 1 >= 0:
             self.position = [self.position[0] - 1, self.position[1]]
-            print(self.position)
-        
-        
-        cell = self.getCurrentCell(board)
-        simple_cell = self.getCurrentCell(self.simple_board)
 
+        if self.direction == "south" and self.position[0] + 1 <= board.getSize()-1:
+            self.position = [self.position[0] + 1, self.position[1]]
+
+        if self.direction == "east" and self.position[1] + 1 <= board.getSize()-1:
+            self.position = [self.position[0], self.position[1] + 1]
+
+        if self.direction == "west" and self.position[1] - 1 >= 0:
+            self.position = [self.position[0], self.position[1] - 1]
+        
+        print(self.position)
+        print()
+        
+        cell = board.getCell(self.position)
+        simple_cell = self.simple_board.getCell(self.position)
 
         if cell not in self.visited_cells:
             self.visited_cells.append(cell)
 
         state = self.getCurrentState(cell)
-
+        self.simple_board.getCell(self.position).setVisited()
         
         if state['Stench']:
             simple_cell.setStateStench()
@@ -225,10 +221,10 @@ class Explorer(SimpleExplorer):
             self.setPotPit(state)
             self.provePit()
 
-        if not state['Breeze']:
-            self.removePotPit(state )
+        if state['Breeze'] == False:
+            self.removePotPit(state)
         
-        if not state['Stench']:
+        if state['Stench'] == False:
             self.removePotWumpus(state)   
 
         self.cost -= 1
@@ -263,13 +259,9 @@ class Explorer(SimpleExplorer):
         while(True):
             # print(self.position)
             print(self.position)
-            # print("FIRST THING TO PRINT")
-            # print()
-            self.findBestMove(board)
-
-            # print(self.position)
 
             cell = board.getCell(self.position)
+            # print(cell.getIndex())
             board.displayBoard(board.getSize())
             print()
             self.simple_board.displaySimpleBoard(board.getSize())
@@ -286,6 +278,8 @@ class Explorer(SimpleExplorer):
                 self.cost += 1000
                 print("Won Board")
                 break
+
+            self.findBestMove(board)
 
             
         

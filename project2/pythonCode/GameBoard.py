@@ -21,9 +21,8 @@ class GameBoard:
         return [[Cell(i, j) for i in range(0, dim)] for j in range(0, dim)]
     
     def getCell(self, pos):
-        j = pos[0] 
-        i = pos[1]
-        # print(i, j)
+        i = pos[0] 
+        j = pos[1]
         return self.board[i][j]
     
     def getSize(self):
@@ -92,6 +91,8 @@ class GameBoard:
                     print('B', end='      ')
                 elif self.getCell([i,j]).getState()['Gold']:
                     print('G', end='      ')
+                elif self.getCell([i,j]).getVisited():
+                    print('V', end='      ')
                 else:
                     print(self.board[i][j].getIndex(), end=' ')
             print()
@@ -114,6 +115,8 @@ class GameBoard:
                     print('P?', end='     ')
                 elif self.getCell([i,j]).getState()['potW']:
                     print('W?', end='     ')
+                elif self.getCell([i,j]).getVisited():
+                    print('V', end='      ')
                 else:
                     print(self.board[i][j].getIndex(), end=' ')
             print()
