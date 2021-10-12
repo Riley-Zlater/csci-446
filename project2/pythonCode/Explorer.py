@@ -14,6 +14,7 @@ class Explorer(SimpleExplorer):
         self.arrows = simple_explorer.arrows
         self.simple_board = GameBoard(board_size)
         self.visited_cells = []
+        self.moves = 0
         super().__init__(self.position, self.arrows)
     
 
@@ -249,6 +250,7 @@ class Explorer(SimpleExplorer):
             self.removePotWumpus(state)   
 
         self.cost -= 1
+        self.moves += 1
         # print(self.position)    
 
     def determineDeath(self, cell):
@@ -296,7 +298,7 @@ class Explorer(SimpleExplorer):
         if state['Stench'] == False:
             self.removePotWumpus(state)
 
-        while(True):
+        while(self.moves <= board.getSize() * board.getSize()):
             # print(self.position)
             print(self.position)
 
@@ -319,7 +321,7 @@ class Explorer(SimpleExplorer):
                 print("Won Board")
                 break
 
-            input("Press enter")
+            # input("Press enter")
             self.findBestMove(board)
 
             
