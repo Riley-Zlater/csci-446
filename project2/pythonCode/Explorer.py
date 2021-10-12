@@ -234,7 +234,10 @@ class Explorer(SimpleExplorer):
     def determineWin(self, cell):
         state = self.getCurrentState(cell)
 
+        
+
         if state['Gold'] == True:
+            self.simple_board.getCell(cell.getIndex()).setStateGold()
             return True
         
         return False
@@ -271,6 +274,7 @@ class Explorer(SimpleExplorer):
             print()
             self.simple_board.displaySimpleBoard(board.getSize())
             print()
+
             v_c = [cell.getIndex() for cell in self.visited_cells]
             print("Visted Cells list:")
             print(v_c)
