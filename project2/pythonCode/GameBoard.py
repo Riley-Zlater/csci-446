@@ -21,9 +21,13 @@ class GameBoard:
         return [[Cell(i, j) for i in range(0, dim)] for j in range(0, dim)]
     
     def getCell(self, pos):
-        i = pos[0] 
-        j = pos[1]
+        j = pos[0] 
+        i = pos[1]
+        # print(i, j)
         return self.board[i][j]
+    
+    def getSize(self):
+        return self.size
 
     def setStates(self, size, pitp, wumpusp, obstp):  # use the probabilities to change the states of the cells
         probP = floor((size ** 2) * pitp)
@@ -58,8 +62,9 @@ class GameBoard:
             
             if self.board[i][j].getState()['Obstacle'] == False and self.board[i][j].getState()['Pit'] == False:
                 self.board[i][j].setStateWumpus()
-                for cell in self.board[i][j].getAdjList():
-                    self.board[i][j].setStateStench()
+                adj_list = self.board[i][j].getAdjList()
+                for cell in adj_list:
+                    cell.setStateStench()
                 probW -= 1
 
     def setAdjList(self, size):  # this fn will make the adjacency lists for each cell
@@ -67,11 +72,11 @@ class GameBoard:
             for j in range(0, size):
                 if i + 1 < size:
                     self.board[i][j].addAdjacent(self.board[i+1][j])
-                if i - 1 > 0:
+                if i - 1 >= 0:
                     self.board[i][j].addAdjacent(self.board[i-1][j])
                 if j + 1 < size:
                     self.board[i][j].addAdjacent(self.board[i][j+1])
-                if j - 1 > 0:
+                if j - 1 >= 0:
                     self.board[i][j].addAdjacent(self.board[i][j-1])
 
     def displayBoard(self, dim):  # simple display fn
@@ -80,9 +85,35 @@ class GameBoard:
                 if self.getCell([i,j]).getState()['Wumpus']:
                     print('W', end='      ')
                 elif self.getCell([i,j]).getState()['Pit']:
-                    print('P', end='     ')
+                    print('P', end='      ')
+                elif self.getCell([i,j]).getState()['Stench']:
+                    print('S', end='      ')
+                elif self.getCell([i,j]).getState()['Breeze']:
+                    print('B', end='      ')
                 elif self.getCell([i,j]).getState()['Gold']:
-                    print('G', end='     ')
+                    print('G', end='      ')
+                else:
+                    print(self.board[i][j].getIndex(), end=' ')
+            print()
+        return
+    
+    def displaySimpleBoard(self, dim):  # simple display fn
+        for i in range(dim):
+            for j in range(dim):
+                if self.getCell([i,j]).getState()['Wumpus']:
+                    print('W', end='      ')
+                elif self.getCell([i,j]).getState()['Pit']:
+                    print('P', end='      ')
+                elif self.getCell([i,j]).getState()['Stench']:
+                    print('S', end='      ')
+                elif self.getCell([i,j]).getState()['Breeze']:
+                    print('B', end='      ')
+                elif self.getCell([i,j]).getState()['Gold']:
+                    print('G', end='      ')
+                elif self.getCell([i,j]).getState()['potP']:
+                    print('P?', end='     ')
+                elif self.getCell([i,j]).getState()['potW']:
+                    print('W?', end='     ')
                 else:
                     print(self.board[i][j].getIndex(), end=' ')
             print()

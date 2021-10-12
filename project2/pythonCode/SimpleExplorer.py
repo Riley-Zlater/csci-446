@@ -27,7 +27,7 @@ class SimpleExplorer:
         print(self.direction)
         self.cost -= 1
     
-    def turn(self, direction):
+    def directedTurn(self, direction):
         self.direction = direction
         self.cost -= 1
     

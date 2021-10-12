@@ -4,7 +4,7 @@ from SimpleExplorer import SimpleExplorer
 
 boardSize = 5
 
-wumpus = GameBoard(boardSize, 0.03, 0.2, 0.5)
+wumpus = GameBoard(boardSize, 0.03, 0.1, 0.5)
 
 wumpus.displayBoard(boardSize)
 
