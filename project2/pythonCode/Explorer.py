@@ -108,7 +108,7 @@ class Explorer(SimpleExplorer):
                 if len(copy_pot_pit_list) == 1:
                     cell_index = list(copy_pot_pit_list.keys())[0]
                     j, i = cell_index
-                    self.simple_board.getCell([i,j]).SetStatePit()
+                    self.simple_board.getCell([i,j]).setStatePit()
                     print("PROVED WUMPUS")
         
         return False
@@ -195,8 +195,8 @@ class Explorer(SimpleExplorer):
         
 
     def moveForwardAssertState(self, board):
-        print(self.position)
-        print(board.getCell(self.position).getIndex())
+        print("this",self.position)
+        print("that",board.getCell(self.position).getIndex())
         print()
 
         if self.direction == "north" and self.position[0] - 1 >= 0:
@@ -272,7 +272,7 @@ class Explorer(SimpleExplorer):
 
         while(True):
             # print(self.position)
-            print(self.position)
+            print("Explorer current position:",self.position)
 
             cell = board.getCell(self.position)
             # print(cell.getIndex())
@@ -281,6 +281,7 @@ class Explorer(SimpleExplorer):
             self.simple_board.displaySimpleBoard(board.getSize())
             print()
             v_c = [cell.getIndex() for cell in self.visited_cells]
+            print("Visted Cells list:")
             print(v_c)
 
             if self.determineDeath(cell) == True:

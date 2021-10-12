@@ -4,9 +4,9 @@ from SimpleExplorer import SimpleExplorer
 
 boardSize = 5
 
-wumpus = GameBoard(boardSize, 0.03, 0.1, 0.5)
+wumpus = GameBoard(boardSize, 0.25, 0.1, .33)
 
-wumpus.displayBoard(boardSize)
+#wumpus.displayBoard(boardSize)
 
 jerry = SimpleExplorer([0,0], 3)
 

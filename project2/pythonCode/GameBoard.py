@@ -42,24 +42,24 @@ class GameBoard:
         while probP > 0:
             i = ran.randint(0, size-1)
             j = ran.randint(0, size-1)
-            while self.board[i][j].getState()['Obstacle'] == True:
+            while self.board[i][j].state['Obstacle']:
                 i = ran.randint(0, size-1)
                 j = ran.randint(0, size-1)
             
-            if (self.board[i][j].getState()['Obstacle'] == False):
+            if not (self.board[i][j].state['Obstacle']):
                 self.board[i][j].setStatePit()
                 for cell in self.board[i][j].getAdjList():
-                    self.board[i][j].setStateBreeze()
+                    cell.setStateBreeze()
                 probP -= 1
 
         while probW > 0:
             i = ran.randint(0, size-1)
             j = ran.randint(0, size-1)
-            while self.board[i][j].getState()['Obstacle'] == True or self.board[i][j].getState()['Pit'] == True:
+            while self.board[i][j].state['Obstacle'] or self.board[i][j].state['Pit']:
                 i = ran.randint(0, size-1)
                 j = ran.randint(0, size-1)
             
-            if self.board[i][j].getState()['Obstacle'] == False and self.board[i][j].getState()['Pit'] == False:
+            if not (self.board[i][j].state['Obstacle'] and self.board[i][j].state['Pit']):
                 self.board[i][j].setStateWumpus()
                 adj_list = self.board[i][j].getAdjList()
                 for cell in adj_list:
@@ -81,18 +81,22 @@ class GameBoard:
     def displayBoard(self, dim):  # simple display fn
         for i in range(dim):
             for j in range(dim):
-                if self.getCell([i,j]).getState()['Wumpus']:
+                if self.getCell([i,j]).state['Wumpus']:
                     print('W', end='      ')
-                elif self.getCell([i,j]).getState()['Pit']:
+                elif self.getCell([i,j]).state['Stench'] and self.getCell([i,j]).state['Breeze']:
+                    print('SB', end='     ')
+                elif self.getCell([i,j]).state['Pit']:
                     print('P', end='      ')
-                elif self.getCell([i,j]).getState()['Stench']:
+                elif self.getCell([i,j]).state['Stench']:
                     print('S', end='      ')
-                elif self.getCell([i,j]).getState()['Breeze']:
+                elif self.getCell([i,j]).state['Breeze']:
                     print('B', end='      ')
-                elif self.getCell([i,j]).getState()['Gold']:
+                elif self.getCell([i,j]).state['Gold']:
                     print('G', end='      ')
                 elif self.getCell([i,j]).getVisited():
                     print('V', end='      ')
+                elif self.getCell([i,j]).state['Obstacle']:
+                    print('O', end='      ')
                 else:
                     print(self.board[i][j].getIndex(), end=' ')
             print()
@@ -158,15 +162,18 @@ class Cell(GameBoard):
 
     def setStatePotPit(self):
         for cell in self.getAdjList():
-            if cell.visted == False:
-                cell.state['potP'] = True
+            for outerCell in cell.getAdjList():
+                if not outerCell.state['Breeze']:
+                    cell.state['potP'] = False
+                if not cell.visited:
+                    cell.state['potP'] = True
             
     def setStatePotWumpus(self):
         for cell in self.getAdjList():
             for outerCell in cell.getAdjList():
-                if outerCell.state['Stench'] == False:
+                if not outerCell.state['Stench']:
                     cell.state['potW'] = False
-                if cell.visited == False:
+                if not cell.visited:
                     cell.state['potW'] = True
 
     def removeAdjStatePotPit(self):
