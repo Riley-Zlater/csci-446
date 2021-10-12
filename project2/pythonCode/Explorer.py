@@ -203,12 +203,11 @@ class Explorer(SimpleExplorer):
             self.moveForwardAssertState(board)
         
         
-
-    def moveForwardAssertState(self, board):
         # print(self.position)
         # print(board.getCell(self.position).getIndex())
         # print()
 
+    def moveForwardAssertState(self, board):
         if self.direction == "north" and self.position[0] - 1 >= 0:
             self.position = [self.position[0] - 1, self.position[1]]
 
@@ -286,7 +285,7 @@ class Explorer(SimpleExplorer):
 
         if state['Stench'] == True:
             temp.setStateStench()
-            self.setPotWumpus()
+            self.setPotWumpus(state)
         
         if state['Breeze']:
             temp.setStateBreeze()
