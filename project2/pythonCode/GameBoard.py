@@ -65,6 +65,18 @@ class GameBoard:
                 for cell in adj_list:
                     cell.setStateStench()
                 probW -= 1
+        
+
+        i = ran.randint(0, size-1)
+        j = ran.randint(0, size-1)
+
+        while self.board[i][j].getState()['Obstacle'] == True or self.board[i][j].getState()['Pit'] == True or self.board[i][j].getState()['Wumpus']:
+            i = ran.randint(0, size-1)
+            j = ran.randint(0, size-1)
+        
+        self.board[i][j].setStateGold()
+
+
 
     def setAdjList(self, size):  # this fn will make the adjacency lists for each cell
         for i in range(0, size):  # if current cell is (2, 2) adjList: [(1, 2), (2, 1), (3, 2), (2, 3)]
@@ -89,6 +101,8 @@ class GameBoard:
                     print('S', end='      ')
                 elif self.getCell([i,j]).getState()['Breeze']:
                     print('B', end='      ')
+                elif self.getCell([i,j]).getState()['Obstacle']:
+                    print('O', end='      ')
                 elif self.getCell([i,j]).getState()['Gold']:
                     print('G', end='      ')
                 elif self.getCell([i,j]).getVisited():
@@ -109,6 +123,8 @@ class GameBoard:
                     print('S', end='      ')
                 elif self.getCell([i,j]).getState()['Breeze']:
                     print('B', end='      ')
+                elif self.getCell([i,j]).getState()['Obstacle']:
+                    print('O', end='      ')
                 elif self.getCell([i,j]).getState()['Gold']:
                     print('G', end='      ')
                 elif self.getCell([i,j]).getState()['potP']:
@@ -155,6 +171,9 @@ class Cell(GameBoard):
     
     def selfStateNoPotW(self):
         self.state['potW'] = False
+    
+    def setStateGold(self):
+        self.state['Gold'] = True
 
     def setStatePotPit(self):
         for cell in self.getAdjList():
