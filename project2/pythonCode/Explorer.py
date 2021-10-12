@@ -81,7 +81,7 @@ class Explorer(SimpleExplorer):
             false_pit_list.append(cell.getIndex())
 
             for c in adj_list:
-                if c.getState()['potW'] == False:
+                if c.getState()['potP'] == False:
                     false_pit_list.append(c.getIndex())
 
         for cell in self.simple_board.getCell(self.position).getAdjList():
@@ -171,11 +171,9 @@ class Explorer(SimpleExplorer):
             
             self.turn()
             self.moveForwardAssertState(board)
-        
-        
+
 
     def moveForwardAssertState(self, board):
-
         if self.direction == "north" and self.position[0] - 1 >= 0:
             self.position = [self.position[0] - 1, self.position[1]]
 
@@ -251,7 +249,7 @@ class Explorer(SimpleExplorer):
 
         if state['Stench'] == True:
             temp.setStateStench()
-            self.setPotWumpus()
+            self.setPotWumpus(state)
         
         if state['Breeze']:
             temp.setStateBreeze()
@@ -265,7 +263,7 @@ class Explorer(SimpleExplorer):
 
         while(self.moves <= board.getSize() * board.getSize()):
             # print(self.position)
-            print(self.position)
+            print("Explorer current position:",self.position)
 
             cell = board.getCell(self.position)
             # print(cell.getIndex())
@@ -274,6 +272,7 @@ class Explorer(SimpleExplorer):
             self.simple_board.displaySimpleBoard(board.getSize())
             print()
             v_c = [cell.getIndex() for cell in self.visited_cells]
+            print("Visted Cells list:")
             print(v_c)
 
             if self.determineDeath(cell) == True:
