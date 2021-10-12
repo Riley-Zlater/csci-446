@@ -45,29 +45,33 @@ class Explorer(SimpleExplorer):
         pot_wumpus_list = []
 
         for cell in self.visited_cells:
-            adj_list = cell.getAdjList()
+            adj_list = self.simple_board.getCell(cell.getIndex()).getAdjList()
+            false_wumpus_list.append(cell.getIndex())
             for c in adj_list:
                 if c.getState()['potW'] == False:
-                    pot_wumpus_list.append(c.getIndex())
-                    # false_wumpus_list[tuple(c.getIndex())] = c.getState()['Wumpus']
-        
-        l = self.simple_board.getCell(self.position).getAdjList()
-        
-        
-        for i in l:
-            print(i.getIndex())
+                    # print(str(c.getState()['potW']) + " " + str(c.getIndex()))
+                    false_wumpus_list.append(c.getIndex())
 
+                    # false_wumpus_list[tuple(c.getIndex())] = c.getState()['Wumpus']
+
+        print("Not Wump")
+        print(false_wumpus_list)
         for cell in self.simple_board.getCell(self.position).getAdjList():
             pot_wumpus_list.append(cell.getIndex())
-            print(str(c.getState()['potW']) + " " + str(cell.getIndex()))
+            print(str(cell.getState()['potW']) + " " + str(cell.getIndex()))
                 # pot_wumpus_list[tuple(c.getIndex())] = c.getState()['potW']
 
         copy_pot_wumpus_list = copy.deepcopy(pot_wumpus_list)
 
-        
+        print("List")
+        print(copy_pot_wumpus_list)
+        print("Reduction")
+
         for pot_wumpus_index in pot_wumpus_list:
             if pot_wumpus_index in false_wumpus_list:
                 copy_pot_wumpus_list.remove(pot_wumpus_index)
+                print(copy_pot_wumpus_list)
+
         
 
         if len(copy_pot_wumpus_list) == 1:
