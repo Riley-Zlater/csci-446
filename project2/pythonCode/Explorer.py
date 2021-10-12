@@ -1,5 +1,6 @@
 import copy
 from pprint import pprint
+from random import randint
 from GameBoard import GameBoard
 from SimpleExplorer import SimpleExplorer
 
@@ -13,6 +14,7 @@ class Explorer(SimpleExplorer):
         self.arrows = simple_explorer.arrows
         self.simple_board = GameBoard(board_size)
         self.visited_cells = []
+        self.moves = 0
         super().__init__(self.position, self.arrows)
     
 
@@ -45,21 +47,20 @@ class Explorer(SimpleExplorer):
         pot_wumpus_list = []
 
         for cell in self.visited_cells:
-            adj_list = self.simple_board.getCell(cell.getIndex()).getAdjList()
+            act_cell = self.simple_board.getCell(cell.getIndex())
+            adj_list = act_cell.getAdjList()
             false_wumpus_list.append(cell.getIndex())
+
             for c in adj_list:
                 if c.getState()['potW'] == False:
-                    # print(str(c.getState()['potW']) + " " + str(c.getIndex()))
                     false_wumpus_list.append(c.getIndex())
 
-                    # false_wumpus_list[tuple(c.getIndex())] = c.getState()['Wumpus']
 
         print("Not Wump")
         print(false_wumpus_list)
         for cell in self.simple_board.getCell(self.position).getAdjList():
             pot_wumpus_list.append(cell.getIndex())
-            print(str(cell.getState()['potW']) + " " + str(cell.getIndex()))
-                # pot_wumpus_list[tuple(c.getIndex())] = c.getState()['potW']
+            # print(str(cell.getState()['potW']) + " " + str(cell.getIndex()))
 
         copy_pot_wumpus_list = copy.deepcopy(pot_wumpus_list)
 
@@ -163,21 +164,30 @@ class Explorer(SimpleExplorer):
             if self.safeState(state) == True and adj_cell not in self.visited_cells:
                 safe_cells.append(adj_cell)
         
-        if len(safe_cells) == 0:
+        if len(safe_cells) == 0:         
+            for adj_cell in adj_list:
+                state = adj_cell.getState()
+                if self.safeState(state) == True:
+                    safe_cells.append(adj_cell)
+
+        if len(safe_cells) > 0:
+            priority_move = safe_cells[randint(0,len(safe_cells)-1)]
+        
+        elif len(safe_cells) == 0:
+            
             for adj_cell in adj_list:
                 state = adj_cell.getState()
                 if self.uncertainSafeState(state):
                     safe_cells.append(adj_cell)
+            
+            if len(safe_cells) > 0:
+                priority_move = None
 
-        if len(safe_cells) > 0:
-            priority_move = safe_cells[0]
-        
-        else:
-            priority_move = None
 
-        for safe_cell in safe_cells:
-            if safe_cell.getVisited() == False:
-                priority_move = safe_cell
+
+        # for safe_cell in safe_cells:
+        #     if safe_cell.getVisited() == False:
+        #         priority_move = safe_cell
         
         # print("priority move")
         # print(str(priority_move.getIndex()))
@@ -195,9 +205,9 @@ class Explorer(SimpleExplorer):
         
 
     def moveForwardAssertState(self, board):
-        print("this",self.position)
-        print("that",board.getCell(self.position).getIndex())
-        print()
+        # print(self.position)
+        # print(board.getCell(self.position).getIndex())
+        # print()
 
         if self.direction == "north" and self.position[0] - 1 >= 0:
             self.position = [self.position[0] - 1, self.position[1]]
@@ -240,6 +250,7 @@ class Explorer(SimpleExplorer):
             self.removePotWumpus(state)   
 
         self.cost -= 1
+        self.moves += 1
         # print(self.position)    
 
     def determineDeath(self, cell):
@@ -247,12 +258,12 @@ class Explorer(SimpleExplorer):
 
         if state['Wumpus'] == True:
             print("Killed by a stinking wumpus")
-            print(cell.getIndex())
-            print(state)
+            # print(cell.getIndex())
+            # print(state)
             return True
         elif state['Pit'] == True:
-            print(cell.getIndex())
-            print(state)
+            # print(cell.getIndex())
+            # print(state)
             return True
         
         return False
@@ -268,9 +279,26 @@ class Explorer(SimpleExplorer):
     
     def searchForGold(self, board):
 
+        temp = self.simple_board.getCell(self.position)
+        temp.setVisited()
+        self.visited_cells.append(temp)
+        state = self.getCurrentState(temp)
 
+        if state['Stench'] == True:
+            temp.setStateStench()
+            self.setPotWumpus()
+        
+        if state['Breeze']:
+            temp.setStateBreeze()
+            self.setPotPit(state)
+        
+        if state['Breeze'] == False:
+            self.removePotPit(state)
+        
+        if state['Stench'] == False:
+            self.removePotWumpus(state)
 
-        while(True):
+        while(self.moves <= board.getSize() * board.getSize()):
             # print(self.position)
             print("Explorer current position:",self.position)
 
@@ -294,7 +322,7 @@ class Explorer(SimpleExplorer):
                 print("Won Board")
                 break
 
-            input("Press enter")
+            # input("Press enter")
             self.findBestMove(board)
 
             
