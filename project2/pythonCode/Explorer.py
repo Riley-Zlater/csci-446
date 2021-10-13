@@ -9,19 +9,16 @@ from SimpleExplorer import SimpleExplorer
 
 class Explorer(SimpleExplorer):
 
-    def __init__(self, simple_explorer, board_size) -> None:
-        self.position = simple_explorer.position
-        self.arrows = simple_explorer.arrows
+    def __init__(self, board_size, arrows) -> None:
+        self.position = [0,0]
+        self.arrows = arrows
         self.simple_board = GameBoard(board_size)
         self.visited_cells = []
-        super().__init__(self.position, self.arrows)
+        self.cost = 0
+        super().__init__(self.arrows)
     
 
-    def getCurrentCell(self, board):
-        return board.getCell(self.position)
-    
-    def getCurrentState(self, cell):
-        return cell.getState()  
+      
     
     def setPotWumpus(self, state):
         if state['Stench'] == True:
@@ -224,31 +221,6 @@ class Explorer(SimpleExplorer):
         self.cost -= 1
         self.moves += 1
         # print(self.position)    
-
-    def determineDeath(self, cell):
-        state = self.getCurrentState(cell)     
-
-        if state['Wumpus'] == True:
-            print("Killed by a stinking wumpus")
-            # print(cell.getIndex())
-            # print(state)
-            return True
-        elif state['Pit'] == True:
-            print("Fell into a pit")
-            # print(cell.getIndex())
-            # print(state)
-            return True
-        
-        return False
-
-    def determineWin(self, cell):
-        state = self.getCurrentState(cell)
-
-        if state['Gold'] == True:
-            self.simple_board.getCell(cell.getIndex()).setStateGold()
-            return True
-        
-        return False
     
     
     def searchForGold(self, board):
