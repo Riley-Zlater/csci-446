@@ -14,7 +14,6 @@ class Explorer(SimpleExplorer):
         self.arrows = simple_explorer.arrows
         self.simple_board = GameBoard(board_size)
         self.visited_cells = []
-        self.moves = 0
         super().__init__(self.position, self.arrows)
     
 
@@ -195,7 +194,7 @@ class Explorer(SimpleExplorer):
         simple_cell = self.simple_board.getCell(self.position)
 
         if cell.getState()['Obstacle'] == True:
-            self.simple_board.getCell(cell.getIndex()).setStateObs()
+            self.simple_board.getCell(self.position).setStateObs()
             self.position = old_position
             cell = board.getCell(self.position)
             simple_cell = self.simple_board.getCell(self.position)
@@ -245,8 +244,6 @@ class Explorer(SimpleExplorer):
     def determineWin(self, cell):
         state = self.getCurrentState(cell)
 
-        
-
         if state['Gold'] == True:
             self.simple_board.getCell(cell.getIndex()).setStateGold()
             return True
@@ -281,10 +278,7 @@ class Explorer(SimpleExplorer):
 
             cell = board.getCell(self.position)
             # print(cell.getIndex())
-            board.displayBoard(board.getSize())
-            print()
-            self.simple_board.displaySimpleBoard(board.getSize())
-            print()
+            
 
             v_c = [cell.getIndex() for cell in self.visited_cells]
             print("Visted Cells list:")
@@ -297,14 +291,17 @@ class Explorer(SimpleExplorer):
             
             if self.determineWin(cell) == True:
                 self.cost += 1000
-                self.simple_board.displaySimpleBoard(board.getSize())
+                # self.simple_board.displaySimpleBoard(board.getSize())
                 print("Won Board")
                 break
 
             # input("Press enter")
             self.findBestMove(board)
-        
-        return self.cost
+        board.displayBoard(board.getSize())
+        print()
+        self.simple_board.displaySimpleBoard(board.getSize())
+        print()
+        return (self.cost, self.moves)
 
             
         

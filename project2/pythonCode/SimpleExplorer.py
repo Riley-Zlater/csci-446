@@ -11,6 +11,7 @@ class SimpleExplorer:
         self.death_by_wumpus = 0
         self.total_cells_explored = 0
         self.cost = 0
+        self.moves = 0
         self.direction = "north"
     
 
@@ -42,7 +43,7 @@ class SimpleExplorer:
             self.position = [self.position[0], self.position[1] - 1]
         
         self.cost -= 1
-        print(self.position)
+        self.moves += 1
         
         
     
