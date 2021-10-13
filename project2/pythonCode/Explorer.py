@@ -13,7 +13,6 @@ class Explorer(SimpleExplorer):
         self.position = [0,0]
         self.arrows = arrows
         self.simple_board = GameBoard(board_size)
-        self.visited_cells = []
         self.cost = 0
         super().__init__(self.arrows)
     
@@ -37,7 +36,7 @@ class Explorer(SimpleExplorer):
             self.simple_board.getCell(self.position).removeAdjStatePotWumpus()
 
     
-    def proveWumpus(self):
+    def proveWumpus(self, board):
         false_wumpus_list = []
         pot_wumpus_list = []
 
@@ -65,6 +64,11 @@ class Explorer(SimpleExplorer):
             j, i = cell_index
             self.simple_board.getCell([i,j]).setStateWumpus()
             print("PROVED WUMPUS")
+            self.determineDirection(self.simple_board.getCell([i,j]))
+            self.shootArrow(board)
+            if(self.screamHeard == True):
+                print("SCREAM HEARD")
+                self.screamHeard = False
 
         
     def provePit(self):
@@ -205,7 +209,7 @@ class Explorer(SimpleExplorer):
         if state['Stench']:
             simple_cell.setStateStench()
             self.setPotWumpus(state)
-            self.proveWumpus()
+            self.proveWumpus(board)
         
         if state['Breeze']:
             simple_cell.setStateBreeze()
@@ -273,7 +277,13 @@ class Explorer(SimpleExplorer):
         print()
         self.simple_board.displaySimpleBoard(board.getSize())
         print()
-        return (self.cost, self.moves)
+        return {"Cost": self.cost, 
+                "Total Moves": self.moves, 
+                "Wumpuses Killed": self.wumpus_kills,
+                "Death by Wumpus": self.death_by_wumpus,
+                "Death by Pit": self.death_by_pit, 
+                "Gold Captured": self.gold, 
+                "Total Visted Cells": len(self.visited_cells)}
 
             
         

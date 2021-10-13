@@ -38,17 +38,15 @@ while boardSize <= 10:
         se_results[inc].append(se.simpleSearchForGold(wumpus))
         
         e = Explorer(boardSize, arrows)
-        e_results[inc].append(e.simpleSearchForGold(wumpus))
-
-
-
-
+        e_results[inc].append(e.searchForGold(wumpus))
     boardSize += 5
     inc += 1
     
-
+print("Simple Explorer Results")
 for result in se_results:
     print(result)
 
+print()
+print("Explorer Results")
 for result in e_results:
     print(result)
