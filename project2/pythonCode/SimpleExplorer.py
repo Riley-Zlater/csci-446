@@ -150,7 +150,7 @@ class SimpleExplorer:
             if rd.random() > 0.98:
                 self.shootArrow(board)
 
-            if(self.screamHeard == True):
+            if (self.screamHeard == True):
                 # print("SCREAM HEARD")
                 self.screamHeard = False
 
