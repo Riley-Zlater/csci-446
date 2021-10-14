@@ -1,0 +1,9 @@
+Riley Slater:
+World generation  GameBoard.py
+
+Cooper Strahan:
+reactive agent  SimpleExplorer.py
+
+We Worked Together:
+Experiment testing  main.py
+First-Order Logic agent  Explorer.py
