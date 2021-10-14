@@ -5,7 +5,6 @@ import random as rd
 *This Class does the funcitonality for the reactionary agent.
 """
 class SimpleExplorer:
-
     def __init__(self, arrow) -> None:
         self.position = [0,0]
         self.arrows = arrow
