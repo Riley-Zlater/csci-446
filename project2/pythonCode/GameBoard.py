@@ -43,7 +43,6 @@ class GameBoard:
     def getSize(self):
         """
         *This method returns the size of the board.
-        !Depreciated method
         @return The board size, int
         """
         return self.size
@@ -93,7 +92,6 @@ class GameBoard:
                     cell.setStateStench()
                 probW -= 1
         
-
         i = ran.randint(0, size-1)
         j = ran.randint(0, size-1)
 
@@ -102,8 +100,6 @@ class GameBoard:
             j = ran.randint(0, size-1)
         
         self.board[i][j].setStateGold()
-
-
 
     def setAdjList(self, size):
         """
@@ -144,37 +140,6 @@ class GameBoard:
                     print('V', end='      ')
                 elif self.getCell([i,j]).state['Obstacle']:
                     print('O', end='      ')
-                else:
-                    print(self.board[i][j].getIndex(), end=' ')
-            print()
-        return
-    
-    def displaySimpleBoard(self, dim):
-        """
-        !Depreciated
-        *This method displays the board with characters representing the states of the Cells.
-        @param dim The size of the board, int
-        """
-        for i in range(dim):
-            for j in range(dim):
-                if self.getCell([i,j]).getState()['Wumpus']:
-                    print('W', end='      ')
-                elif self.getCell([i,j]).getState()['Pit']:
-                    print('P', end='      ')
-                elif self.getCell([i,j]).getState()['Stench']:
-                    print('S', end='      ')
-                elif self.getCell([i,j]).getState()['Breeze']:
-                    print('B', end='      ')
-                elif self.getCell([i,j]).getState()['Obstacle']:
-                    print('O', end='      ')
-                elif self.getCell([i,j]).getState()['Gold']:
-                    print('G', end='      ')
-                elif self.getCell([i,j]).getState()['potP']:
-                    print('P?', end='     ')
-                elif self.getCell([i,j]).getState()['potW']:
-                    print('W?', end='     ')
-                elif self.getCell([i,j]).getVisited():
-                    print('V', end='      ')
                 else:
                     print(self.board[i][j].getIndex(), end=' ')
             print()

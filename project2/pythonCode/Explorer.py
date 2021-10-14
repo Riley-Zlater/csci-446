@@ -1,14 +1,13 @@
+# Writen by Cooper Strahan and Riley Slater
 import copy
-from pprint import pprint
 from random import randint
 from GameBoard import GameBoard
 from SimpleExplorer import SimpleExplorer
 
-
-from SimpleExplorer import SimpleExplorer
-
+"""
+*This class extends the SimpleExplorer class and adds the inference engine functionality.
+"""
 class Explorer(SimpleExplorer):
-
     def __init__(self, board_size, arrows) -> None:
         self.position = [0,0]
         self.arrows = arrows
@@ -16,27 +15,43 @@ class Explorer(SimpleExplorer):
         self.cost = 0
         super().__init__(self.arrows)
     
-
-      
-    
     def setPotWumpus(self, state):
+        """
+        *This method updates the Cells adjacent to a stench to be potential Wumpuses.
+        @param state The state of the current Cell
+        """
         if state['Stench'] == True:
             self.simple_board.getCell(self.position).setStatePotWumpus()
     
     def setPotPit(self, state):
+        """
+        *This method updates the Cells adjacent to a breeze to be potential pits.
+        @param state The state of the current Cell
+        """
         if state['Breeze'] == True:
             self.simple_board.getCell(self.position).setStatePotPit()
     
     def removePotPit(self, state):
+        """
+        *This method will remove a potential pit after more evaluation.
+        @param state The state of the current cell
+        """
         if state['Breeze'] == False:
             self.simple_board.getCell(self.position).removeAdjStatePotPit()
 
     def removePotWumpus(self, state):
+        """
+        *This method will remove a potential Wumpus after more evaluation.
+        @param state The state of the current cell
+        """
         if state['Breeze'] == False:
             self.simple_board.getCell(self.position).removeAdjStatePotWumpus()
 
-    
     def proveWumpus(self, board):
+        """
+        *This method applies unification and resolution to prove the location of Wumpus.
+        @param board The GameBoard object
+        """
         false_wumpus_list = []
         pot_wumpus_list = []
 
@@ -57,21 +72,20 @@ class Explorer(SimpleExplorer):
         for pot_wumpus_index in pot_wumpus_list:
             if pot_wumpus_index in false_wumpus_list:
                 copy_pot_wumpus_list.remove(pot_wumpus_index)
-                # print(copy_pot_wumpus_list)
 
         if len(copy_pot_wumpus_list) == 1:
             cell_index = copy_pot_wumpus_list[0]
             j, i = cell_index
             self.simple_board.getCell([i,j]).setStateWumpus()
-            # print("PROVED WUMPUS")
             self.determineDirection(self.simple_board.getCell([i,j]))
             self.shootArrow(board)
             if(self.screamHeard == True):
-                # print("SCREAM HEARD")
                 self.screamHeard = False
-
         
     def provePit(self):
+        """
+        *This method applies unification and resolution to prove the location of pit.
+        """
         false_pit_list = []
         pot_pit_list = []
 
@@ -92,16 +106,18 @@ class Explorer(SimpleExplorer):
         for pot_pit_index in pot_pit_list:
             if pot_pit_index in false_pit_list:
                 copy_pot_pit_list.remove(pot_pit_index)
-                # print(copy_pot_pit_list)
 
         if len(copy_pot_pit_list) == 1:
             cell_index = copy_pot_pit_list[0]
             j, i = cell_index
             self.simple_board.getCell([i,j]).setStatePit()
-            # print("PROVED PIT")
         
-    
     def safeState(self, state):
+        """
+        *This method determines if a Cell is safe given its states.
+        @state the States of a Cell
+        @return boolean
+        """
         if state['Pit']:
             return False
         if state['Wumpus']:
@@ -110,6 +126,11 @@ class Explorer(SimpleExplorer):
         return True 
         
     def uncertainSafeState(self, state):
+        """
+        *This method determines if a Cell is questionable interms of safety.
+        @param state The state of the cell
+        @return boolean
+        """
         if state['potP']:
             return True
         if state['potW']:
@@ -118,6 +139,10 @@ class Explorer(SimpleExplorer):
         return False
     
     def determineDirection(self, projectedCell):
+        """
+        *This method decides which direction our explorer should turn towards.
+        @param projectedCell The cell the agent is considering moving to
+        """
         c_i,c_j = self.simple_board.getCell(self.position).getIndex()
         p_i,p_j = projectedCell.getIndex()
 
@@ -133,10 +158,12 @@ class Explorer(SimpleExplorer):
         self.cost -= 1
         
     def findBestMove(self, board):
+        """
+        *This method finds an optimal move given the current board.
+        @param board The GameBoard object
+        """
         cell = board.getCell(self.position)
-
         adj_list = cell.getAdjList()
-
         safe_cells = []
 
         for adj_cell in adj_list:
@@ -168,13 +195,15 @@ class Explorer(SimpleExplorer):
             self.moveForwardAssertState(board)
         
         if priority_move == None:
-            
             self.turn()
             self.moveForwardAssertState(board)
 
 
     def moveForwardAssertState(self, board):
-
+        """
+        *This method moves the agent in the direction it is facing.
+        @param board The GameBoard object
+        """
         old_position = self.position
 
         if self.direction == "north" and self.position[0] - 1 >= 0:
@@ -189,7 +218,6 @@ class Explorer(SimpleExplorer):
         if self.direction == "west" and self.position[1] - 1 >= 0:
             self.position = [self.position[0], self.position[1] - 1]
 
-        
 
         cell = board.getCell(self.position)
         simple_cell = self.simple_board.getCell(self.position)
@@ -223,12 +251,14 @@ class Explorer(SimpleExplorer):
             self.removePotWumpus(state)   
 
         self.cost -= 1
-        self.moves += 1
-        # print(self.position)    
-    
+        self.moves += 1 
     
     def searchForGold(self, board):
-
+        """
+        *This method puts everything into motion and performes the search on the board using the agent's logic.
+        @param board The GameBoard object
+        @return A dictionary containing the performance measures
+        """
         temp = self.simple_board.getCell(self.position)
         temp.setVisited()
         self.visited_cells.append(temp)
@@ -249,34 +279,19 @@ class Explorer(SimpleExplorer):
             self.removePotWumpus(state)
 
         while(self.moves <= board.getSize() * board.getSize()):
-            # print(self.position)
-            # print("Explorer current position:",self.position)
-
             cell = board.getCell(self.position)
-            # print(cell.getIndex())
-            
-
             v_c = [cell.getIndex() for cell in self.visited_cells]
-            # print("Visted Cells list:")
-            # print(v_c)
 
             if self.determineDeath(cell) == True:
                 self.cost -= 1000
-                # print("Lost Board")
                 break
             
             if self.determineWin(cell) == True:
                 self.cost += 1000
-                # self.simple_board.displaySimpleBoard(board.getSize())
-                # print("Won Board")
                 break
 
-            # input("Press enter")
             self.findBestMove(board)
-        # board.displayBoard(board.getSize())
-        # print()
-        # self.simple_board.displaySimpleBoard(board.getSize())
-        # print()
+
         return {"Cost": self.cost, 
                 "Total Moves": self.moves, 
                 "Wumpuses Killed": self.wumpus_kills,
