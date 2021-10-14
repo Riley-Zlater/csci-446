@@ -3,9 +3,10 @@ from GameBoard import GameBoard
 from SimpleExplorer import SimpleExplorer
 from math import floor
 
-boardSize = 5
 
-pit_p = 0.025
+numTests = 100
+
+pit_p = .025
 wumpus_p = .025
 obs_p = .025
 
@@ -26,7 +27,7 @@ se_results = [se_five_by_five, se_ten_by_ten, se_fifteen_by_fifteen, se_twenty_b
 
 inc = 0
 for boardSize in range(5, 26, 5):
-    for numTests in range(10):
+    for test in range(numTests):
         wumpus = GameBoard(boardSize, pit_p, wumpus_p, obs_p)
 
         arrows = floor((boardSize ** 2) * wumpus_p)
@@ -39,22 +40,6 @@ for boardSize in range(5, 26, 5):
         e_results[inc].append(e.searchForGold(wumpus))
     inc += 1
 
-""" inc = 0
-while boardSize <= 10:
-    for i in range(0,10):
-        wumpus = GameBoard(boardSize, pit_p, wumpus_p, obs_p)
-
-        arrows = floor((boardSize ** 2) * wumpus_p)
-
-        se = SimpleExplorer(arrows)
-        
-        se_results[inc].append(se.simpleSearchForGold(wumpus))
-        
-        e = Explorer(boardSize, arrows)
-        e_results[inc].append(e.searchForGold(wumpus))
-    boardSize += 5
-    inc += 1 """
-
 avgCost = 0
 avgMoves = 0
 avgWumpusKilled = 0
@@ -62,12 +47,11 @@ avgDeathByWumpus = 0
 avgDeathByPit = 0
 avgGoldCap = 0
 avgVisitedCells = 0
-numTests = 10
 
 i = 5
 print("Simple Explorer Results")
 for result in se_results:
-    print("\nboard size of", i)
+    print("\nboard size of", i,"with", numTests,"tests")
     for board in result:
         avgCost += board['Cost']
         avgMoves += board['Total Moves']
@@ -101,7 +85,7 @@ print()
 i = 5
 print("Explorer Results")
 for result in e_results:
-    print("\nboard size of", i)
+    print("\nboard size of", i,"with", numTests,"tests")
     for board in result:
         avgCost += board['Cost']
         avgMoves += board['Total Moves']
