@@ -48,7 +48,6 @@ class SimpleExplorer:
             self.direction = "east"
         elif(num > 0.75):
             self.direction = "west"
-        # print(self.direction)
         self.cost -= 1
     
     def directedTurn(self, direction):
@@ -134,6 +133,7 @@ class SimpleExplorer:
             self.screamHeard = True
             self.wumpus_kills += 1
             return True
+
         if arrow_cell_state['Obstacle'] == True:
             return False
 
@@ -153,11 +153,10 @@ class SimpleExplorer:
         state = self.getCurrentState(cell)     
 
         if state['Wumpus'] == True:
-            # print("Killed by a stinking wumpus")
             self.death_by_wumpus += 1
             return True
+
         elif state['Pit'] == True:
-            # print("Fell into a pit")
             self.death_by_pit += 1
             return True
         
@@ -172,7 +171,6 @@ class SimpleExplorer:
         state = self.getCurrentState(cell)
 
         if state['Gold'] == True:
-            # self.simple_board.getCell(cell.getIndex()).setStateGold()
             self.gold += 1
             return True
         
@@ -190,34 +188,25 @@ class SimpleExplorer:
 
             if cell not in self.visited_cells:
                 self.visited_cells.append(cell)
-            # print(self.position)
+
             if self.determineDeath(cell) == True:
                 self.cost -= 1000
-                # print("Lost Board")
                 break
             
             if self.determineWin(cell) == True:
                 self.cost += 1000
-                # self.simple_board.displaySimpleBoard(board.getSize())
-                # print("Won Board")
                 break
 
             if rd.random() > 0.98:
                 self.shootArrow(board)
 
             if (self.screamHeard == True):
-                # print("SCREAM HEARD")
                 self.screamHeard = False
 
             self.turn()
             self.moveForward(board)
             cell = board.getCell(self.position)
 
-
-
-        # board.displayBoard(board.getSize())
-        # print()
-        # self.simple_board.displaySimpleBoard(board.getSize())
         return {"Cost": self.cost, 
                 "Total Moves": self.moves, 
                 "Wumpuses Killed": self.wumpus_kills,
