@@ -57,17 +57,17 @@ class Explorer(SimpleExplorer):
         for pot_wumpus_index in pot_wumpus_list:
             if pot_wumpus_index in false_wumpus_list:
                 copy_pot_wumpus_list.remove(pot_wumpus_index)
-                print(copy_pot_wumpus_list)
+                # print(copy_pot_wumpus_list)
 
         if len(copy_pot_wumpus_list) == 1:
             cell_index = copy_pot_wumpus_list[0]
             j, i = cell_index
             self.simple_board.getCell([i,j]).setStateWumpus()
-            print("PROVED WUMPUS")
+            # print("PROVED WUMPUS")
             self.determineDirection(self.simple_board.getCell([i,j]))
             self.shootArrow(board)
             if(self.screamHeard == True):
-                print("SCREAM HEARD")
+                # print("SCREAM HEARD")
                 self.screamHeard = False
 
         
@@ -92,13 +92,13 @@ class Explorer(SimpleExplorer):
         for pot_pit_index in pot_pit_list:
             if pot_pit_index in false_pit_list:
                 copy_pot_pit_list.remove(pot_pit_index)
-                print(copy_pot_pit_list)
+                # print(copy_pot_pit_list)
 
         if len(copy_pot_pit_list) == 1:
             cell_index = copy_pot_pit_list[0]
             j, i = cell_index
             self.simple_board.getCell([i,j]).setStatePit()
-            print("PROVED PIT")
+            # print("PROVED PIT")
         
     
     def safeState(self, state):
@@ -250,40 +250,40 @@ class Explorer(SimpleExplorer):
 
         while(self.moves <= board.getSize() * board.getSize()):
             # print(self.position)
-            print("Explorer current position:",self.position)
+            # print("Explorer current position:",self.position)
 
             cell = board.getCell(self.position)
             # print(cell.getIndex())
             
 
             v_c = [cell.getIndex() for cell in self.visited_cells]
-            print("Visted Cells list:")
-            print(v_c)
+            # print("Visted Cells list:")
+            # print(v_c)
 
             if self.determineDeath(cell) == True:
                 self.cost -= 1000
-                print("Lost Board")
+                # print("Lost Board")
                 break
             
             if self.determineWin(cell) == True:
                 self.cost += 1000
                 # self.simple_board.displaySimpleBoard(board.getSize())
-                print("Won Board")
+                # print("Won Board")
                 break
 
             # input("Press enter")
             self.findBestMove(board)
-        board.displayBoard(board.getSize())
-        print()
-        self.simple_board.displaySimpleBoard(board.getSize())
-        print()
+        # board.displayBoard(board.getSize())
+        # print()
+        # self.simple_board.displaySimpleBoard(board.getSize())
+        # print()
         return {"Cost": self.cost, 
                 "Total Moves": self.moves, 
                 "Wumpuses Killed": self.wumpus_kills,
                 "Death by Wumpus": self.death_by_wumpus,
                 "Death by Pit": self.death_by_pit, 
                 "Gold Captured": self.gold, 
-                "Total Visted Cells": len(self.visited_cells)}
+                "Total Visited Cells": len(self.visited_cells)}
 
             
         

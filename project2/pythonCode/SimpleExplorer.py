@@ -108,11 +108,11 @@ class SimpleExplorer:
         state = self.getCurrentState(cell)     
 
         if state['Wumpus'] == True:
-            print("Killed by a stinking wumpus")
+            # print("Killed by a stinking wumpus")
             self.death_by_wumpus += 1
             return True
         elif state['Pit'] == True:
-            print("Fell into a pit")
+            # print("Fell into a pit")
             self.death_by_pit += 1
             return True
         
@@ -138,20 +138,20 @@ class SimpleExplorer:
             # print(self.position)
             if self.determineDeath(cell) == True:
                 self.cost -= 1000
-                print("Lost Board")
+                # print("Lost Board")
                 break
             
             if self.determineWin(cell) == True:
                 self.cost += 1000
                 # self.simple_board.displaySimpleBoard(board.getSize())
-                print("Won Board")
+                # print("Won Board")
                 break
 
             if rd.random() > 0.98:
                 self.shootArrow(board)
 
             if(self.screamHeard == True):
-                print("SCREAM HEARD")
+                # print("SCREAM HEARD")
                 self.screamHeard = False
 
             self.turn()
@@ -160,8 +160,8 @@ class SimpleExplorer:
 
 
 
-        board.displayBoard(board.getSize())
-        print()
+        # board.displayBoard(board.getSize())
+        # print()
         # self.simple_board.displaySimpleBoard(board.getSize())
         return {"Cost": self.cost, 
                 "Total Moves": self.moves, 
@@ -169,4 +169,4 @@ class SimpleExplorer:
                 "Death by Wumpus": self.death_by_wumpus,
                 "Death by Pit": self.death_by_pit, 
                 "Gold Captured": self.gold, 
-                "Total Visted Cells": len(self.visited_cells)}
+                "Total Visited Cells": len(self.visited_cells)}

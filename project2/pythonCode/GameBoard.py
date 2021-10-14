@@ -70,7 +70,7 @@ class GameBoard:
         i = ran.randint(0, size-1)
         j = ran.randint(0, size-1)
 
-        while self.board[i][j].getState()['Obstacle'] == True or self.board[i][j].getState()['Pit'] == True or self.board[i][j].getState()['Wumpus']:
+        while self.board[i][j].getState()['Obstacle'] or self.board[i][j].getState()['Pit'] or self.board[i][j].getState()['Wumpus']:
             i = ran.randint(0, size-1)
             j = ran.randint(0, size-1)
         
