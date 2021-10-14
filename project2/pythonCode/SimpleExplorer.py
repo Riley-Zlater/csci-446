@@ -1,5 +1,9 @@
+# Written by Cooper Strahan and Riley Slater
 import random as rd
 
+"""
+*This Class does the funcitonality for the reactionary agent.
+"""
 class SimpleExplorer:
 
     def __init__(self, arrow) -> None:
@@ -16,12 +20,25 @@ class SimpleExplorer:
         self.screamHeard = False
     
     def getCurrentCell(self, board):
+        """
+        *This method gets the cell that the agent is in.
+        @param board The GameBoard object
+        @return The [i, j] indecies of the agent, list
+        """
         return board.getCell(self.position)
     
     def getCurrentState(self, cell):
+        """
+        *This method gets the states of the Cell the agent is in.
+        @param cell A Cell object which is a child of the GameBoard class
+        @return A dictionary with the boolean values of the possible states for a Cell
+        """
         return cell.getState()
 
     def turn(self):
+        """
+        *This method randomly choose which way the agent will face north, east, west, or south.
+        """
         num = rd.random()
         if(num < 0.25):
             self.direction = "north"
@@ -35,11 +52,19 @@ class SimpleExplorer:
         self.cost -= 1
     
     def directedTurn(self, direction):
+        """
+        *This method updates the direction the agent is facing directly.
+        @param direction The direction the agent will be facing, string
+        """
         self.direction = direction
         self.cost -= 1
     
     
     def moveForward(self, board):
+        """
+        *This method moves the agent from one cell to another.
+        @param board The GameBoard object
+        """
         old_position = self.position
 
         if self.direction == "north" and self.position[0] - 1 >= 0:
@@ -63,6 +88,11 @@ class SimpleExplorer:
         self.moves += 1
         
     def shootArrow(self, board):
+        """
+        *This method shoots an arrow based on the direction the agent is facing.
+        @param board The GameBoard object
+        @return boolean
+        """
         if self.arrows > 0:
             self.arrows -= 1
             self.cost -= 50
@@ -93,6 +123,12 @@ class SimpleExplorer:
         return False
     
     def arrow_fire(self, board, arrow_pos):
+        """
+        *This method tracks the arrows flight path and notifies the agent if a Wumpus is hit.
+        @param board The GameBoard object
+        @param arrow_pos The indecies of the arrow
+        @return boolean
+        """
         arrow_cell_state = self.getCurrentState(board.getCell(arrow_pos))
         if arrow_cell_state['Wumpus'] == True:
             self.screamHeard = True
@@ -102,9 +138,18 @@ class SimpleExplorer:
             return False
 
     def getPosition(self):
+        """
+        *This method gets the current position of the agent.
+        @return The [i, j] indecies of the agent, list
+        """
         return self.position
     
     def determineDeath(self, cell):
+        """
+        *This method determines if the agent has walked into a Wumpus or pit.
+        @param cell The Cell object location of the agent on the GameBoard
+        @return boolean
+        """
         state = self.getCurrentState(cell)     
 
         if state['Wumpus'] == True:
@@ -119,6 +164,11 @@ class SimpleExplorer:
         return False
 
     def determineWin(self, cell):
+        """
+        *This method determines if the agent has found the gold.
+        @param cell The Cell object location of the agent on the GameBoard
+        @return boolean
+        """
         state = self.getCurrentState(cell)
 
         if state['Gold'] == True:
@@ -129,6 +179,11 @@ class SimpleExplorer:
         return False
 
     def simpleSearchForGold(self, board):
+        """
+        *This method does a search for the gold using the simple reactive explorer agent.
+        @param board The GameBoard object
+        @return A dictionary containing the performance measures
+        """
         while(self.moves <= board.getSize() * board.getSize()):
             
             cell = board.getCell(self.position)
