@@ -3,7 +3,8 @@ from Explorer import Explorer
 from GameBoard import GameBoard
 from SimpleExplorer import SimpleExplorer
 from math import floor
-
+import numpy as np
+from scipy import stats
 
 numTests = 100     #  This variable is the number of times each board size is tested
 
@@ -51,13 +52,13 @@ for boardSize in range(5, 26, 5):     #  boardSize: [5, 10, 15, 20, 25]
 #  INTERPRETTING THE RESULTS
 
 #  integers used to track the performance measures across multiple tests
-avgCost = 0
-avgMoves = 0
-avgWumpusKilled = 0
-avgDeathByWumpus = 0
-avgDeathByPit = 0
-avgGoldCap = 0
-avgVisitedCells = 0
+avgCost = []
+avgMoves = []
+avgWumpusKilled = []
+avgDeathByWumpus = []
+avgDeathByPit = []
+avgGoldCap = []
+avgVisitedCells = []
 
 size = 5     #  The board size
 print("Simple Explorer Results")
@@ -66,34 +67,39 @@ for result in se_results:     #  Access the results
 
     for board in result:     #  Access the results for a specific board size
         #  Sum the performance measures of the simple explorer for a specific board size
-        avgCost += board['Cost']
-        avgMoves += board['Total Moves']
-        avgWumpusKilled += board['Wumpuses Killed']
-        avgDeathByWumpus += board['Death by Wumpus']
-        avgDeathByPit += board['Death by Pit']
-        avgGoldCap += board['Gold Captured']
-        avgVisitedCells += board['Total Visited Cells']
+        avgCost.append(board['Cost'])
+        avgMoves.append(board['Total Moves'])
+        avgWumpusKilled.append(board['Wumpuses Killed'])
+        avgDeathByWumpus.append(board['Death by Wumpus'])
+        avgDeathByPit.append(board['Death by Pit'])
+        avgGoldCap.append(board['Gold Captured'])
+        avgVisitedCells.append(board['Total Visited Cells'])
 
     #  divide the summations by the number of tests to find the averages
-    avgCost /= numTests
-    avgMoves /= numTests
-    avgWumpusKilled /= numTests
-    avgDeathByWumpus /= numTests
-    avgDeathByPit /= numTests
-    avgGoldCap /= numTests
-    avgVisitedCells /= numTests
+    avgCost = np.array(avgCost)
+    avgMoves = np.array(avgMoves)
+    avgWumpusKilled = np.array(avgWumpusKilled)
+    avgDeathByWumpus = np.array(avgDeathByWumpus)
+    avgDeathByPit = np.array(avgDeathByPit)
+    avgGoldCap = np.array(avgGoldCap)
+    avgVisitedCells = np.array(avgVisitedCells)
     #  print the results
-    print("Average Cost:",avgCost,"\nAverage Moves:",avgMoves,"\nAverage Wumpuses Killed:",avgWumpusKilled,"\nAverage Death by Wumpus:",avgDeathByWumpus,
-    "\nAverage Death by Pit:",avgDeathByPit,"\nAverage Gold Captured:",avgGoldCap,"\nAverage Visited Cells:",avgVisitedCells)
+    print("Average Cost:",str(stats.describe(avgCost)),str(stats.tstd(avgCost)),
+    "\nAverage Moves:",str(stats.describe(avgMoves)),str(stats.tstd(avgMoves)),
+    "\nAverage Wumpuses Killed:",str(stats.describe(avgWumpusKilled)),str(stats.tstd(avgWumpusKilled)),
+    "\nAverage Death by Wumpus:",str(stats.describe(avgDeathByWumpus)),str(stats.tstd(avgDeathByWumpus)),
+    "\nAverage Death by Pit:",str(stats.describe(avgDeathByPit)),str(stats.tstd(avgDeathByPit)),
+    "\nAverage Gold Captured:",str(stats.describe(avgGoldCap)),str(stats.tstd(avgGoldCap)),
+    "\nAverage Visited Cells:",str(stats.describe(avgVisitedCells)),str(stats.tstd(avgVisitedCells)))
     size += 5
     #  reset the performance tracking variables for the next board size
-    avgCost = 0
-    avgMoves = 0
-    avgWumpusKilled = 0
-    avgDeathByWumpus = 0
-    avgDeathByPit = 0
-    avgGoldCap = 0
-    avgVisitedCells = 0
+    avgCost = []
+    avgMoves = []
+    avgWumpusKilled = []
+    avgDeathByWumpus = []
+    avgDeathByPit = []
+    avgGoldCap = []
+    avgVisitedCells = []
 
 print()
 print()
@@ -104,32 +110,40 @@ for result in e_results:     #  Access the results
     print("\nboard size of", size,"with", numTests,"tests")
 
     for board in result:     #  Access the results for a specific board size
-        #  Sum the performance measures of the smart explorer for a specific board size
-        avgCost += board['Cost']
-        avgMoves += board['Total Moves']
-        avgWumpusKilled += board['Wumpuses Killed']
-        avgDeathByWumpus += board['Death by Wumpus']
-        avgDeathByPit += board['Death by Pit']
-        avgGoldCap += board['Gold Captured']
-        avgVisitedCells += board['Total Visited Cells']
+        #  Sum the performance measures of the simple explorer for a specific board size
+        avgCost.append(board['Cost'])
+        avgMoves.append(board['Total Moves'])
+        avgWumpusKilled.append(board['Wumpuses Killed'])
+        avgDeathByWumpus.append(board['Death by Wumpus'])
+        avgDeathByPit.append(board['Death by Pit'])
+        avgGoldCap.append(board['Gold Captured'])
+        avgVisitedCells.append(board['Total Visited Cells'])
 
     #  divide the summations by the number of tests to find the averages
-    avgCost /= numTests
-    avgMoves /= numTests
-    avgWumpusKilled /= numTests
-    avgDeathByWumpus /= numTests
-    avgDeathByPit /= numTests
-    avgGoldCap /= numTests
-    avgVisitedCells /= numTests
+    avgCost = np.array(avgCost)
+    avgMoves = np.array(avgMoves)
+    avgWumpusKilled = np.array(avgWumpusKilled)
+    avgDeathByWumpus = np.array(avgDeathByWumpus)
+    avgDeathByPit = np.array(avgDeathByPit)
+    avgGoldCap = np.array(avgGoldCap)
+    avgVisitedCells = np.array(avgVisitedCells)
     #  print the results
-    print("Average Cost:",avgCost,"\nAverage Moves:",avgMoves,"\nAverage Wumpuses Killed:",avgWumpusKilled,"\nAverage Death by Wumpus:",avgDeathByWumpus,
-    "\nAverage Death by Pit:",avgDeathByPit,"\nAverage Gold Captured:",avgGoldCap,"\nAverage Visited Cells:",avgVisitedCells)
+    print("Average Cost:",str(stats.describe(avgCost)),str(stats.tstd(avgCost)),
+    "\nAverage Moves:",str(stats.describe(avgMoves)),str(stats.tstd(avgMoves)),
+    "\nAverage Wumpuses Killed:",str(stats.describe(avgWumpusKilled)),str(stats.tstd(avgWumpusKilled)),
+    "\nAverage Death by Wumpus:",str(stats.describe(avgDeathByWumpus)),str(stats.tstd(avgDeathByWumpus)),
+    "\nAverage Death by Pit:",str(stats.describe(avgDeathByPit)),str(stats.tstd(avgDeathByPit)),
+    "\nAverage Gold Captured:",str(stats.describe(avgGoldCap)),str(stats.tstd(avgGoldCap)),
+    "\nAverage Visited Cells:",str(stats.describe(avgVisitedCells)),str(stats.tstd(avgVisitedCells)))
     size += 5
     #  reset the performance tracking variables for the next board size
-    avgCost = 0
-    avgMoves = 0
-    avgWumpusKilled = 0
-    avgDeathByWumpus = 0
-    avgDeathByPit = 0
-    avgGoldCap = 0
-    avgVisitedCells = 0
+    avgCost = []
+    avgMoves = []
+    avgWumpusKilled = []
+    avgDeathByWumpus = []
+    avgDeathByPit = []
+    avgGoldCap = []
+    avgVisitedCells = []
+
+print()
+print()
