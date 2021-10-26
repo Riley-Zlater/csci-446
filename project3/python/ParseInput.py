@@ -1,9 +1,5 @@
 
-
-with open("../inputFiles/alarm.bif", "r") as file:
-    rawBIF = file.readlines()
-
-
+import Variable
 
 
 def ParseInputBIF(inputBIF):
@@ -11,38 +7,111 @@ def ParseInputBIF(inputBIF):
     index = 0
     varList = []
 
+    # begin file
     while index < len(inputBIF):
         line = inputBIF[index].split()
         
+        # find first variable
         if line[0] == "variable":
+            # variable name
             varName = line[1]
+            # move to the next line
             index += 1
             nextLine = inputBIF[index].split()
+            # variable type 
             varType = nextLine[1]
+            # number of types
             numTypes = int(nextLine[3])
-            varTypes = [type.replace(",", "") for type in nextLine[6:6+numTypes]]
+            # list of types
+            varTypesList = tuple([type.replace(",", "") for type in nextLine[6:6+numTypes]])
+            # create object to store the new variable
+            varList.append(Variable.Variable(varName, varType, numTypes, varTypesList))
+
+        # find the first probability
+        
+        elif line[0] == "probability":
             
-            # make a new variable object with the arguements:
-            # varName, varType, numTypes, varTypes
-            # this mght help lmk what you think 
-            # i know it's not even close to the design doc 
-            # but I think it will make the project easier
-            print("variable name:",varName,"\nvariable type:", varType,
-            "\nnumber of types:", numTypes,"\ntypes:", varTypes,"\n")
-
-            # append new variable object to varList
-
-        if line[0] == "probability":
             line = inputBIF[index].split()
 
-            # for variable in 
-            pass
+            # check in the list of variable objects for the name
+            # store in tempVar
+            for variable in varList:
+                if variable.getVarName() == line[2]:
+                    tempVar = variable
+                    break
+                
+            # look at the "given" part of the probability
+            if line[3] == "|":
+                tempIndex = 4
+                while line[tempIndex] != ")":
+                    for variable in varList:
+                        if variable.getVarName() == line[tempIndex].strip(","):
+                            tempVar.appendParent([variable])
+                            variable.appendChild([tempVar])
+                            break
+                    tempIndex += 1
+                index += 1
+            
+                
+                probDict = {}
+                probTable = []
+                line = inputBIF[index].split()
+            
+                if "table" == line[0]:
+                    del line[0]
 
-        index += 1
+                    line = [value.replace(",", "") for value in line]
+                    probabilities = [value.replace(";", "") for value in line]
+
+                    probTable = [float(probabilities[i]) for i in range(tempVar.getVarNumTypes())]
+
+                elif line[0][0] == "(":
+                    keys = []
+
+                    line = [value.replace(",", "") for value in line]
+                    line = [value.replace(";", "") for value in line]
+                    line = [value.replace(")", "") for value in line]
+                    line = [value.replace("(", "") for value in line]
+
+                        
+                    for i in range(len(line)):
+                        try:
+                            float(line[i])
+                        except ValueError:
+                            keys.append(line[i])
+                            continue
+                    probDict[tuple(keys)] = [float(line[j]) for j in range(len(keys), len(line))]
+
+                index += 1
+                if len(probTable) != 0:
+                    tempVar.appendProbTable(probTable)
+                else:
+                    tempVar.appendProbTable(probDict)
+            index += 1
+        else:
+            index += 1
+
+    return varList
 
 
+def displayVariables(varList):
+    for var in varList:
+        print("variable name:",var.getVarName())
+        print("Parent vars:")    
+        for parVar in var.getParents():
+            for p in parVar:
+                print(p.getVarName())
+        print("prob table:")
+        print(var.getProbTable())
+        print("children: ")
+        for chiVar in var.getChildren():
+            for c in chiVar:
+                print(c.getVarName())
+        print()
 
-    
+with open("C:/Users/riley/repos/csci-446/project3/inputFiles/alarm.bif", "r") as file:
+    rawBIF = file.readlines()
 
+variables = ParseInputBIF(rawBIF)
 
-ParseInputBIF(rawBIF)
+displayVariables(variables)
