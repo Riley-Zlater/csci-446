@@ -50,47 +50,40 @@ def ParseInputBIF(inputBIF):
                             variable.appendChild([tempVar])
                             break
                     tempIndex += 1
-                index += 1
+            index += 1
             
                 
-                probDict = {}
-                probTable = []
-                line = inputBIF[index].split()
+        probMatrix = []
+        probTable = []
+        line = inputBIF[index].split()
             
-                if "table" == line[0]:
-                    del line[0]
+        if "table" == line[0]:
+            del line[0]
 
-                    line = [value.replace(",", "") for value in line]
-                    probabilities = [value.replace(";", "") for value in line]
+            line = [value.replace(",", "") for value in line]
+            probabilities = [value.replace(";", "") for value in line]
 
-                    probTable = [float(probabilities[i]) for i in range(tempVar.getVarNumTypes())]
+            probTable = [float(prob) for prob in probabilities]
 
-                elif line[0][0] == "(":
-                    keys = []
+            tempVar.appendProbTable(probTable)
 
-                    line = [value.replace(",", "") for value in line]
-                    line = [value.replace(";", "") for value in line]
-                    line = [value.replace(")", "") for value in line]
-                    line = [value.replace("(", "") for value in line]
+        if line[0][0] == "(":
 
-                        
-                    for i in range(len(line)):
-                        try:
-                            float(line[i])
-                        except ValueError:
-                            keys.append(line[i])
-                            continue
-                    probDict[tuple(keys)] = [float(line[j]) for j in range(len(keys), len(line))]
+            line = [value.replace(",", "") for value in line]
+            line = [value.replace(";", "") for value in line]
+            line = [value.replace(")", "") for value in line]
+            line = [value.replace("(", "") for value in line]
 
-                index += 1
-                if len(probTable) != 0:
-                    tempVar.appendProbTable(probTable)
-                else:
-                    tempVar.appendProbTable(probDict)
-            index += 1
-        else:
-            index += 1
-
+            for i in range(len(line)):
+                try:
+                    line[i] = float(line[i])
+                except ValueError:
+                    continue
+                
+            probMatrix = line
+            tempVar.appendProbTable(probMatrix)
+        
+        index += 1
     return varList
 
 

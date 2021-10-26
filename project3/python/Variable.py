@@ -10,7 +10,7 @@ class Variable:
         self.marginal = None
         self.parentList = []
         self.childList = []
-        self.probabilityTables = None
+        self.probabilityTables = []
 
     def appendParent(self, parentVar):
         self.parentList.append(parentVar)
@@ -19,9 +19,8 @@ class Variable:
         self.childList.append(childVar)
 
     def appendProbTable(self, probabilities):
-        if self.probabilityTables != None:
-            self.probabilityTables
-        self.probabilityTables = probabilities
+        self.probabilityTables.append(probabilities)
+        
     """
         if self.rootVariableCheck():
             self.marginal = []
