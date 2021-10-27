@@ -89,21 +89,22 @@ def ParseInputBIF(inputBIF):
 
 def displayVariables(varList):
     for var in varList:
-        print("variable name:",var.getVarName())
-        print("Parent vars:")    
+        print("\nvariable name:",var.getVarName())
+        print("\nParents:")    
         for parVar in var.getParents():
             for p in parVar:
                 print(p.getVarName())
-        print("prob table:")
-        print(var.getProbTable())
-        print("children: ")
+        print("\nchildren: ")
         for chiVar in var.getChildren():
             for c in chiVar:
                 print(c.getVarName())
+        print("\nprob table:")
+        print(var.getProbTable())
+        print()
         print()
 
-# with open("C:/Users/riley/repos/csci-446/project3/inputFiles/alarm.bif", "r") as file:
-with open("/Users/cooperstrahan/School/csci-446/project3/inputFiles/child.bif", "r") as file:
+with open("../inputFiles/child.bif", "r") as file:
+# with open("/Users/cooperstrahan/School/csci-446/project3/inputFiles/child.bif", "r") as file:
     rawBIF = file.readlines()
 
 variables = ParseInputBIF(rawBIF)
