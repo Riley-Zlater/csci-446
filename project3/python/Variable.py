@@ -21,6 +21,21 @@ class Variable:
     def appendProbTable(self, probabilities):
         self.probabilityTables.append(probabilities)
         
+    def transformProbTable(self):
+        newTables = dict()
+        for probTable in self.probabilityTables:
+            var_names = []
+            var_values = []
+            for value in probTable:
+                try:
+                    value = float(value)
+                    var_values.append(value)
+                except ValueError:
+                    var_names.append(value)
+            newTables[tuple(var_names)] = var_values
+            # newTables.append(newTable)
+
+        return newTables
     """
         if self.rootVariableCheck():
             self.marginal = []
@@ -37,6 +52,7 @@ class Variable:
         return len(self.childList) == 0
 
     def getProbTable(self):
+        self.probabilityTables = self.transformProbTable()
         return self.probabilityTables
 
     def getParents(self):
