@@ -12,6 +12,9 @@ class Variable:
         self.childList = []
         self.probabilityTables = []
 
+    def setMarginal(self, margList):
+        self.marginal = margList
+
     def appendParent(self, parentVar):
         self.parentList.append(parentVar)
 
@@ -56,3 +59,6 @@ class Variable:
 
     def getVarTypes(self):
         return self.types
+    
+    def getMarginal(self):
+        return self.marginal

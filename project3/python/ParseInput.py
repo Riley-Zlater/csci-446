@@ -65,7 +65,7 @@ def ParseInputBIF(inputBIF):
 
             probTable = [float(prob) for prob in probabilities]
 
-            tempVar.appendProbTable(probTable)
+            tempVar.setMarginal(probTable)
 
         if line[0][0] == "(":
 
@@ -98,12 +98,16 @@ def displayVariables(varList):
         for chiVar in var.getChildren():
             for c in chiVar:
                 print(c.getVarName())
-        print("\nprob table:")
-        print(var.getProbTable())
+        if var.getMarginal() != None:
+            print("\nMarginal:")
+            print(var.getMarginal())
+        else:
+            print("\nprob table:")
+            print(var.getProbTable())
         print()
         print()
 
-with open("../inputFiles/child.bif", "r") as file:
+with open("C://Users/Riley/repos/csci-446/project3/inputFiles/alarm.bif", "r") as file:
 # with open("/Users/cooperstrahan/School/csci-446/project3/inputFiles/child.bif", "r") as file:
     rawBIF = file.readlines()
 
