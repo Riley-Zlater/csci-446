@@ -29,11 +29,10 @@ class ExactInference():
     def make_factor(self, v, e):
         
         new_factor = []
+        
         prob_table = v.getProbTable()
         parents = v.getParents()
         
-        
-
         parent_types = []
         for parent in parents:
             if parent not in e:
@@ -41,9 +40,13 @@ class ExactInference():
         
         possible_combinations = list(it.product(*parent_types))
 
-        
+        for prob_type, prob_list in prob_table:
+            if list(prob_type) in possible_combinations:
+                for prob in prob_list:
+                    new_factor.append(prob)
 
-        return new_factor
+
+        return {tuple([v.getName(), p.getName() for p in parents]): new_factor}
     
     def hidden_variable(self, X, V, e):
         if X != V and X not in e:
