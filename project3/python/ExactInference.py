@@ -1,4 +1,4 @@
-
+import itertools as it
 
 class ExactInference():
     def __init__(self) -> None:
@@ -26,11 +26,29 @@ class ExactInference():
         
         return l
     
-    def make_factor(self, V, e):
-        return (V,e)
+    def make_factor(self, v, e):
+        
+        new_factor = []
+        prob_table = v.getProbTable()
+        parents = v.getParents()
+        
+        
+
+        parent_types = []
+        for parent in parents:
+            if parent not in e:
+                parent_types.append(list(parent.getVarTypes()))
+        
+        possible_combinations = list(it.product(*parent_types))
+
+        
+
+        return new_factor
     
-    def hidden_variable(self, V):
-        return True
+    def hidden_variable(self, X, V, e):
+        if X != V and X not in e:
+            return True
+        return False
 
     def sum_out(self, V, factors):
         return factors
@@ -47,10 +65,11 @@ class ExactInference():
     def elimination_ask(self, X, e, bay_net):
 
         factors = []
-        for v in self.order(bay_net):
-            factors.append(self.make_factor(v,e))
-            if self.hidden_variable(v):
-                factors = self.sum_out(v, factors)
+        bay_net = self.order(bay_net)
+        for v in bay_net:
+            factors.append(self.make_factor(v, e, bay_net))
+            if self.hidden_variable(v, X, e):
+                factors = self.sum_out(X, v, factors)
         return self.normalize(self.pointwise_product(factors))
     
     
