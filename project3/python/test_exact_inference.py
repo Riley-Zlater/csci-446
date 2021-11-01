@@ -16,13 +16,11 @@ def test_order():
     if len(ordered_variables) != len(variables):
         print("lengths are not equal! " +
             str(len(ordered_variables))+ " " + str(len(variables)))
-        # displayVariables(ordered_variables)
-        # print("variables\n")
-        # displayVariables(variables)
         return False
 
     for o_var in ordered_variables:
-        print(o_var)
+        if exact_inference.check_list(o_var, variables) == False:
+            return False
     
     return True
 

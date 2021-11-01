@@ -4,7 +4,7 @@ class ExactInference():
     def __init__(self) -> None:
         pass
 
-    def check_list(item, l):
+    def check_list(self, item, l):
         for l_i in l:
             if item.getVarName() == l_i.getVarName():
                 return True
@@ -18,6 +18,7 @@ class ExactInference():
         """
         l = []
         s = set()
+        
 
         for var in vars:
             if len(var.getParents()) == 0:
@@ -27,14 +28,13 @@ class ExactInference():
             n = s.pop()
             l.append(n)
             for m in n.getChildren():
-                # for c in m:
+                test = True
                 parents = m.getParents()
                 for p_i in parents:
-                    print(p_i)
-                        # for p_i in parList:
-
-                    # if all(p_i in parents for p_i in l):
-                        # s.add(c)
+                    if self.check_list(p_i, l) == False:
+                        test = False
+                if test:
+                    s.add(m)
         
         return l
     
