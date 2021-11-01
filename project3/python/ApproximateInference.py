@@ -14,6 +14,11 @@ class ApproximateInference():
     # in this case 0.6
     # so we sample 0.3 (same index as 0.6)
 
+    def sample(self, variable):
+        
+        
+        pass
+
     def markov_blanket(self, variable: list) -> list:
         markov_list = []
 

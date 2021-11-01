@@ -38,16 +38,6 @@ class Variable:
             newTables[tuple(var_names)] = var_values
             # newTables.append(newTable)
 
-        return newTables
-    """
-        if self.rootVariableCheck():
-            self.marginal = []
-            for prob in probabilities:
-                index = 0
-                while index < len(prob):
-                    self.marginal.append(probabilities[index])
-                    index += 1
-    """
     def rootVariableCheck(self):
         return len(self.parentList) == 0
 
