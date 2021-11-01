@@ -4,6 +4,13 @@ class ExactInference():
     def __init__(self) -> None:
         pass
 
+    def check_list(item, l):
+        for l_i in l:
+            if item.getVarName() == l_i.getVarName():
+                return True
+        return False
+        
+
     def order(self, vars):
         """
             Kahns algorithm for topological sorting
@@ -13,16 +20,21 @@ class ExactInference():
         s = set()
 
         for var in vars:
-            if len(var.getParents()) is 0:
+            if len(var.getParents()) == 0:
                 s.add(var)
         
-        while len(s) is not 0:
+        while len(s) != 0:
             n = s.pop()
             l.append(n)
             for m in n.getChildren():
+                # for c in m:
                 parents = m.getParents()
-                if all(p_i in parents for p_i in l):
-                    s.add(m)
+                for p_i in parents:
+                    print(p_i)
+                        # for p_i in parList:
+
+                    # if all(p_i in parents for p_i in l):
+                        # s.add(c)
         
         return l
     
@@ -45,8 +57,8 @@ class ExactInference():
                 for prob in prob_list:
                     new_factor.append(prob)
 
-
-        return {tuple([v.getName(), p.getName() for p in parents]): new_factor}
+        return new_factor
+        # return {tuple([v.getName(), p.getName() for p in parents]): new_factor}
     
     def hidden_variable(self, X, V, e):
         if X != V and X not in e:
