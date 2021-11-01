@@ -56,9 +56,13 @@ class ExactInference():
             if list(prob_type) in possible_combinations:
                 for prob in prob_list:
                     new_factor.append(prob)
+        
+        title_list = [p.getVarName() for p in parents]
+        title_list.insert(0, v.getVarName())
 
-        return new_factor
-        # return {tuple([v.getName(), p.getName() for p in parents]): new_factor}
+
+        return {tuple(title_list): new_factor}
+
     
     def hidden_variable(self, X, V, e):
         if X != V and X not in e:

@@ -104,7 +104,10 @@ def displayVariables(varList):
             print(var.getMarginal())
         else:
             print("\nprob table:")
-            print(var.getProbTable())
+            p_table = var.getProbTable()
+            for k in p_table:
+                print("{0:20} {1}".format(str(k), str(p_table[k])))
+            # print(var.getProbTable())
         print()
         print()
 

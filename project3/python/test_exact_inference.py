@@ -2,15 +2,18 @@ from ParseInput import ParseInputBIF
 from ParseInput import displayVariables
 from ExactInference import ExactInference
 
-def test_make_input():
+with open("../inputFiles/alarm.bif", "r") as file:
+        rawBIF = file.readlines()
+
+variables = ParseInputBIF(rawBIF)
+exact_inference = ExactInference()
+
+def test_make_factor():
+    
     return
 
 def test_order():
-    with open("../inputFiles/alarm.bif", "r") as file:
-        rawBIF = file.readlines()
-
-    variables = ParseInputBIF(rawBIF)
-    exact_inference = ExactInference()
+    
     ordered_variables = exact_inference.order(variables)
 
     if len(ordered_variables) != len(variables):
