@@ -93,11 +93,9 @@ def displayVariables(varList):
         print("\ntype:", var.getVarTypes())
         print("\nParents:")    
         for p in var.getParents():
-            # for p in parVar:
             print(p.getVarName())
         print("\nchildren: ")
         for c in var.getChildren():
-            # for c in chiVar:
             print(c.getVarName())
         if var.getMarginal() != None:
             print("\nMarginal:")
