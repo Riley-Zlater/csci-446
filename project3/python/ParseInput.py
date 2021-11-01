@@ -89,30 +89,22 @@ def ParseInputBIF(inputBIF):
 
 def displayVariables(varList):
     for var in varList:
-        print("\nvariable name:",var.getVarName())
-        print("\ntype:", var.getVarTypes())
+        print("\nVariable Name:", var.getVarName())
+        print("\nType:", var.getVarTypes())
         print("\nParents:")    
         for p in var.getParents():
             print(p.getVarName())
-        print("\nchildren: ")
+        print("\nChildren: ")
         for c in var.getChildren():
             print(c.getVarName())
-        if var.getMarginal() != None:
+        if var.getMarginal() is not None:
             print("\nMarginal:")
             print(var.getMarginal())
         else:
-            print("\nprob table:")
-            p_table = var.getProbTable()
-            for k in p_table:
-                print("{0:20} {1}".format(str(k), str(p_table[k])))
-            # print(var.getProbTable())
+            print("\nProb Table:")
+    
+            for key, value in var.getProbTable().items():
+                print(f"Key: {key}        Value: {value}")
+            
         print()
         print()
-
-# with open("C://Users/Riley/repos/csci-446/project3/inputFiles/alarm.bif", "r") as file:
-# with open("/Users/cooperstrahan/School/csci-446/project3/inputFiles/child.bif", "r") as file:
-#     rawBIF = file.readlines()
-
-# variables = ParseInputBIF(rawBIF)
-
-# displayVariables(variables)

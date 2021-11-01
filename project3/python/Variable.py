@@ -40,6 +40,7 @@ class Variable:
                     var_names.append(value)
             newTables[tuple(var_names)] = var_values
             # newTables.append(newTable)
+        return newTables
 
     def rootVariableCheck(self):
         return len(self.parentList) == 0

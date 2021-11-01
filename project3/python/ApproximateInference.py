@@ -1,7 +1,8 @@
 from ExactInference import order, normalize
+import numpy as np
 
 class ApproximateInference():
-    def __init__(self):
+    def __init__(self) -> None:
         pass
 
     # How sampling works:
@@ -15,7 +16,8 @@ class ApproximateInference():
     # so we sample 0.3 (same index as 0.6)
 
     def sample(self, variable):
-        
+        cumulative_dist = []
+        # use np.cumsum(list) to get the cumulative distribution
         
         pass
 
