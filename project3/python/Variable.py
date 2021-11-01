@@ -11,6 +11,9 @@ class Variable:
         self.parentList = []
         self.childList = []
         self.probabilityTables = []
+    
+    # def __eq__(self, other):
+    #     return self.name == other.name         
 
     def setMarginal(self, margList):
         self.marginal = margList

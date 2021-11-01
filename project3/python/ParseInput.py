@@ -46,8 +46,8 @@ def ParseInputBIF(inputBIF):
                 while line[tempIndex] != ")":
                     for variable in varList:
                         if variable.getVarName() == line[tempIndex].strip(","):
-                            tempVar.appendParent([variable])
-                            variable.appendChild([tempVar])
+                            tempVar.appendParent(variable)
+                            variable.appendChild(tempVar)
                             break
                     tempIndex += 1
             index += 1
@@ -92,19 +92,20 @@ def displayVariables(varList):
         print("\nvariable name:",var.getVarName())
         print("\ntype:", var.getVarTypes())
         print("\nParents:")    
-        for parVar in var.getParents():
-            for p in parVar:
-                print(p.getVarName())
+        for p in var.getParents():
+            print(p.getVarName())
         print("\nchildren: ")
-        for chiVar in var.getChildren():
-            for c in chiVar:
-                print(c.getVarName())
+        for c in var.getChildren():
+            print(c.getVarName())
         if var.getMarginal() != None:
             print("\nMarginal:")
             print(var.getMarginal())
         else:
             print("\nprob table:")
-            print(var.getProbTable())
+            p_table = var.getProbTable()
+            for k in p_table:
+                print("{0:20} {1}".format(str(k), str(p_table[k])))
+            # print(var.getProbTable())
         print()
         print()
 
