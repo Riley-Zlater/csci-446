@@ -90,6 +90,7 @@ def ParseInputBIF(inputBIF):
 def displayVariables(varList):
     for var in varList:
         print("\nvariable name:",var.getVarName())
+        print("\ntype:", var.getVarTypes())
         print("\nParents:")    
         for parVar in var.getParents():
             for p in parVar:
@@ -107,10 +108,10 @@ def displayVariables(varList):
         print()
         print()
 
-with open("C://Users/Riley/repos/csci-446/project3/inputFiles/alarm.bif", "r") as file:
+# with open("C://Users/Riley/repos/csci-446/project3/inputFiles/alarm.bif", "r") as file:
 # with open("/Users/cooperstrahan/School/csci-446/project3/inputFiles/child.bif", "r") as file:
-    rawBIF = file.readlines()
+#     rawBIF = file.readlines()
 
-variables = ParseInputBIF(rawBIF)
+# variables = ParseInputBIF(rawBIF)
 
-displayVariables(variables)
+# displayVariables(variables)
