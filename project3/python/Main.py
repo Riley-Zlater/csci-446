@@ -8,3 +8,4 @@ with open("C:/Users/riley/repos/csci-446/project3/inputFiles/alarm.bif", "r") as
 variables = ParseInputBIF(rawBIF)
 
 displayVariables(variables)
+
