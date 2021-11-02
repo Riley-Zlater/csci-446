@@ -9,8 +9,11 @@ variables = ParseInputBIF(rawBIF)
 exact_inference = ExactInference()
 
 def test_make_factor():
-    
+    print(variables[-1].getVarName())
+    exact_inference.make_factor(variables[-1], {})
     return
+
+test_make_factor()
 
 def test_order():
     
@@ -28,4 +31,4 @@ def test_order():
     return True
 
 
-print(test_order())
+# print(test_order())

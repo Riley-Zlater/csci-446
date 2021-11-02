@@ -45,23 +45,19 @@ class ExactInference():
         prob_table = v.getProbTable()
         parents = v.getParents()
         
-        parent_types = []
-        for parent in parents:
-            if parent not in e:
-                parent_types.append(list(parent.getVarTypes()))
-        
-        possible_combinations = list(it.product(*parent_types))
+        len_num_types = len(v.getVarTypes())
 
-        for prob_type, prob_list in prob_table:
-            if list(prob_type) in possible_combinations:
-                for prob in prob_list:
-                    new_factor.append(prob)
-        
+        for i in range(len_num_types):
+            for prob_list in prob_table:
+                new_factor.append(prob_table[prob_list][i])
+
+        print(new_factor)
+
         title_list = [p.getVarName() for p in parents]
         title_list.insert(0, v.getVarName())
 
 
-        return {tuple(title_list): new_factor}
+        return tuple(title_list), new_factor
 
     
     def hidden_variable(self, X, V, e):
@@ -83,10 +79,12 @@ class ExactInference():
 
     def elimination_ask(self, X, e, bay_net):
 
-        factors = []
+        factors = dict()
         bay_net = self.order(bay_net)
         for v in bay_net:
-            factors.append(self.make_factor(v, e, bay_net))
+            fac_name, new_fac = self.make_factor(v,e)
+            factors[fac_name] = new_fac
+            # factors.append(self.make_factor(v, e, bay_net))
             if self.hidden_variable(v, X, e):
                 factors = self.sum_out(X, v, factors)
         return self.normalize(self.pointwise_product(factors))
