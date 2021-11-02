@@ -1,4 +1,4 @@
-# import itertools as it
+import itertools as it
 import numpy as np
 
 class ExactInference():
@@ -10,7 +10,8 @@ class ExactInference():
             if item.getVarName() == l_i.getVarName():
                 return True
         return False
-        
+    
+      
 
     def order(self, vars):
         """
@@ -86,25 +87,70 @@ class ExactInference():
         if X != V and X not in e:
             return True
         return False
+    
+    def get_var_types(self, name, bay_net):
+        for node in bay_net:
+            if node.name == name:
+                return list(node.getVarTypes())
+        
+        return []
 
-    def sum_out(self, V, factors):
-        reduced_factors = []
+    def sum_out(self, V, factors, bay_net):
+        reduced_factors = dict()
         temp_new_factor_vars = []
+        temp_new_factor_var_types = []
 
         for factor in factors:
             if V in list(factor):
-                reduced_factors.append({factor: factors[factor]})
+                reduced_factors[factor] = factors[factor]
             pass
 
-        for factor_dict in reduced_factors:
-            for var_names in factor_dict:
-                for var in var_names:
-                    if var not in temp_new_factor_vars:
-                        temp_new_factor_vars.append(var)
+        for var_names in reduced_factors:
+            for var in var_names:
+                if var not in temp_new_factor_vars:
+                    temp_new_factor_vars.append(var)
+                    temp_new_factor_var_types.append(self.get_var_types(var, bay_net))
+
+        # print(reduced_factors)
         
+        #     print()
+        #     for factor, value in factors:
+        #         print(str(factor) + " " + str(value))
+                # print(str(factor) + " " + str(factors[factor]))
         
+        enumerated_combinations = list(it.product(*temp_new_factor_var_types))
+
+        new_temp_factor_dict = dict()
+        for comb in enumerated_combinations:
+            new_temp_factor_dict[comb] = []
+
+        for temp_factor_vars in new_temp_factor_dict:
+            for factors in reduced_factors:
+                # print(str(factors) + "**************************************")
+                r_fac = reduced_factors[factors]
+                for factor in r_fac:
+                    # print(r_fac[factor])
+                    test = True
+                    for var in factor:
+                        # print(var)
+                        if var not in list(temp_factor_vars):
+                            test = False
+                    if test:
+                        new_temp_factor_dict[temp_factor_vars].append(r_fac[factor])
+
+                        # self.check_list(var, list(temp_factor_vars))
+
+        for t in new_temp_factor_dict:
+            print(str(t) + " " + str(new_temp_factor_dict[t]))
         
+        # for factors in reduced_factors:
+        #     for factor in reduced_factors[factors]:
+        #         print(factor)
+
         print(str(temp_new_factor_vars))
+        print(str(temp_new_factor_var_types))
+
+        # print(str(list(it.product(*temp_new_factor_var_types))))
         return factors
     
     def pointwise_product(self, factors):
@@ -125,7 +171,7 @@ class ExactInference():
             factors[fac_name] = new_fac
             # factors.append(self.make_factor(v, e, bay_net))
             if self.hidden_variable(v, X, e):
-                factors = self.sum_out(v, factors)
+                factors = self.sum_out(v.getVarName(), factors, bay_net)
         return self.normalize(self.pointwise_product(factors))
     
     

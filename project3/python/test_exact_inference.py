@@ -51,7 +51,7 @@ def test_sum_out():
                  c: d}
 
 
-    exact_inference.sum_out('VENTALV', factor)
+    exact_inference.sum_out('VENTALV', factor, variables)
 # print(test_order())
 
 test_sum_out()
