@@ -2,73 +2,55 @@
 
 
 class Variable:
-    def __init__(self, name, type, numTypes, types):
+    def __init__(self, name: str, type: tuple, numTypes: int,
+                 types: list) -> None:
         self.name = name
         self.type = type
         self.numTypes = numTypes
         self.types = types
-        self.marginal = None
-        self.parentList = []
-        self.childList = []
-        self.probabilityTables = []
+        self.marginal = list()
+        self.parentList = list()
+        self.childList = list()
+        self.probabilityTables = dict()
     
-    # def __eq__(self, other):
-    #     return self.name == other.name         
-
-    def setMarginal(self, margList):
+    def setMarginal(self, margList: list) -> None:
         self.marginal = margList
 
-    def appendParent(self, parentVar):
+    def appendParent(self, parentVar: object) -> None:
         self.parentList.append(parentVar)
 
-    def appendChild(self, childVar):
+    def appendChild(self, childVar: object) -> None:
         self.childList.append(childVar)
 
-    def appendProbTable(self, probabilities):
-        self.probabilityTables.append(probabilities)
-        
-    def transformProbTable(self):
-        newTables = dict()
-        for probTable in self.probabilityTables:
-            var_names = []
-            var_values = []
-            for value in probTable:
-                try:
-                    value = float(value)
-                    var_values.append(value)
-                except ValueError:
-                    var_names.append(value)
-            newTables[tuple(var_names)] = var_values
-            # newTables.append(newTable)
-        return newTables
+    def setProbTable(self, probabilities: dict) -> None:
+        self.probabilityTables = probabilities
 
-    def rootVariableCheck(self):
+    def rootVariableCheck(self) -> bool:
         return len(self.parentList) == 0
 
-    def leafVariableCheck(self):
+    def leafVariableCheck(self) -> bool:
         return len(self.childList) == 0
 
-    def getProbTable(self):
-        self.probabilityTables = self.transformProbTable()
+    def getProbTable(self) -> dict:
         return self.probabilityTables
 
-    def getParents(self):
+    def getParents(self) -> list:
         return self.parentList
 
-    def getChildren(self):
+    def getChildren(self) -> list:
         return self.childList
 
-    def getVarName(self):
+    def getVarName(self) -> str:
         return self.name
 
-    def getVarType(self):
+    def getVarType(self) -> tuple:
         return self.type
 
-    def getVarNumTypes(self):
+    def getVarNumTypes(self) -> int:
         return self.numTypes
 
-    def getVarTypes(self):
+    def getVarTypes(self) -> list:
         return self.types
     
-    def getMarginal(self):
+    def getMarginal(self) -> list:
         return self.marginal
