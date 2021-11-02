@@ -1,20 +1,20 @@
-from ExactInference import order, normalize
+from ExactInference import order
+import numpy as np
+import random as ran
 
 class ApproximateInference():
-    def __init__(self):
+    def __init__(self) -> None:
         pass
 
-    # How sampling works:
-    # [0.2, 0.1, 0.3, 0.4] -> 
-    # [0.2, (0.2+0.1)=0.3, (0.3+0.3)=0.6, (0.6+0.4)=1] ->
-    # [0.2, 0.3, 0.6, 1]
-    # generate a random num 0-1
-    # if num = 0.55
-    # choose element in new list closest to num
-    # in this case 0.6
-    # so we sample 0.3 (same index as 0.6)
+    def norm(self, data: list) -> list:
+        return [x / sum(data) for x in data]
 
-    def markov_blanket(self, variable: list) -> list:
+    def sample(self, variable: object) -> float:
+        variable_values = variable.getProbabilityTable().values()
+        variable_values = variable_values[ran.randint(1, len(variable_values))]
+        return ran.choices(variable_values, variable_values)
+
+    def markov_blanket(self, variable: object) -> list:
         markov_list = []
 
         for child in variable.getChildren():
@@ -24,20 +24,17 @@ class ApproximateInference():
 
         for parent in variable.getParents():
             markov_list.append(parent)
-
         return markov_list
 
-    def gibbs_sampling(self, X: object, evidence: list, bayes_net: list, n: int) -> float:
+    def gibbs_sampling(self, X: object, evidence: list, bayes_net: list, num_iter: int) -> list:
         top_sort_bn = order(bayes_net)
-        C = 0
+        C = []
         Z = [var for var in bayes_net if var not in evidence]
-        x = None  # Current state of the network
+        x = evidence  # Current state of the network
 
-        for k in range(1, n):
-            # Choose variable Zi from Z
+        for k in range(1, num_iter):
+            Z_k = ran.choice(Z)
             # Set the value of Zi in x by sampling from P(Zi|mb(Zi))
             # C[j] <- C[j] + 1 where xj is the value of X in x
-            pass
-
-        return normalize(C)
+        return self.norm(C) # Normalize C
         
