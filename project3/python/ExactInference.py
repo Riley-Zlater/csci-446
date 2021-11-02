@@ -1,4 +1,5 @@
-import itertools as it
+# import itertools as it
+import numpy as np
 
 class ExactInference():
     def __init__(self) -> None:
@@ -45,13 +46,36 @@ class ExactInference():
         prob_table = v.getProbTable()
         parents = v.getParents()
         
+        var_types = v.getVarTypes()
         len_num_types = len(v.getVarTypes())
+
+        array_shape = (len_num_types,)
+
+        for parent in parents:
+            array_shape += (len(parent.getVarTypes()), )
+
+        new_factor_2 = np.zeros(array_shape)
+
+        # print(new_factor_2)
+
+        new_factor_3 = {}
 
         for i in range(len_num_types):
             for prob_list in prob_table:
                 new_factor.append(prob_table[prob_list][i])
+        
+        new_factor_2 = np.reshape(new_factor, array_shape)
+        
+        for i in range(len_num_types):
+            for prob_list in prob_table:
+                prob_index = (var_types[i],) + prob_list
+                new_factor_3[prob_index] = prob_table[prob_list][i]
 
         print(new_factor)
+        print(new_factor_2)
+        for factor in new_factor_3:
+            print(str(factor) + " " + str(new_factor_3[factor]))
+        # print(new_factor_3)
 
         title_list = [p.getVarName() for p in parents]
         title_list.insert(0, v.getVarName())
