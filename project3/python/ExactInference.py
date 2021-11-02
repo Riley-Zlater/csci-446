@@ -56,8 +56,6 @@ class ExactInference():
 
         new_factor_2 = np.zeros(array_shape)
 
-        # print(new_factor_2)
-
         new_factor_3 = {}
 
         for i in range(len_num_types):
@@ -71,17 +69,17 @@ class ExactInference():
                 prob_index = (var_types[i],) + prob_list
                 new_factor_3[prob_index] = prob_table[prob_list][i]
 
-        print(new_factor)
-        print(new_factor_2)
-        for factor in new_factor_3:
-            print(str(factor) + " " + str(new_factor_3[factor]))
+        # print(new_factor)
+        # print(new_factor_2)
+        # for factor in new_factor_3:
+        #     print(str(factor) + " " + str(new_factor_3[factor]))
         # print(new_factor_3)
 
         title_list = [p.getVarName() for p in parents]
         title_list.insert(0, v.getVarName())
 
 
-        return tuple(title_list), new_factor
+        return tuple(title_list), new_factor_3
 
     
     def hidden_variable(self, X, V, e):
@@ -90,6 +88,23 @@ class ExactInference():
         return False
 
     def sum_out(self, V, factors):
+        reduced_factors = []
+        temp_new_factor_vars = []
+
+        for factor in factors:
+            if V in list(factor):
+                reduced_factors.append({factor: factors[factor]})
+            pass
+
+        for factor_dict in reduced_factors:
+            for var_names in factor_dict:
+                for var in var_names:
+                    if var not in temp_new_factor_vars:
+                        temp_new_factor_vars.append(var)
+        
+        
+        
+        print(str(temp_new_factor_vars))
         return factors
     
     def pointwise_product(self, factors):
@@ -110,7 +125,7 @@ class ExactInference():
             factors[fac_name] = new_fac
             # factors.append(self.make_factor(v, e, bay_net))
             if self.hidden_variable(v, X, e):
-                factors = self.sum_out(X, v, factors)
+                factors = self.sum_out(v, factors)
         return self.normalize(self.pointwise_product(factors))
     
     

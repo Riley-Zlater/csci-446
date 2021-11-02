@@ -10,10 +10,15 @@ exact_inference = ExactInference()
 
 def test_make_factor():
     print(variables[-1].getVarName())
-    exact_inference.make_factor(variables[-1], {})
-    return
+    a, b = exact_inference.make_factor(variables[-1], {})
+    print(a.index('BP'))
+    try:
+        print(a.index('CUNT'))
+    except:
+        ValueError
+    return a, b
 
-test_make_factor()
+# print(test_make_factor())
 
 def test_order():
     
@@ -30,5 +35,23 @@ def test_order():
     
     return True
 
+def test_sum_out():
+    ventalv = None
+    pvsat = None
 
+    for var in variables:
+        if var.getVarName() == 'VENTALV':
+            ventalv = var
+        if var.getVarName() == 'PVSAT':
+            pvsat = var
+
+    a, b = exact_inference.make_factor(ventalv, {})
+    c, d = exact_inference.make_factor(pvsat, {})
+    factor =    {a: b,
+                 c: d}
+
+
+    exact_inference.sum_out('VENTALV', factor)
 # print(test_order())
+
+test_sum_out()
