@@ -99,6 +99,8 @@ class ExactInference():
         reduced_factors = dict()
         temp_new_factor_vars = []
         temp_new_factor_var_types = []
+        new_factor_vars = []
+        new_factor_var_types = []
 
         for factor in factors:
             if V in list(factor):
@@ -110,22 +112,24 @@ class ExactInference():
                 if var not in temp_new_factor_vars:
                     temp_new_factor_vars.append(var)
                     temp_new_factor_var_types.append(self.get_var_types(var, bay_net))
+                if var != V and var not in new_factor_vars:
+                    new_factor_vars.append(var)
+                    new_factor_var_types.append(self.get_var_types(var, bay_net))
 
-        # print(reduced_factors)
-        
-        #     print()
-        #     for factor, value in factors:
-        #         print(str(factor) + " " + str(value))
-                # print(str(factor) + " " + str(factors[factor]))
         
         enumerated_combinations = list(it.product(*temp_new_factor_var_types))
+        enumerated_combinations_2 = list(it.product(*new_factor_var_types))
 
-        new_temp_factor_dict = dict()
+        temp_new_factor_dict = dict()
         for comb in enumerated_combinations:
-            new_temp_factor_dict[comb] = []
+            temp_new_factor_dict[comb] = []
+        
+        new_factor_dict = dict()
+        for comb in enumerated_combinations_2:
+            new_factor_dict[comb] = []
 
 
-        for temp_factor_vars in new_temp_factor_dict:
+        for temp_factor_vars in temp_new_factor_dict:
             for factors in reduced_factors:
                 r_fac = reduced_factors[factors]
                 for factor in r_fac:
@@ -135,27 +139,44 @@ class ExactInference():
                         if temp_factor_vars[idex] == factor[i]:
                             count += 1
                     if count == len(factor):
-                        new_temp_factor_dict[temp_factor_vars].append(r_fac[factor])
+                        temp_new_factor_dict[temp_factor_vars].append(r_fac[factor])
 
-                        
-                            
-
-        print()               
-
-        # for factors in reduced_factors:
-        #     for factor in reduced_factors[factors]:
-        #         print(str(factor) + " " + str(reduced_factors[factors][factor]))
-
-        # print()
-
-        for t in new_temp_factor_dict:
-            print(str(t) + ":  " + str(new_temp_factor_dict[t]))
         
-        # for factors in reduced_factors:
-        #     for factor in reduced_factors[factors]:
-        #         print(factor)
+
+        # for t in temp_new_factor_dict:
+        #     print(str(t) + ":  " + str(temp_new_factor_dict[t]))
+        
+        for t in temp_new_factor_dict:
+            temp_new_factor_dict[t] = np.prod(temp_new_factor_dict[t])
+        
+        # for t in temp_new_factor_dict:
+        #     print(str(t) + ":  " + str(temp_new_factor_dict[t]))
+        
+        for temp_factor_vars in temp_new_factor_dict:
+            for factor_vars in new_factor_dict:
+                count = 0
+                for i in range(len(factor_vars)):
+                    index = temp_new_factor_vars.index(new_factor_vars[i])
+                    # print(new_factor_vars[i])
+                    # print(index)
+                    # print(temp_factor_vars)
+                    # print(factor_vars)
+                    # print(index)
+                    if temp_factor_vars[index] == factor_vars[i]:
+                        count += 1
+                # print(count)
+                if count == len(factor_vars):
+                    new_factor_dict[factor_vars].append(temp_new_factor_dict[temp_factor_vars])
+                    # new_factor_dict.append(temp_new_factor_dict[temp_factor_vars])
+
+
+        for t in new_factor_dict:
+            print(str(t) + ":  " + str(new_factor_dict[t]))
+
+        print()
 
         print(str(temp_new_factor_vars))
+        print(str(new_factor_vars))
         print(str(temp_new_factor_var_types))
         for r in reduced_factors:
             print(r)
