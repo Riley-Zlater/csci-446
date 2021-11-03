@@ -71,4 +71,6 @@ def test_sum_out_simple():
 
 # print(test_order())
 
-test_sum_out_simple()
+test_sum_out()
+
+# test_sum_out_simple()

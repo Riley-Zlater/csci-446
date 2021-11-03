@@ -1,5 +1,6 @@
 import itertools as it
 import numpy as np
+import copy
 
 class ExactInference():
     def __init__(self) -> None:
@@ -96,6 +97,7 @@ class ExactInference():
         return []
 
     def sum_out(self, V, factors, bay_net):
+        factors_to_return = copy.deepcopy(factors)
         reduced_factors = dict()
         temp_new_factor_vars = []
         temp_new_factor_var_types = []
@@ -105,7 +107,7 @@ class ExactInference():
         for factor in factors:
             if V in list(factor):
                 reduced_factors[factor] = factors[factor]
-            pass
+                del factors_to_return[factor]          
 
         for var_names in reduced_factors:
             for var in var_names:
@@ -130,12 +132,12 @@ class ExactInference():
 
 
         for temp_factor_vars in temp_new_factor_dict:
-            for factors in reduced_factors:
-                r_fac = reduced_factors[factors]
+            for red_factors in reduced_factors:
+                r_fac = reduced_factors[red_factors]
                 for factor in r_fac:
                     count = 0
                     for i in range(len(factor)):
-                        idex = temp_new_factor_vars.index(factors[i])
+                        idex = temp_new_factor_vars.index(red_factors[i])
                         if temp_factor_vars[idex] == factor[i]:
                             count += 1
                     if count == len(factor):
@@ -169,21 +171,23 @@ class ExactInference():
                     new_factor_dict[factor_vars].append(temp_new_factor_dict[temp_factor_vars])
                     # new_factor_dict.append(temp_new_factor_dict[temp_factor_vars])
 
-
         for t in new_factor_dict:
+            new_factor_dict[t] = np.sum(new_factor_dict[t])
             print(str(t) + ":  " + str(new_factor_dict[t]))
 
-        print()
+        # print()
 
-        print(str(temp_new_factor_vars))
-        print(str(new_factor_vars))
-        print(str(temp_new_factor_var_types))
-        for r in reduced_factors:
-            print(r)
+        factors_to_return[tuple(new_factor_vars)] = new_factor_dict
+
+        # print(str(temp_new_factor_vars))
+        # print(str(new_factor_vars))
+        # print(str(temp_new_factor_var_types))
+        # for r in reduced_factors:
+        #     print(r)
         # print(str(reduced_factors))
 
         # print(str(list(it.product(*temp_new_factor_var_types))))
-        return factors
+        return factors_to_return
     
     def pointwise_product(self, factors):
         return factors
