@@ -38,20 +38,25 @@ def test_order():
 def test_sum_out():
     ventalv = None
     pvsat = None
+    minvol = None
 
     for var in variables:
-        if var.getVarName() == 'VENTALV':
+        if var.getVarName() == 'VENTLUNG':
             ventalv = var
-        if var.getVarName() == 'PVSAT':
+        if var.getVarName() == 'EXPCO2':
             pvsat = var
+        if var.getVarName() == 'MINVOL':
+            minvol = var
 
     a, b = exact_inference.make_factor(ventalv, {})
     c, d = exact_inference.make_factor(pvsat, {})
+    e, f = exact_inference.make_factor(minvol, {})
     factor =    {a: b,
-                 c: d}
+                 c: d,
+                 e: f}
 
 
-    exact_inference.sum_out('VENTALV', factor, variables)
+    exact_inference.sum_out('VENTLUNG', factor, variables)
 # print(test_order())
 
 test_sum_out()

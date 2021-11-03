@@ -124,24 +124,32 @@ class ExactInference():
         for comb in enumerated_combinations:
             new_temp_factor_dict[comb] = []
 
+
         for temp_factor_vars in new_temp_factor_dict:
             for factors in reduced_factors:
-                # print(str(factors) + "**************************************")
                 r_fac = reduced_factors[factors]
                 for factor in r_fac:
-                    # print(r_fac[factor])
-                    test = True
-                    for var in factor:
-                        # print(var)
-                        if var not in list(temp_factor_vars):
-                            test = False
-                    if test:
+                    count = 0
+                    for i in range(len(factor)):
+                        idex = temp_new_factor_vars.index(factors[i])
+                        if temp_factor_vars[idex] == factor[i]:
+                            count += 1
+                    if count == len(factor):
                         new_temp_factor_dict[temp_factor_vars].append(r_fac[factor])
 
-                        # self.check_list(var, list(temp_factor_vars))
+                        
+                            
+
+        print()               
+
+        # for factors in reduced_factors:
+        #     for factor in reduced_factors[factors]:
+        #         print(str(factor) + " " + str(reduced_factors[factors][factor]))
+
+        # print()
 
         for t in new_temp_factor_dict:
-            print(str(t) + " " + str(new_temp_factor_dict[t]))
+            print(str(t) + ":  " + str(new_temp_factor_dict[t]))
         
         # for factors in reduced_factors:
         #     for factor in reduced_factors[factors]:
@@ -149,6 +157,9 @@ class ExactInference():
 
         print(str(temp_new_factor_vars))
         print(str(temp_new_factor_var_types))
+        for r in reduced_factors:
+            print(r)
+        # print(str(reduced_factors))
 
         # print(str(list(it.product(*temp_new_factor_var_types))))
         return factors
