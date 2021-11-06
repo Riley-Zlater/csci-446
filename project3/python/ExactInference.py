@@ -85,7 +85,7 @@ class ExactInference():
 
     
     def hidden_variable(self, X, V, e):
-        if X != V and X not in e:
+        if X.getName() != V.getName() and X not in e:
             return True
         return False
     
@@ -144,53 +144,92 @@ class ExactInference():
                         temp_new_factor_dict[temp_factor_vars].append(r_fac[factor])
 
         
-
-        # for t in temp_new_factor_dict:
-        #     print(str(t) + ":  " + str(temp_new_factor_dict[t]))
-        
         for t in temp_new_factor_dict:
             temp_new_factor_dict[t] = np.prod(temp_new_factor_dict[t])
         
-        # for t in temp_new_factor_dict:
-        #     print(str(t) + ":  " + str(temp_new_factor_dict[t]))
         
         for temp_factor_vars in temp_new_factor_dict:
             for factor_vars in new_factor_dict:
                 count = 0
                 for i in range(len(factor_vars)):
                     index = temp_new_factor_vars.index(new_factor_vars[i])
-                    # print(new_factor_vars[i])
-                    # print(index)
-                    # print(temp_factor_vars)
-                    # print(factor_vars)
-                    # print(index)
                     if temp_factor_vars[index] == factor_vars[i]:
                         count += 1
-                # print(count)
                 if count == len(factor_vars):
                     new_factor_dict[factor_vars].append(temp_new_factor_dict[temp_factor_vars])
-                    # new_factor_dict.append(temp_new_factor_dict[temp_factor_vars])
 
         for t in new_factor_dict:
             new_factor_dict[t] = np.sum(new_factor_dict[t])
             print(str(t) + ":  " + str(new_factor_dict[t]))
 
-        # print()
-
         factors_to_return[tuple(new_factor_vars)] = new_factor_dict
 
-        # print(str(temp_new_factor_vars))
-        # print(str(new_factor_vars))
-        # print(str(temp_new_factor_var_types))
-        # for r in reduced_factors:
-        #     print(r)
-        # print(str(reduced_factors))
-
-        # print(str(list(it.product(*temp_new_factor_var_types))))
         return factors_to_return
     
-    def pointwise_product(self, factors):
-        return factors
+    def pointwise_product(self, factors, bay_net):
+        # factors_to_return = copy.deepcopy(factors)
+        # reduced_factors = dict()
+        temp_new_factor_vars = []
+        temp_new_factor_var_types = []
+        # new_factor_vars = []
+        # new_factor_var_types = []
+
+        # for factor in factors:
+        #     if V in list(factor):
+        #         reduced_factors[factor] = factors[factor]
+        #         del factors_to_return[factor]          
+
+        for var_names in factors:
+            for var in var_names:
+                if var not in temp_new_factor_vars:
+                    temp_new_factor_vars.append(var)
+
+                    # FAKE INPUT FOR TESTING
+                    # temp_new_factor_var_types.append()
+
+                    # THIS IS THE REAL INPUT
+                    temp_new_factor_var_types.append(self.get_var_types(var, bay_net))
+                # if var != V and var not in new_factor_vars:
+                #     new_factor_vars.append(var)
+                #     new_factor_var_types.append(self.get_var_types(var, bay_net))
+
+        # print(temp_new_factor_vars)
+        enumerated_combinations = list(it.product(*temp_new_factor_var_types))
+        # print(enumerated_combinations)
+        # enumerated_combinations_2 = list(it.product(*new_factor_var_types))
+
+        temp_new_factor_dict = dict()
+        for comb in enumerated_combinations:
+            temp_new_factor_dict[comb] = []
+        
+        # new_factor_dict = dict()
+        # for comb in enumerated_combinations_2:
+        #     new_factor_dict[comb] = []
+
+
+        for temp_factor_vars in temp_new_factor_dict:
+            for red_factor in factors:
+                r_fac = factors[red_factor]
+                for f in r_fac:
+                    count = 0
+                    for i in range(len(f)):
+                        idex = temp_new_factor_vars.index(red_factor[i])
+                        if temp_factor_vars[idex] == f[i]:
+                            count += 1
+                    if count == len(f):
+                        temp_new_factor_dict[temp_factor_vars].append(r_fac[f])
+
+        
+        # for t in temp_new_factor_dict:
+        #     print(str(t) + " " + str(temp_new_factor_dict[t]))
+            # temp_new_factor_dict[t] = np.prod(temp_new_factor_dict[t])
+
+        # print()
+
+        for t in temp_new_factor_dict:
+            temp_new_factor_dict[t] = np.prod(temp_new_factor_dict[t])
+
+        return temp_new_factor_dict
     
     def normalize(self, factors):
         normalized_factors = []
@@ -208,6 +247,6 @@ class ExactInference():
             # factors.append(self.make_factor(v, e, bay_net))
             if self.hidden_variable(v, X, e):
                 factors = self.sum_out(v.getVarName(), factors, bay_net)
-        return self.normalize(self.pointwise_product(factors))
+        return self.normalize(self.pointwise_product(factors, bay_net))
     
     
