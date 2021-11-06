@@ -55,7 +55,7 @@ class Variable:
     def getCurrentType(self) -> str:
         return self.current_type
 
-    def getVarType(self) -> tuple:
+    def getVarType(self) -> str:
         return self.type
 
     def getVarNumTypes(self) -> int:
