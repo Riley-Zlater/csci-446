@@ -11,7 +11,7 @@ exact_inference = ExactInference()
 def test_make_factor():
     print(variables[-1].getVarName())
     a, b = exact_inference.make_factor(variables[-1], {})
-    print(a.index('BP'))
+    # print(a.index('BP'))
     try:
         print(a.index('CUNT'))
     except:
@@ -56,7 +56,6 @@ def test_sum_out():
 
 def test_sum_out_simple():
     bp = None
-    pvsat = None
 
     for var in variables:
         if var.getVarName() == 'BP':
@@ -69,8 +68,64 @@ def test_sum_out_simple():
 
     exact_inference.sum_out('BP', factor, variables)
 
-# print(test_order())
+# test_sum_out()
 
-test_sum_out()
+def test_pointwise_product():
+    ventalv = None
+    pvsat = None
 
-# test_sum_out_simple()
+    for var in variables:
+        if var.getVarName() == 'VENTALV':
+            ventalv = var
+        if var.getVarName() == 'PVSAT':
+            pvsat = var
+        
+
+    a, b = exact_inference.make_factor(ventalv, {})
+    c, d = exact_inference.make_factor(pvsat, {})
+    factor =    {a: b,
+                 c: d}
+
+    
+    ans = exact_inference.pointwise_product(factor, variables)
+    return ans
+
+
+def test_pointwise_product_book_ex():
+    f1 = {("X", "Y"): 
+            { 
+                ('T', 'T'): 0.3,
+                ('T', 'F'): 0.7,
+                ('F', 'T'): 0.9,
+                ('F', 'F'): 0.1   
+            },
+          ("Y", "Z"): 
+            { 
+                ('T', 'T'): 0.2,
+                ('T', 'F'): 0.8,
+                ('F', 'T'): 0.6,
+                ('F', 'F'): 0.4   
+            }
+        }
+
+    
+    ans = exact_inference.pointwise_product(f1, variables)
+    return ans
+
+# ans = test_pointwise_product()
+
+# for x in ans:
+#     print(str(x) + " " + str(ans[x]))
+
+
+def test_exact_inference():
+    ventalv = None
+
+    for var in variables:
+        if var.getVarName() == 'VENTALV':
+            ventalv = var
+    
+    ans = exact_inference.elimination_ask(ventalv, {}, variables)
+    return ans
+
+print(test_exact_inference())
