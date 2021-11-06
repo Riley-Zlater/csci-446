@@ -2,8 +2,7 @@
 
 
 class Variable:
-    def __init__(self, name: str, type: tuple, numTypes: int,
-                 types: list) -> None:
+    def __init__(self, name: str, type: tuple, numTypes: int, types: list) -> None:
         self.name = name
         self.type = type
         self.numTypes = numTypes
@@ -12,6 +11,10 @@ class Variable:
         self.parentList = list()
         self.childList = list()
         self.probabilityTables = dict()
+        self.current_type = str()
+
+    def setCurrentType(self, type) -> None:
+        self.current_type = type
     
     def setMarginal(self, margList: list) -> None:
         self.marginal = margList
@@ -40,8 +43,17 @@ class Variable:
     def getChildren(self) -> list:
         return self.childList
 
+    def getVarTypes(self) -> list:
+        return self.types
+    
+    def getMarginal(self) -> list:
+        return self.marginal
+
     def getVarName(self) -> str:
         return self.name
+
+    def getCurrentType(self) -> str:
+        return self.current_type
 
     def getVarType(self) -> tuple:
         return self.type
@@ -49,8 +61,3 @@ class Variable:
     def getVarNumTypes(self) -> int:
         return self.numTypes
 
-    def getVarTypes(self) -> list:
-        return self.types
-    
-    def getMarginal(self) -> list:
-        return self.marginal

@@ -31,7 +31,7 @@ def ParseInputBIF(inputBIF: list) -> list:
             nextLine = inputBIF[nextIndex].split()
             varType = nextLine[1]
             numTypes = int(nextLine[3])
-            varTypesList = tuple([type.replace(",", "") for type in nextLine[6:6+numTypes]])
+            varTypesList = [type.replace(",", "") for type in nextLine[6:6+numTypes]]
             varList.append(Variable.Variable(varName, varType, numTypes, varTypesList))
 
         elif line[0] == "probability":
@@ -66,11 +66,11 @@ def ParseInputBIF(inputBIF: list) -> list:
                 line = [value.replace(";", "") for value in line]
                 line = [value.replace(")", "") for value in line]
                 line = [value.replace("(", "") for value in line]
-                for i in range(len(line)):
+                for element in line:
                     try:
-                        values.append(float(line[i]))
+                        values.append(float(element))
                     except ValueError:
-                        keys.append(line[i])
+                        keys.append(element)
                         continue
                 prob_table[tuple(keys)] = values
                 index += 1
