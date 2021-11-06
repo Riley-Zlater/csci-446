@@ -51,12 +51,12 @@ class ExactInference():
         var_types = v.getVarTypes()
         len_num_types = len(v.getVarTypes())
 
-        array_shape = (len_num_types,)
+        # array_shape = (len_num_types,)
 
-        for parent in parents:
-            array_shape += (len(parent.getVarTypes()), )
+        # for parent in parents:
+        #     array_shape += (len(parent.getVarTypes()), )
 
-        new_factor_2 = np.zeros(array_shape)
+        # new_factor_2 = np.zeros(array_shape)
 
         new_factor_3 = {}
 
@@ -64,7 +64,7 @@ class ExactInference():
             for prob_list in prob_table:
                 new_factor.append(prob_table[prob_list][i])
         
-        new_factor_2 = np.reshape(new_factor, array_shape)
+        # new_factor_2 = np.reshape(new_factor, array_shape)
         
         for i in range(len_num_types):
             for prob_list in prob_table:
@@ -85,7 +85,7 @@ class ExactInference():
 
     
     def hidden_variable(self, X, V, e):
-        if X.getName() != V.getName() and X not in e:
+        if X.getVarName() != V.getVarName() and X not in e:
             return True
         return False
     
