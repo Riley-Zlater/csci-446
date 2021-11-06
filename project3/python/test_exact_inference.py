@@ -44,6 +44,7 @@ def test_sum_out():
             ventalv = var
         if var.getVarName() == 'PVSAT':
             pvsat = var
+        
 
     a, b = exact_inference.make_factor(ventalv, {})
     c, d = exact_inference.make_factor(pvsat, {})
@@ -52,6 +53,24 @@ def test_sum_out():
 
 
     exact_inference.sum_out('VENTALV', factor, variables)
+
+def test_sum_out_simple():
+    bp = None
+    pvsat = None
+
+    for var in variables:
+        if var.getVarName() == 'BP':
+            bp = var
+        
+
+    a, b = exact_inference.make_factor(bp, {})
+    factor =    {a: b}
+
+
+    exact_inference.sum_out('BP', factor, variables)
+
 # print(test_order())
 
 test_sum_out()
+
+# test_sum_out_simple()
