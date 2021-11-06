@@ -24,7 +24,8 @@ class ApproximateInference():  # Remove from a Class?
         for child in variable.getChildren():
             markov_list.append(child)
             for child_parent in child.getParents():
-                markov_list.append(child_parent)
+                if child_parent != variable:
+                    markov_list.append(child_parent)
 
         for parent in variable.getParents():
             markov_list.append(parent)
@@ -48,9 +49,8 @@ class ApproximateInference():  # Remove from a Class?
             # Set the value of Zi in x by sampling from P(Zi|mb(Zi))
             sample_key, sample_value, sample_value_index = self.sample(Z_k)
             x.append(self.getState(Z_k, sample_key))
-            
-            
             # break down P() with bayes rule to use the floats
             # C[j] <- C[j] + 1 where xj is the value of X in x
+
         return self.norm(C) # Normalize C
         
