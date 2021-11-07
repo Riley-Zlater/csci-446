@@ -1,0 +1,8 @@
+Riley Slater:
+Video
+BIF parser
+Approximate Inference
+
+Cooper Strahan:
+Report 
+Exact Inference
