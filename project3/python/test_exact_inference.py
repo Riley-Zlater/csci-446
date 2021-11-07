@@ -2,7 +2,7 @@ from ParseInput import ParseInputBIF
 from ParseInput import displayVariables
 from ExactInference import ExactInference
 
-with open("../inputFiles/alarm.bif", "r") as file:
+with open("project3/inputFiles/alarm.bif", "r") as file:
         rawBIF = file.readlines()
 
 variables = ParseInputBIF(rawBIF)
@@ -17,8 +17,6 @@ def test_make_factor():
     except:
         ValueError
     return a, b
-
-# print(test_make_factor())
 
 def test_order():
     
@@ -68,7 +66,23 @@ def test_sum_out_simple():
 
     exact_inference.sum_out('BP', factor, variables)
 
-# test_sum_out()
+def test_sum_out_book():
+    f1 = {("X", "Y"): 
+            { 
+                ('T', 'T'): 0.3,
+                ('T', 'F'): 0.7,
+                ('F', 'T'): 0.9,
+                ('F', 'F'): 0.1   
+            },
+          ("Y", "Z"): 
+            { 
+                ('T', 'T'): 0.2,
+                ('T', 'F'): 0.8,
+                ('F', 'T'): 0.6,
+                ('F', 'F'): 0.4   
+            }
+        }
+    return exact_inference.sum_out('X', f1, variables)
 
 def test_pointwise_product():
     ventalv = None
@@ -89,7 +103,6 @@ def test_pointwise_product():
     
     ans = exact_inference.pointwise_product(factor, variables)
     return ans
-
 
 def test_pointwise_product_book_ex():
     f1 = {("X", "Y"): 
@@ -112,20 +125,15 @@ def test_pointwise_product_book_ex():
     ans = exact_inference.pointwise_product(f1, variables)
     return ans
 
-# ans = test_pointwise_product()
-
-# for x in ans:
-#     print(str(x) + " " + str(ans[x]))
-
-
 def test_exact_inference():
     ventalv = None
 
     for var in variables:
-        if var.getVarName() == 'VENTALV':
+        if var.getVarName() == 'HYPOVOLEMIA':
             ventalv = var
     
-    ans = exact_inference.elimination_ask(ventalv, {}, variables)
+    ans = exact_inference.elimination_ask(ventalv, {"HRBP": "HIGH", "CO": "LOW", "BP": "HIGH",
+                    "HRSAT": "LOW", "HREKG": "LOW", "HISTORY": "TRUE"}, variables)
     return ans
 
 print(test_exact_inference())

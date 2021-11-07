@@ -1,6 +1,7 @@
 import itertools as it
 import numpy as np
 import copy
+from Variable import Variable
 
 class ExactInference():
     def __init__(self) -> None:
@@ -51,31 +52,16 @@ class ExactInference():
         var_types = v.getVarTypes()
         len_num_types = len(v.getVarTypes())
 
-        array_shape = (len_num_types,)
-
-        for parent in parents:
-            array_shape += (len(parent.getVarTypes()), )
-
-        new_factor_2 = np.zeros(array_shape)
-
         new_factor_3 = {}
 
         for i in range(len_num_types):
             for prob_list in prob_table:
                 new_factor.append(prob_table[prob_list][i])
         
-        new_factor_2 = np.reshape(new_factor, array_shape)
-        
         for i in range(len_num_types):
             for prob_list in prob_table:
                 prob_index = (var_types[i],) + prob_list
                 new_factor_3[prob_index] = prob_table[prob_list][i]
-
-        # print(new_factor)
-        # print(new_factor_2)
-        # for factor in new_factor_3:
-        #     print(str(factor) + " " + str(new_factor_3[factor]))
-        # print(new_factor_3)
 
         title_list = [p.getVarName() for p in parents]
         title_list.insert(0, v.getVarName())
@@ -85,7 +71,7 @@ class ExactInference():
 
     
     def hidden_variable(self, X, V, e):
-        if X.getName() != V.getName() and X not in e:
+        if X.getVarName() != V.getVarName() and X not in e:
             return True
         return False
     
@@ -98,7 +84,6 @@ class ExactInference():
 
     def sum_out(self, V, factors, bay_net):
         factors_to_return = copy.deepcopy(factors)
-        reduced_factors = dict()
         temp_new_factor_vars = []
         temp_new_factor_var_types = []
         new_factor_vars = []
@@ -106,20 +91,24 @@ class ExactInference():
 
         for factor in factors:
             if V in list(factor):
-                reduced_factors[factor] = factors[factor]
                 del factors_to_return[factor]          
 
-        for var_names in reduced_factors:
+        for var_names in factors:
             for var in var_names:
                 if var not in temp_new_factor_vars:
                     temp_new_factor_vars.append(var)
+                    #TEST INPUT
+                    # temp_new_factor_var_types.append(['T','F'])
                     temp_new_factor_var_types.append(self.get_var_types(var, bay_net))
                 if var != V and var not in new_factor_vars:
                     new_factor_vars.append(var)
                     new_factor_var_types.append(self.get_var_types(var, bay_net))
+                    # new_factor_var_types.append(['T','F'])
 
-        
+        # print(temp_new_factor_var_types)
+
         enumerated_combinations = list(it.product(*temp_new_factor_var_types))
+        # print(enumerated_combinations)
         enumerated_combinations_2 = list(it.product(*new_factor_var_types))
 
         temp_new_factor_dict = dict()
@@ -130,10 +119,9 @@ class ExactInference():
         for comb in enumerated_combinations_2:
             new_factor_dict[comb] = []
 
-
         for temp_factor_vars in temp_new_factor_dict:
-            for red_factors in reduced_factors:
-                r_fac = reduced_factors[red_factors]
+            for red_factors in factors:
+                r_fac = factors[red_factors]
                 for factor in r_fac:
                     count = 0
                     for i in range(len(factor)):
@@ -157,55 +145,41 @@ class ExactInference():
                         count += 1
                 if count == len(factor_vars):
                     new_factor_dict[factor_vars].append(temp_new_factor_dict[temp_factor_vars])
+        
+        # print(new_factor_dict)
 
         for t in new_factor_dict:
-            new_factor_dict[t] = np.sum(new_factor_dict[t])
-            print(str(t) + ":  " + str(new_factor_dict[t]))
+            new_factor_dict[t] = sum(new_factor_dict[t])
+        
+        # print(new_factor_dict)
 
         factors_to_return[tuple(new_factor_vars)] = new_factor_dict
+
+        # print(factors_to_return)
 
         return factors_to_return
     
     def pointwise_product(self, factors, bay_net):
-        # factors_to_return = copy.deepcopy(factors)
-        # reduced_factors = dict()
         temp_new_factor_vars = []
-        temp_new_factor_var_types = []
-        # new_factor_vars = []
-        # new_factor_var_types = []
-
-        # for factor in factors:
-        #     if V in list(factor):
-        #         reduced_factors[factor] = factors[factor]
-        #         del factors_to_return[factor]          
+        temp_new_factor_var_types = []   
 
         for var_names in factors:
+            print(var_names)
+            print(factors[var_names])
             for var in var_names:
+                
                 if var not in temp_new_factor_vars:
                     temp_new_factor_vars.append(var)
-
-                    # FAKE INPUT FOR TESTING
-                    # temp_new_factor_var_types.append()
-
-                    # THIS IS THE REAL INPUT
                     temp_new_factor_var_types.append(self.get_var_types(var, bay_net))
-                # if var != V and var not in new_factor_vars:
-                #     new_factor_vars.append(var)
-                #     new_factor_var_types.append(self.get_var_types(var, bay_net))
 
-        # print(temp_new_factor_vars)
         enumerated_combinations = list(it.product(*temp_new_factor_var_types))
-        # print(enumerated_combinations)
-        # enumerated_combinations_2 = list(it.product(*new_factor_var_types))
+
+
+        print(enumerated_combinations)
 
         temp_new_factor_dict = dict()
         for comb in enumerated_combinations:
             temp_new_factor_dict[comb] = []
-        
-        # new_factor_dict = dict()
-        # for comb in enumerated_combinations_2:
-        #     new_factor_dict[comb] = []
-
 
         for temp_factor_vars in temp_new_factor_dict:
             for red_factor in factors:
@@ -218,13 +192,6 @@ class ExactInference():
                             count += 1
                     if count == len(f):
                         temp_new_factor_dict[temp_factor_vars].append(r_fac[f])
-
-        
-        # for t in temp_new_factor_dict:
-        #     print(str(t) + " " + str(temp_new_factor_dict[t]))
-            # temp_new_factor_dict[t] = np.prod(temp_new_factor_dict[t])
-
-        # print()
 
         for t in temp_new_factor_dict:
             temp_new_factor_dict[t] = np.prod(temp_new_factor_dict[t])
@@ -240,13 +207,37 @@ class ExactInference():
     def elimination_ask(self, X, e, bay_net):
 
         factors = dict()
-        bay_net = self.order(bay_net)
-        for v in bay_net:
+        # bay_net = 
+
+        bay_net = self.evidence_prune(e, bay_net)
+        iter = 0
+        for v in reversed(bay_net):
+            iter += 1
+            print(iter)
+            # print(v.getVarName())
             fac_name, new_fac = self.make_factor(v,e)
             factors[fac_name] = new_fac
             # factors.append(self.make_factor(v, e, bay_net))
             if self.hidden_variable(v, X, e):
+                # print("true")
                 factors = self.sum_out(v.getVarName(), factors, bay_net)
+                # print(factors)
+
+        print(factors)
         return self.normalize(self.pointwise_product(factors, bay_net))
     
-    
+    def evidence_prune(self, evidence, bay_net):
+        if evidence:  # if there is evidence
+            for var_name, var_type in evidence.items():  # loop through the evidence
+                for var in bay_net:  # loop through the bayes_net
+                    if var_name == var.getVarName():  # if the key of the evidence is the same name as a variable in the bayes_net
+                        var.setCurrentType(var_type)  # set the current type of that variable
+                        item_index = var.getVarTypes().index(var_type)
+                        prob_table = var.getProbTable()
+
+                        for prob_var_name in prob_table:
+                            prob_table[prob_var_name] = [prob_table[prob_var_name][item_index]]
+                        
+                        var.types = [var_type]
+                        var.numTypes = 1
+        return bay_net
