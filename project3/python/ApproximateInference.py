@@ -7,11 +7,11 @@ class ApproximateInference():
     def markov_blanket(self, variable: object) -> list:
         markov_list = list()
 
-        if variable.getParents():
+        if not variable.rootVariableCheck():
             for parent in variable.getParents():
                 markov_list.append(parent)
         
-        if variable.getChildren():
+        if not variable.leafVariableCheck():
             for child in variable.getChildren():
                 markov_list.append(child)
                 if child.getParents():
@@ -22,7 +22,7 @@ class ApproximateInference():
         return markov_list
 
     def sample(self, variable: object, evidence: dict, markov_blanket: list, bayes_net: list) -> None:
-        if variable.getMarginal():  # variable already has prob
+        if variable.rootVariableCheck():  # variable already has prob
             return
         else:
             if evidence:  # set the evidence types
