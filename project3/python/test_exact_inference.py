@@ -2,7 +2,7 @@ from ParseInput import ParseInputBIF
 from ParseInput import displayVariables
 from ExactInference import ExactInference
 
-with open("project3/inputFiles/alarm.bif", "r") as file:
+with open("project3/inputFiles/child.bif", "r") as file:
         rawBIF = file.readlines()
 
 variables = ParseInputBIF(rawBIF)
@@ -129,11 +129,11 @@ def test_exact_inference():
     ventalv = None
 
     for var in variables:
-        if var.getVarName() == 'HYPOVOLEMIA':
+        if var.getVarName() == 'Disease':
             ventalv = var
     
-    ans = exact_inference.elimination_ask(ventalv, {"HRBP": "HIGH", "CO": "LOW", "BP": "HIGH",
-                    "HRSAT": "LOW", "HREKG": "LOW", "HISTORY": "TRUE"}, variables)
+    ans = exact_inference.elimination_ask(ventalv, {"LowerBodyO2": "<5", "RUQO2": "12+", "CO2Report": ">=7.5",
+                        "XrayReport": "Asy/Patchy"}, variables)
     return ans
 
 print(test_exact_inference())

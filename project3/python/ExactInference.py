@@ -199,9 +199,11 @@ class ExactInference():
         return temp_new_factor_dict
     
     def normalize(self, factors):
+        
+
         normalized_factors = []
-        for x in factors:
-            normalized_factors.append(x * 1/sum(factors))
+        for x in factors.values():
+            normalized_factors.append(x/sum(list(factors.values())))
         return normalized_factors
 
     def elimination_ask(self, X, e, bay_net):

@@ -45,9 +45,9 @@ def test_alarm(variables):
 def test_child(variables):
     base_e = {}
     # Child Evidence
-    child_little_e = {"LowerBodyO2": "<5", "RUQO2": ">=12", "CO2Report": ">=7.5",
+    child_little_e = {"LowerBodyO2": "<5", "RUQO2": "12+", "CO2Report": ">=7.5",
                         "XrayReport": "Asy/Patchy"}
-    child_moderate_e = {"LowerBodyO2": "<5", "RUQO2": ">=12", "CO2Report": ">=7.5",
+    child_moderate_e = {"LowerBodyO2": "<5", "RUQO2": "12+", "CO2Report": ">=7.5",
                         "XrayReport": "Asy/Patchy", "GruntingReport": "Yes",
                         "LVHReport": "Yes", "Age": "11-30 Days"}
     child_list = ["Disease"]
