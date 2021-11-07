@@ -7,29 +7,29 @@ class ApproximateInference():
     def markov_blanket(self, variable: object) -> list:
         markov_list = list()
 
-        if not variable.rootVariableCheck():
-            for parent in variable.getParents():
-                markov_list.append(parent)
+        if not variable.rootVariableCheck():  # if the variable has parents
+            for parent in variable.getParents():  
+                markov_list.append(parent)  # add the parents to the markov_list
         
-        if not variable.leafVariableCheck():
-            for child in variable.getChildren():
-                markov_list.append(child)
-                if child.getParents():
+        if not variable.leafVariableCheck():  # if the variable has children
+            for child in variable.getChildren():  
+                markov_list.append(child)  # add the children to the markov_list
+                if child.getParents():  # if the children of the variable have parents
                     for child_par in child.getParents():
-                        if child_par != variable:
-                            markov_list.append(child_par)
+                        if child_par != variable:  # if the parent of the child is not the variable
+                            markov_list.append(child_par)  # add the childs parents to the markov_list
 
         return markov_list
 
     def sample(self, variable: object, evidence: dict, markov_blanket: list, bayes_net: list) -> None:
-        if variable.rootVariableCheck():  # variable already has prob
+        if variable.rootVariableCheck():  # variable is a root already know marginal
             return
         else:
-            if evidence:  # set the evidence types
-                for var_name, var_type in evidence.items():
-                    for var in bayes_net:
-                        if var_name == var.getVarName():
-                            var.setCurrentType(var_type)
+            if evidence:  # if there is evidence
+                for var_name, var_type in evidence.items():  # loop through the evidence
+                    for var in bayes_net:  # loop through the bayes_net
+                        if var_name == var.getVarName():  # if the key of the evidence is the same name as a variable in the bayes_net
+                            var.setCurrentType(var_type)  # set the current type of that variable
 
             if not variable.getCurrentType():
                 variable.setCurrentType(ran.choice(variable.getVarTypes()))  # set the type of the random variable
