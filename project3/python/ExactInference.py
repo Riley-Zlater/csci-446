@@ -12,38 +12,9 @@ class ExactInference():
             if item.getVarName() == l_i.getVarName():
                 return True
         return False
+          
     
-      
-
-    def order(self, vars):
-        """
-            Kahns algorithm for topological sorting
-            https://en.wikipedia.org/wiki/Topological_sorting
-        """
-        l = []
-        s = set()
-        
-
-        for var in vars:
-            if len(var.getParents()) == 0:
-                s.add(var)
-        
-        while len(s) != 0:
-            n = s.pop()
-            l.append(n)
-            for m in n.getChildren():
-                test = True
-                parents = m.getParents()
-                for p_i in parents:
-                    if self.check_list(p_i, l) == False:
-                        test = False
-                if test:
-                    s.add(m)
-        
-        return l
-    
-    def make_factor(self, v, e):
-        
+    def make_factor(self, v, e):  
         new_factor = []
         
         prob_table = v.getProbTable()
@@ -65,7 +36,6 @@ class ExactInference():
 
         title_list = [p.getVarName() for p in parents]
         title_list.insert(0, v.getVarName())
-
 
         return tuple(title_list), new_factor_3
 
@@ -97,18 +67,13 @@ class ExactInference():
             for var in var_names:
                 if var not in temp_new_factor_vars:
                     temp_new_factor_vars.append(var)
-                    #TEST INPUT
-                    # temp_new_factor_var_types.append(['T','F'])
                     temp_new_factor_var_types.append(self.get_var_types(var, bay_net))
                 if var != V and var not in new_factor_vars:
                     new_factor_vars.append(var)
                     new_factor_var_types.append(self.get_var_types(var, bay_net))
-                    # new_factor_var_types.append(['T','F'])
 
-        # print(temp_new_factor_var_types)
 
         enumerated_combinations = list(it.product(*temp_new_factor_var_types))
-        # print(enumerated_combinations)
         enumerated_combinations_2 = list(it.product(*new_factor_var_types))
 
         temp_new_factor_dict = dict()
@@ -146,16 +111,10 @@ class ExactInference():
                 if count == len(factor_vars):
                     new_factor_dict[factor_vars].append(temp_new_factor_dict[temp_factor_vars])
         
-        # print(new_factor_dict)
-
         for t in new_factor_dict:
             new_factor_dict[t] = sum(new_factor_dict[t])
         
-        # print(new_factor_dict)
-
         factors_to_return[tuple(new_factor_vars)] = new_factor_dict
-
-        # print(factors_to_return)
 
         return factors_to_return
     
@@ -173,9 +132,6 @@ class ExactInference():
                     temp_new_factor_var_types.append(self.get_var_types(var, bay_net))
 
         enumerated_combinations = list(it.product(*temp_new_factor_var_types))
-
-
-        print(enumerated_combinations)
 
         temp_new_factor_dict = dict()
         for comb in enumerated_combinations:
@@ -200,30 +156,23 @@ class ExactInference():
     
     def normalize(self, factors):
         normalized_factors = []
-        for x in factors:
-            normalized_factors.append(x * 1/sum(factors))
+        for x in factors.values():
+            normalized_factors.append(x/sum(list(factors.values())))
         return normalized_factors
 
     def elimination_ask(self, X, e, bay_net):
-
         factors = dict()
-        # bay_net = 
 
         bay_net = self.evidence_prune(e, bay_net)
-        iter = 0
+        # iter = 0
         for v in reversed(bay_net):
-            iter += 1
-            print(iter)
-            # print(v.getVarName())
+            # iter += 1
+            # print(iter)
             fac_name, new_fac = self.make_factor(v,e)
             factors[fac_name] = new_fac
-            # factors.append(self.make_factor(v, e, bay_net))
             if self.hidden_variable(v, X, e):
-                # print("true")
                 factors = self.sum_out(v.getVarName(), factors, bay_net)
-                # print(factors)
 
-        print(factors)
         return self.normalize(self.pointwise_product(factors, bay_net))
     
     def evidence_prune(self, evidence, bay_net):
