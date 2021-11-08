@@ -1,6 +1,7 @@
 import Variable
 
 def topo_sort(variables: list) -> list:
+    """This function topologically sorts the data."""
     sorted_data = list()
     temp_set = list()
 
@@ -19,6 +20,7 @@ def topo_sort(variables: list) -> list:
     return sorted_data
 
 def ParseInputBIF(inputBIF: list) -> list:
+    """This function parses the input BIF file into Variable objects."""
     index = 0
     varList = []
 
@@ -79,7 +81,7 @@ def ParseInputBIF(inputBIF: list) -> list:
     return topo_sort(varList)
 
 def displayVariables(varList: list) -> None:
-    looks = 'Value:'
+    """This function will display the data."""
     for var in varList:
         print("\nVariable Name:", var.getVarName())
         print("\nType:", var.getVarTypes())
