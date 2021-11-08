@@ -1,6 +1,10 @@
-from ParseInput import ParseInputBIF
-from ParseInput import displayVariables
+# Written by Riley Slater and Cooper Strahan
+from ParseInput import ParseInputBIF, displayVariables
 from ResultsApprox import test_approx
+
+
+"""Run this file to do the Gibbs Sampling testing"""
+
 
 # with open("C:/Users/riley/repos/csci-446/project3/inputFiles/win95pts.bif", "r") as file:
 with open("../inputFiles/win95pts.bif", "r") as file:

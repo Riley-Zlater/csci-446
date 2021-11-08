@@ -1,20 +1,33 @@
+# Written by Cooper Strahan
 import itertools as it
 import numpy as np
 import copy
 from Variable import Variable
 
+"""
+This class contains the functions to perform exact
+inference on a bayesian network.
+"""
 class ExactInference():
     def __init__(self) -> None:
         pass
 
-    def check_list(self, item, l):
+    def check_list(self, item: object, l: list) -> bool:
+        """
+        This function checks to see if the given item is in
+        the given list.
+        """
         for l_i in l:
             if item.getVarName() == l_i.getVarName():
                 return True
         return False
           
     
-    def make_factor(self, v, e):  
+    def make_factor(self, v: object) -> tuple and dict:  
+        """
+        This function joins all the probability distributions of the 
+        variables that include the query variable.
+        """
         new_factor = []
         
         prob_table = v.getProbTable()
@@ -40,19 +53,25 @@ class ExactInference():
         return tuple(title_list), new_factor_3
 
     
-    def hidden_variable(self, X, V, e):
+    def hidden_variable(self, X: object, V: object, e: dict) -> bool:
+        """This function identifies hidden variables."""
         if X.getVarName() != V.getVarName() and X not in e:
             return True
         return False
     
-    def get_var_types(self, name, bay_net):
+    def get_var_types(self, name: str, bay_net: list) -> list:
+        """This function gets the type values of a variable."""
         for node in bay_net:
             if node.name == name:
                 return list(node.getVarTypes())
         
         return []
 
-    def sum_out(self, V, factors, bay_net):
+    def sum_out(self, V: object, factors: dict, bay_net: list) -> dict:
+        """
+        This function sums, or marginalizes out, a variable from
+        the joined distributions.
+        """
         factors_to_return = copy.deepcopy(factors)
         temp_new_factor_vars = []
         temp_new_factor_var_types = []
@@ -118,7 +137,8 @@ class ExactInference():
 
         return factors_to_return
     
-    def pointwise_product(self, factors, bay_net):
+    def pointwise_product(self, factors: dict, bay_net: list) -> dict:
+        """This function computes the pointwise product of a factor."""
         temp_new_factor_vars = []
         temp_new_factor_var_types = []   
 
@@ -154,13 +174,15 @@ class ExactInference():
 
         return temp_new_factor_dict
     
-    def normalize(self, factors):
+    def normalize(self, factors: dict) -> list:
+        """This function normalizes the data."""
         normalized_factors = []
         for x in factors.values():
             normalized_factors.append(x/sum(list(factors.values())))
         return normalized_factors
 
-    def elimination_ask(self, X, e, bay_net):
+    def elimination_ask(self, X: object, e: dict, bay_net: list) -> list:
+        """Driver function for the exact inference."""
         factors = dict()
 
         bay_net = self.evidence_prune(e, bay_net)
@@ -175,7 +197,8 @@ class ExactInference():
 
         return self.normalize(self.pointwise_product(factors, bay_net))
     
-    def evidence_prune(self, evidence, bay_net):
+    def evidence_prune(self, evidence: list, bay_net: list) -> list:
+        """"This function applies the evidence to the bayes net."""
         if evidence:  # if there is evidence
             for var_name, var_type in evidence.items():  # loop through the evidence
                 for var in bay_net:  # loop through the bayes_net

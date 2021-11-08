@@ -2,7 +2,8 @@ from ApproximateInference import gibbs_sampling
 
 def test_approx(alarm_variables: object, child_variables: object,
                 hailfinder_variables: object, insurance_variables: object, 
-                win95pts_variables: object):
+                win95pts_variables: object) -> None:
+    """Driver function for testig approximate inference on all of the networks."""
 
     test_alarm(alarm_variables)
     test_child(child_variables)
@@ -11,7 +12,11 @@ def test_approx(alarm_variables: object, child_variables: object,
     test_win95pts(win95pts_variables)
 
 
-def test_alarm(variables):
+def test_alarm(variables: list) -> None:
+    """
+    This function tests the alarm network with varying amounts
+    evidence provided and reports on the desired variables.
+    """
     # No Evidence
     base_e = {}
     # Alarm Evidence
@@ -42,7 +47,11 @@ def test_alarm(variables):
     print()
     ##----- End Alarm -----##
 
-def test_child(variables):
+def test_child(variables: list) -> None:
+    """
+    This function tests the child network with varying amounts
+    evidence provided and reports on the desired variables.
+    """
     base_e = {}
     # Child Evidence
     child_little_e = {"LowerBodyO2": "<5", "RUQO2": "12+", "CO2Report": ">=7.5",
@@ -73,7 +82,11 @@ def test_child(variables):
     print()
     ##----- End Child -----##
 
-def test_hailfinder(variables):
+def test_hailfinder(variables: list) -> None:
+    """
+    This function tests the hailfinder network with varying amounts
+    evidence provided and reports on the desired variables.
+    """
     base_e = {}
     # Hailfinder Evidence
     hailfinder_little_e = {"RSFcst": "XNIL", "N32StarFcst": "XNIL", "MountainFcst": "XNIL",
@@ -104,7 +117,11 @@ def test_hailfinder(variables):
     print()
     ##----- End Hailfinder -----##
 
-def test_insurance(variables):
+def test_insurance(variables: list) -> None:
+    """
+    This function tests the insurance network with varying amounts
+    evidence provided and reports on the desired variables.
+    """
     base_e = {}
     # Insurance Evidence
     insurance_little_e = {"Age": "Adolescent", "GoodStudent": "False", "SeniorTrain": "False", "DrivQuality": "Poor"}
@@ -133,7 +150,11 @@ def test_insurance(variables):
     print()
     ##----- End Insurance -----##
 
-def test_win95pts(variables):
+def test_win95pts(variables: list) -> None:
+    """
+    This function tests the win95pts network with varying amounts
+    evidence provided and reports on the desired variables.
+    """
     base_e = {}
     # Win95pts Evidence
     win95pts_e1 = {"Problem1": "No_Output"}
