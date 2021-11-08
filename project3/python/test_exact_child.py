@@ -19,17 +19,19 @@ def test_exact_inference():
     child_little_e = {"LowerBodyO2": "<5", "RUQO2": "12+", "CO2Report": ">=7.5",
                         "XrayReport": "Asy/Patchy"}
     child_moderate_e = {"LowerBodyO2": "<5", "RUQO2": "12+", "CO2Report": ">=7.5",
-                        "XrayReport": "Asy/Patchy", "GruntingReport": "Yes",
-                        "LVHReport": "Yes", "Age": "11-30 Days"}
+                        "XrayReport": "Asy/Patchy", "GruntingReport": "yes",
+                        "LVHReport": "yes", "Age": "11-30_days"}
 
     search = [disease]
     ev_level = [base_e, child_little_e, child_moderate_e]
 
-    for ev in ev_level:
-        for item in search:
-            print(str(item.getVarName()) + " " + str(ev))
-            print(exact_inference.elimination_ask(item, ev, variables))
+    # for ev in ev_level:
+    #     for item in search:
+    #         print(str(item.getVarName()) + " " + str(ev))
+    #         print(exact_inference.elimination_ask(item, ev, variables))
     
+    print(exact_inference.elimination_ask(disease, child_moderate_e, variables))
+
     ##----- End Alarm -----##
 
 # print(test_exact_inference())

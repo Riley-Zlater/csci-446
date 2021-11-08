@@ -23,11 +23,14 @@ def test_exact_inference():
     # Alarm Evidence
     insurance_little_e = {"Age": "Adolescent", "GoodStudent": "False", "SeniorTrain": "False", "DrivQuality": "Poor"}
     insurance_moderate_e = {"Age": "Adolescent", "GoodStudent": "False", "SeniorTrain": "False", "DrivQuality": "Poor",
-                            "MakeModel": "Luxury", "CarValue": "FiftyThousand", "DrivHistory": "Zero"}
+                            "MakeModel": "Luxury", "CarValue": "FiftyThou", "DrivHistory": "Zero"}
    
 
     search = [medcost, ilicost, propcost]
     ev_level = [base_e, insurance_little_e, insurance_moderate_e]
+
+    # exact_inference.elimination_ask(medcost, insurance_little_e, variables)
+    # exact_inference.elimination_ask(medcost, insurance_moderate_e, variables)
 
     for ev in ev_level:
         for item in search:
