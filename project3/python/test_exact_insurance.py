@@ -27,7 +27,7 @@ def test_exact_inference():
    
 
     search = [medcost, ilicost, propcost]
-    ev_level = [base_e, insurance_little_e, insurance_moderate_e]
+    ev_level = [insurance_moderate_e, insurance_little_e, base_e]
 
     # exact_inference.elimination_ask(medcost, insurance_little_e, variables)
     # exact_inference.elimination_ask(medcost, insurance_moderate_e, variables)

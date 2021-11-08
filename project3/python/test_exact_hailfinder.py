@@ -25,7 +25,7 @@ def test_exact_inference():
                             "CurPropConv": "Strong"}
 
     search = [satcont, lliw]
-    ev_level = [base_e, hailfinder_little_e, hailfinder_moderate_e]
+    ev_level = [hailfinder_moderate_e, hailfinder_little_e, base_e]
 
     for ev in ev_level:
         for item in search:

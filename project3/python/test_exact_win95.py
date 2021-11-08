@@ -35,7 +35,7 @@ def test_exact_inference():
     win95pts_e6 = {"Problem6": "Yes"}
 
     search = [p1, p2, p3, p4, p5, p6]
-    ev_level = [base_e, win95pts_e1, win95pts_e2, win95pts_e3, win95pts_e4, win95pts_e5, win95pts_e6]
+    ev_level = [win95pts_e6, win95pts_e5, win95pts_e4, win95pts_e3, win95pts_e2, win95pts_e1, base_e]
 
     for ev in ev_level:
         for item in search:
