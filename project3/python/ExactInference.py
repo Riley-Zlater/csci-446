@@ -164,16 +164,15 @@ class ExactInference():
         factors = dict()
 
         bay_net = self.evidence_prune(e, bay_net)
-        iter = 0
+        # iter = 0
         for v in reversed(bay_net):
-            iter += 1
-            print(iter)
+            # iter += 1
+            # print(iter)
             fac_name, new_fac = self.make_factor(v,e)
             factors[fac_name] = new_fac
             if self.hidden_variable(v, X, e):
                 factors = self.sum_out(v.getVarName(), factors, bay_net)
 
-        print(factors)
         return self.normalize(self.pointwise_product(factors, bay_net))
     
     def evidence_prune(self, evidence, bay_net):
