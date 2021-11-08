@@ -190,7 +190,7 @@ class ExactInference():
         for v in reversed(bay_net):
             # iter += 1
             # print(iter)
-            fac_name, new_fac = self.make_factor(v,e)
+            fac_name, new_fac = self.make_factor(v)
             factors[fac_name] = new_fac
             if self.hidden_variable(v, X, e):
                 factors = self.sum_out(v.getVarName(), factors, bay_net)

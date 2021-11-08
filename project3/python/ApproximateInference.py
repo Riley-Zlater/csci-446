@@ -57,5 +57,5 @@ def gibbs_sampling(evidence: dict, bayes_net: list, num_iter: int) -> None:
     for _ in range(num_iter):
         Z_i = ran.choice(bayes_net)
         mbZ_i = markov_blanket(Z_i)
-        sample(Z_i, evidence, mbZ_i)  
+        sample(Z_i, mbZ_i)  
     return
