@@ -29,7 +29,7 @@ def test_exact_inference():
 
     for ev in ev_level:
         for item in search:
-            print(str(item) + " " + str(ev))
+            print(str(item.getVarName()) + " " + str(ev))
             print(exact_inference.elimination_ask(item, ev, variables))
     
     ##----- End Alarm -----##
