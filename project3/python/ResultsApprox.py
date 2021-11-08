@@ -45,14 +45,13 @@ def test_alarm(variables):
 def test_child(variables):
     base_e = {}
     # Child Evidence
-    child_little_e = {"LowerBodyO2": "<5", "RUQO2": ">=12", "CO2Report": ">=7.5",
+    child_little_e = {"LowerBodyO2": "<5", "RUQO2": "12+", "CO2Report": ">=7.5",
                         "XrayReport": "Asy/Patchy"}
-    child_moderate_e = {"LowerBodyO2": "<5", "RUQO2": ">=12", "CO2Report": ">=7.5",
+    child_moderate_e = {"LowerBodyO2": "<5", "RUQO2": "12+", "CO2Report": ">=7.5",
                         "XrayReport": "Asy/Patchy", "GruntingReport": "Yes",
                         "LVHReport": "Yes", "Age": "11-30 Days"}
     child_list = ["Disease"]
     gibbs_sampling(base_e, variables, 10000)
-    alarm_list = ["HYPOVOLEMIA", "LVFAILURE", "ERRLOWOUTPUT"]
     print("Child Network No Evidence")
     for var in variables:
         if var.getVarName() in child_list:
