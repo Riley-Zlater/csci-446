@@ -73,6 +73,7 @@ class ExactInference():
         the joined distributions.
         """
         factors_to_return = copy.deepcopy(factors)
+        reduced_factors = dict()
         temp_new_factor_vars = []
         temp_new_factor_var_types = []
         new_factor_vars = []
@@ -80,9 +81,10 @@ class ExactInference():
 
         for factor in factors:
             if V in list(factor):
+                reduced_factors[factor] = factors[factor]
                 del factors_to_return[factor]          
 
-        for var_names in factors:
+        for var_names in reduced_factors:
             for var in var_names:
                 if var not in temp_new_factor_vars:
                     temp_new_factor_vars.append(var)
@@ -104,8 +106,8 @@ class ExactInference():
             new_factor_dict[comb] = []
 
         for temp_factor_vars in temp_new_factor_dict:
-            for red_factors in factors:
-                r_fac = factors[red_factors]
+            for red_factors in reduced_factors:
+                r_fac = reduced_factors[red_factors]
                 for factor in r_fac:
                     count = 0
                     for i in range(len(factor)):
@@ -143,8 +145,8 @@ class ExactInference():
         temp_new_factor_var_types = []   
 
         for var_names in factors:
-            print(var_names)
-            print(factors[var_names])
+            # print(var_names)
+            # print(factors[var_names])
             for var in var_names:
                 
                 if var not in temp_new_factor_vars:
@@ -197,9 +199,10 @@ class ExactInference():
 
         return self.normalize(self.pointwise_product(factors, bay_net))
     
-    def evidence_prune(self, evidence: list, bay_net: list) -> list:
+    def evidence_prune(self, evidence: dict, bay_net: list) -> list:
         """"This function applies the evidence to the bayes net."""
         if evidence:  # if there is evidence
+            # print("reducing variables")
             for var_name, var_type in evidence.items():  # loop through the evidence
                 for var in bay_net:  # loop through the bayes_net
                     if var_name == var.getVarName():  # if the key of the evidence is the same name as a variable in the bayes_net
@@ -212,4 +215,6 @@ class ExactInference():
                         
                         var.types = [var_type]
                         var.numTypes = 1
+                        
+                    
         return bay_net

@@ -27,7 +27,7 @@ def test_exact_inference():
                         "HRSAT": "LOW", "HREKG": "LOW", "HISTORY": "TRUE"}
 
     search = [hypo, lvfail, errlow]
-    ev_level = [base_e, alarm_little_e, alarm_moderate_e]
+    ev_level = [alarm_moderate_e, alarm_little_e, base_e]
 
     for ev in ev_level:
         for item in search:
