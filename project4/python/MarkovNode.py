@@ -8,3 +8,27 @@ class MarkovNode():
         self.j = j
         self.utility = 0
     
+    def get_state(self):
+        return self.state
+
+    def get_wall_state(self) -> bool:
+        return self.get_state() == "wall"
+    
+    def get_finish_state(self) -> bool:
+        return self.get_state() == "finish"
+
+    def check_and_set_utility(self):
+        if self.get_wall_state():
+            self.utility = -1
+        if self.get_finish_state():
+            self.utility = 1
+    
+    def set_utility(self, value: float):
+        self.utility = value
+    
+    def set_wall_utility(self):
+        self.utility = -1
+    
+    def set_finish_utility(self):
+        self.utility = 1
+    

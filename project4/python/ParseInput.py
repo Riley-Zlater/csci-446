@@ -29,11 +29,18 @@ def get_state(cell: str):
 i = 0
 for line in input_file:
     j = 0
+    line_list = list()
     for cell in line:
         state = get_state(cell)
-        markov_list.append(MarkovNode(state, i, j))
+        line_list.append(MarkovNode(state, i, j))
         j+=1
     i += 1
+    markov_list.append(line_list)
         
 
+
+for line in markov_list:
+    for item in line:
+        print(item.get_state())
+    # print(line)
 
