@@ -1,6 +1,7 @@
 
 
 from MarkovNode import MarkovNode
+from MarkovList import MarkovList
 
 
 input_file = None
@@ -8,14 +9,28 @@ input_file = None
 with open("../inputFiles/L-track.txt", "r") as file:
         input_file = file.readlines()
     
-f_line = input_file[0]
-height, width = f_line.split(",")[0], f_line.split(",")[1]
+def generate_markov_list(file) -> MarkovList:
 
-input_file = input_file[1:]
-print(height, width)
+    f_line = file[0]
+    h, w = f_line.split(",")[0], f_line.split(",")[1]
 
-markov_list = list()
+    file = file[1:]
+    print(h, w)
 
+    markov_list = MarkovList(w, h)
+    i = 0
+    for line in file:
+        j = 0
+        line_list = list()
+        for cell in line:
+            state = get_state(cell)
+            line_list.append(MarkovNode(state, i, j))
+            j+=1
+        i += 1
+        markov_list.insert_list(line_list)
+    
+    return markov_list
+        
 def get_state(cell: str):
     if cell == "#":
         return "wall"
@@ -26,21 +41,8 @@ def get_state(cell: str):
     if cell == "F":
         return "finish"
 
-i = 0
-for line in input_file:
-    j = 0
-    line_list = list()
-    for cell in line:
-        state = get_state(cell)
-        line_list.append(MarkovNode(state, i, j))
-        j+=1
-    i += 1
-    markov_list.append(line_list)
-        
 
+# markov_list = generate_markov_list(input_file)
 
-for line in markov_list:
-    for item in line:
-        print(item.get_state())
-    # print(line)
+# markov_list.display_markov_list()
 
