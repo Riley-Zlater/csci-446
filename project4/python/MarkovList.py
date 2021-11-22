@@ -15,27 +15,44 @@ class MarkovList():
     
     def get_height(self) -> int:
         return self.height
+    
+    def get_markov_list(self) -> list:
+        return self.markov_list
 
     def insert_list(self, sub_list: list) -> None:
         self.markov_list.append(sub_list)
+    
+    def get_markov_node(self, node: MarkovNode) -> MarkovNode:
+        return self.get_node(node.x_pos, node.y_pos)
+    
+    def get_markov_utilities(self) -> list:
+        U = list()
+        for markov_line in self.markov_list:
+            U_line = list()
+            for markov_node in markov_line:
+                markov_node.check_and_set_utility()
+                U_line.append(markov_node.utility)
+            U.append(U_line)
+        return U
     
     def display_markov_list(self) -> None:
         for line in self.markov_list:
             markov_line = list()
             for node in line:
-                markov_line.append(node.state)
+                markov_line.append(node.utility)
             print(markov_line)
     
     def display_markov_contents(self) -> None:
         for i, row in enumerate(self.markov_list):
             for j, node in enumerate(row):
-                if node.state != "wall":
+                if node.condition != "w":
                     print(f"Node at position {i}, {j}")
-                    print(f"State = {node.state}")
-                    print(f"Index = {node.i}, {node.j}")
+                    print(f"Condition = {node.condition}")
+                    print(f"Index = {node.x_pos}, {node.y_pos}")
+                    print(f"Velocity = {node.x_velocity}, {node.y_velocity}")
+                    print(f"Acceleration = {node.x_acceleration}, {node.y_acceleration}")
                     print(f"Utility = {node.utility}")
                     print(f"Best Move = {node.best_move}")
-                    print(f"Neighbors = {node.neighbors}")
                     print()
 
     def get_node(self, i: int, j: int) -> MarkovNode:
