@@ -26,5 +26,17 @@ class MarkovList():
                 bitcher.append(node.state)
             print(bitcher)
     
+    def display_markov_contents(self) -> None:
+        for i, row in enumerate(self.markov_list):
+            for j, node in enumerate(row):
+                if node.state != "wall":
+                    print(f"Node at position {i}, {j}")
+                    print(f"State = {node.state}")
+                    print(f"Index = {node.i}, {node.j}")
+                    print(f"Utility = {node.utility}")
+                    print(f"Best Move = {node.best_move}")
+                    print(f"Neighbors = {node.neighbors}")
+                    print()
+
     def get_node(self, i: int, j: int) -> MarkovNode:
         return self.markov_list[i][j]

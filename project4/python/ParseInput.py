@@ -6,7 +6,7 @@ from MarkovList import MarkovList
 
 input_file = None
 
-with open("../inputFiles/L-track.txt", "r") as file:
+with open("project4/inputFiles/L-track.txt", "r") as file:
         input_file = file.readlines()
     
 def generate_markov_list(file) -> MarkovList:
@@ -18,20 +18,21 @@ def generate_markov_list(file) -> MarkovList:
     print(h, w)
 
     markov_list = MarkovList(w, h)
-    i = 0
-    for line in file:
-        j = 0
+    #i = 0
+    for i, line in enumerate(file):
+        line = line.strip()
+        #j = 0
         line_list = list()
-        for cell in line:
-            state = get_state(cell)
+        for j, cell in enumerate(line):
+            state = transform_state(cell)
             line_list.append(MarkovNode(state, i, j))
-            j+=1
-        i += 1
+            #j+=1
+        #i += 1
         markov_list.insert_list(line_list)
     
     return markov_list
         
-def get_state(cell: str):
+def transform_state(cell: str):
     if cell == "#":
         return "wall"
     if cell == ".":
@@ -42,7 +43,7 @@ def get_state(cell: str):
         return "finish"
 
 
-# markov_list = generate_markov_list(input_file)
+markov_list = generate_markov_list(input_file)
 
-# markov_list.display_markov_list()
+markov_list.display_markov_contents()
 
