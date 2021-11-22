@@ -16,15 +16,15 @@ class MarkovList():
     def get_height(self) -> int:
         return self.height
 
-    def insert_list(self, sub_list: list()) -> None:
+    def insert_list(self, sub_list: list) -> None:
         self.markov_list.append(sub_list)
     
     def display_markov_list(self) -> None:
         for line in self.markov_list:
-            bitcher = list()
+            markov_line = list()
             for node in line:
-                bitcher.append(node.state)
-            print(bitcher)
+                markov_line.append(node.state)
+            print(markov_line)
     
     def display_markov_contents(self) -> None:
         for i, row in enumerate(self.markov_list):
