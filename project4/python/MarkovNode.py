@@ -3,12 +3,16 @@
 class MarkovNode():
     
     def __init__(self, state: str, i: int, j: int) -> None:
-        self.state = state
-        self.i = i
-        self.j = j
+        self.condition = state
+        self.x_pos = i
+        self.y_pos = j
+        self.x_velocity
+        self.y_velocity
+        self.x_acceleration
+        self.y_acceleration
         self.utility = 0
         self.best_move = None
-        self.neighbors = list()
+        self.action = [0,0]
     
     def get_state(self):
         return self.state
@@ -33,5 +37,4 @@ class MarkovNode():
     
     def set_finish_utility(self) -> None:
         self.utility = 1
-    
     
