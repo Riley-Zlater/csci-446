@@ -49,18 +49,20 @@ def value_iteration(mdp: MarkovList, e: float, discount_factor: float):
                         best_acceleration = action
                         best_velocity = tuple(map(sum, state.get_velocity(), best_acceleration))
 
+                # update U prime
                 U_prime.get_markov_node(state).set_utility(max)
                 U_prime.get_markov_node(state).set_best_move(best_move)
                 U_prime.get_markov_node(state).set_acceleration(best_acceleration)
                 U_prime.get_markov_node(state).set_velocity(best_velocity)
 
+                # check for new max relative change
                 u_diff = abs(U_prime.get_markov_node(state).utility - U.get_markov_node(state).utility)
                 if u_diff > max_rel_change:
                     max_rel_change = u_diff
         
+        # check for convergence
         if max_rel_change <= (e(1 - discount_factor))/discount_factor:
             break
-
 
     return U
 
