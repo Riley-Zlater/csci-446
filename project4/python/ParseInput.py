@@ -6,8 +6,8 @@ from MarkovList import MarkovList
 
 input_file = None
 
-with open("../inputFiles/L-track.txt", "r") as file:
-        input_file = file.readlines()
+# with open("../inputFiles/L-track.txt", "r") as file:
+#         input_file = file.readlines()
     
 def generate_markov_list(file) -> MarkovList:
 

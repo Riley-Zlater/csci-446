@@ -25,7 +25,7 @@ class MarkovNode():
     def get_position(self) -> tuple:
         return (self.x_pos, self.y_pos)
     
-    def get_velocity(self) -> list:
+    def get_velocity(self) -> tuple:
         return (self.x_velocity, self.y_velocity)
 
     def check_and_set_utility(self) -> None:

@@ -1,22 +1,17 @@
-from os import curdir
+#from os import curdir
 from ParseInput import generate_markov_list
 from MarkovList import MarkovList
 from MarkovNode import MarkovNode
 import copy
 
-with open("../inputFiles/L-track.txt", "r") as file:
+with open("project4/inputFiles/L-track.txt", "r") as file:
         input_file = file.readlines()
 
 def value_iteration(mdp: MarkovList, e: float, discount_factor: float):
 
     # local variables
-    max_rel_change = int()
     U = mdp
     U_prime = copy.deepcopy(U)
-
-
-    # for line in U:
-    #     print(line)
 
     # Begin value iteration
     while True:
@@ -25,6 +20,10 @@ def value_iteration(mdp: MarkovList, e: float, discount_factor: float):
         U.display_markov_list()
         for utility_line in U.get_markov_list():
             for state in utility_line:
+                state.check_and_set_utility()
+                if state.utility == -1:
+                    break
+
                 possible_actions =     [(0, 0),   (0, 1),  (0, -1), 
                                         (1, 1),   (1, 0),  (-1, 0), 
                                         (-1, -1), (-1, 1), (1, -1)]
@@ -47,7 +46,7 @@ def value_iteration(mdp: MarkovList, e: float, discount_factor: float):
                         max = q_val
                         best_move = s_prime
                         best_acceleration = action
-                        best_velocity = tuple(map(sum, state.get_velocity(), best_acceleration))
+                        best_velocity = tuple(sum(val) for val in zip(list(state.get_velocity()), list(best_acceleration)))
 
                 # update U prime
                 U_prime.get_markov_node(state).set_utility(max)
@@ -61,7 +60,7 @@ def value_iteration(mdp: MarkovList, e: float, discount_factor: float):
                     max_rel_change = u_diff
         
         # check for convergence
-        if max_rel_change <= (e(1 - discount_factor))/discount_factor:
+        if max_rel_change <= (e*(1 - discount_factor))/discount_factor:
             break
 
     return U
@@ -83,4 +82,6 @@ def q_value(mdp: MarkovList, s: MarkovNode, a: tuple, discount_factor: float):
     
 
 mdp = generate_markov_list(input_file)
-value_iteration(mdp, 0.05, 0.1)
+for nodes in value_iteration(mdp, 0.05, 0.1).get_markov_list():
+    for node in nodes:
+        print(node.utility)
