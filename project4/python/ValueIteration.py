@@ -4,52 +4,55 @@ from MarkovList import MarkovList
 from MarkovNode import MarkovNode
 import copy
 
-with open("project4/inputFiles/L-track.txt", "r") as file:
+with open("../inputFiles/O-track.txt", "r") as file:
         input_file = file.readlines()
-
+        
+temp_counter = 0
 def value_iteration(mdp: MarkovList, e: float, discount_factor: float):
 
     # local variables
-    U = mdp
+    global temp_counter
+    U = copy.deepcopy(mdp)
     U_prime = copy.deepcopy(U)
 
     # Begin value iteration
-    while True:
-        max_rel_change = 0.0
-        U = U_prime
-        U.display_markov_list()
-        for utility_line in U.get_markov_list():
+    for utility_line in U.get_markov_list():
             for state in utility_line:
                 state.check_and_set_utility()
-                if state.utility == -1:
-                    break
+    
+    for utility_line in U_prime.get_markov_list():
+            for state in utility_line:
+                state.check_and_set_utility()
 
-                possible_actions =     [(0, 0),   (0, 1),  (0, -1), 
-                                        (1, 1),   (1, 0),  (-1, 0), 
-                                        (-1, -1), (-1, 1), (1, -1)]
-                max = 0.0
+    while True:
+    # while temp_counter <= 1000:
+        temp_counter += 1
+        max_rel_change = 0.0
+        U = copy.deepcopy(U_prime)
+        U.display_markov_list()
+        print()
+        for utility_line in U.get_markov_list():
+            for state in utility_line:
+                if state.get_condition() in ["w", "f"]:
+                    continue
+                
+                max_value = 0.0
                 best_move = None
                 best_acceleration = (0, 0)
                 best_velocity = (0,0)
-
-                # prune poss actions
-                for action in possible_actions:
-                    x_a, y_a = action
-                    curr_v_x, curr_v_y = state.get_velocity()
-                    if -5 > x_a + curr_v_x > 5 or -5 > y_a + curr_v_y > 5:
-                        possible_actions.remove(action)
+                state.prune_poss_actions()
 
                 # pass actions through q value function
-                for action in possible_actions:
+                for action in state.get_possible_actions():
                     q_val, s_prime = q_value(U_prime, state, action, discount_factor)
-                    if q_val > max:
-                        max = q_val
+                    if q_val > max_value:
+                        max_value = q_val
                         best_move = s_prime
                         best_acceleration = action
                         best_velocity = tuple(sum(val) for val in zip(list(state.get_velocity()), list(best_acceleration)))
 
                 # update U prime
-                U_prime.get_markov_node(state).set_utility(max)
+                U_prime.get_markov_node(state).set_utility(max_value)
                 U_prime.get_markov_node(state).set_best_move(best_move)
                 U_prime.get_markov_node(state).set_acceleration(best_acceleration)
                 U_prime.get_markov_node(state).set_velocity(best_velocity)
@@ -58,7 +61,7 @@ def value_iteration(mdp: MarkovList, e: float, discount_factor: float):
                 u_diff = abs(U_prime.get_markov_node(state).utility - U.get_markov_node(state).utility)
                 if u_diff > max_rel_change:
                     max_rel_change = u_diff
-        
+
         # check for convergence
         if max_rel_change <= (e*(1 - discount_factor))/discount_factor:
             break
@@ -76,12 +79,12 @@ def q_value(mdp: MarkovList, s: MarkovNode, a: tuple, discount_factor: float):
 
     s_prime = mdp.get_node(x_prime, y_prime)
 
-    u_value = (0.8 * (-1 + discount_factor * s_prime.utility)) + (0.2 * (-1 + discount_factor * s.utility))
+    u_value = (0.8 * (1 + discount_factor * s_prime.utility)) + (0.2 * (1 + discount_factor * s.utility)) - 1
 
     return u_value, s_prime
     
 
 mdp = generate_markov_list(input_file)
-for nodes in value_iteration(mdp, 0.05, 0.1).get_markov_list():
-    for node in nodes:
-        print(node.utility)
+value_iteration(mdp, 1, 0.99).display_markov_list_best_move()
+
+print(temp_counter)

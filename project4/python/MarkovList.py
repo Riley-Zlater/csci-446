@@ -39,7 +39,18 @@ class MarkovList():
         for line in self.markov_list:
             markov_line = list()
             for node in line:
-                markov_line.append(node.utility)
+                markov_line.append(round(node.utility, 2))
+            print(markov_line)
+    
+    def display_markov_list_best_move(self) -> None:
+        for line in self.markov_list:
+            markov_line = list()
+            
+            for node in line:
+                if node.get_condition() in ['w', 'f']:
+                    markov_line.append([0,0])
+                else:
+                    markov_line.append(node.get_best_move_indices())
             print(markov_line)
     
     def display_markov_contents(self) -> None:
