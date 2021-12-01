@@ -13,10 +13,13 @@ class MarkovNode():
         self.utility = 0.0
         self.best_move = None
         self.possible_actions =     [(0, 0),   (0, 1),  (0, -1), 
-                                (1, 1),   (1, 0),  (-1, 0), 
-                                (-1, -1), (-1, 1), (1, -1)]
+                                     (1, 1),   (1, 0),  (-1, 0), 
+                                     (-1, -1), (-1, 1), (1, -1)]
         # self.prune_poss_actions()
-    
+
+    def get_acceleration(self):
+        return (self.x_acceleration, self.y_acceleration)
+
     def get_condition(self):
         return self.condition
 
@@ -83,6 +86,11 @@ class MarkovNode():
         if input_y_velocity >= 5:
             self.y_velocity = 5
             limit = False
+        
+        # if self.condition == 's':
+        #     self.x_velocity, self.y_velocity = 0, 0
+        #     limit = False
+        
         
         if limit:
             self.x_velocity, self.y_velocity = velocity

@@ -4,7 +4,7 @@ from MarkovList import MarkovList
 from MarkovNode import MarkovNode
 import copy
 
-with open("../inputFiles/L-track.txt", "r") as file:
+with open("../inputFiles/O-track.txt", "r") as file:
         input_file = file.readlines()
         
 temp_counter = 0
@@ -39,11 +39,13 @@ def value_iteration(mdp: MarkovList, e: float, discount_factor: float):
                 max_value = 0.0
                 best_move = None
                 best_acceleration = (0, 0)
-                best_velocity = (0,0)
+                best_velocity = state.get_velocity()
                 state.prune_poss_actions()
 
                 # pass actions through q value function
                 for action in state.get_possible_actions():
+                    # best_acceleration = (0, 0)
+                    # best_velocity = state.get_velocity()
                     q_val, s_prime = q_value(U_prime, state, action, discount_factor)
                     if q_val > max_value:
                         max_value = q_val
@@ -64,6 +66,7 @@ def value_iteration(mdp: MarkovList, e: float, discount_factor: float):
 
         # check for convergence
         if max_rel_change <= (e*(1 - discount_factor))/discount_factor:
+            U = copy.deepcopy(U_prime)
             break
 
     return U
@@ -112,7 +115,10 @@ sol = value_iteration(mdp, 1, 0.99)
 sol.display_markov_list_best_move()
 print()
 sol.display_markov_list_velocity()
+print()
+sol.display_markov_list_acceleration()
+print()
 
 print(define_policy(sol))
 
-print(temp_counter)
+# print(temp_counter)
