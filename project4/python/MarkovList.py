@@ -53,6 +53,17 @@ class MarkovList():
                     markov_line.append(node.get_best_move_indices())
             print(markov_line)
     
+    def display_markov_list_velocity(self) -> None:
+        for line in self.markov_list:
+            markov_line = list()
+            
+            for node in line:
+                if node.get_condition() in ['w', 'f']:
+                    markov_line.append([0,0])
+                else:
+                    markov_line.append(node.get_velocity())
+            print(markov_line)
+
     def display_markov_contents(self) -> None:
         for i, row in enumerate(self.markov_list):
             for j, node in enumerate(row):
