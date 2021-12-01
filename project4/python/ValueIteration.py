@@ -4,7 +4,7 @@ from MarkovList import MarkovList
 from MarkovNode import MarkovNode
 import copy
 
-with open("../inputFiles/O-track.txt", "r") as file:
+with open("../inputFiles/L-track.txt", "r") as file:
         input_file = file.readlines()
         
 temp_counter = 0
@@ -82,9 +82,37 @@ def q_value(mdp: MarkovList, s: MarkovNode, a: tuple, discount_factor: float):
     u_value = (0.8 * (1 + discount_factor * s_prime.utility)) + (0.2 * (1 + discount_factor * s.utility)) - 1
 
     return u_value, s_prime
-    
+
+
+def define_policy(U: MarkovList):
+    steps = 0
+    policy = list()
+    state_space = U.get_markov_list()
+
+    state = find_start(state_space)
+
+    while state.get_condition() != 'f':
+        policy.append(state.get_position())
+        state = state.best_move
+        steps += 1        
+
+    policy.append(state.get_position())
+    steps += 1
+
+    return policy, steps
+
+def find_start(state_space: list) -> MarkovNode:
+    for state_line in state_space:
+        for state in state_line:
+            if state.get_condition() == 's':
+                return state
 
 mdp = generate_markov_list(input_file)
-value_iteration(mdp, 1, 0.99).display_markov_list_best_move()
+sol = value_iteration(mdp, 1, 0.99)
+sol.display_markov_list_best_move()
+print()
+sol.display_markov_list_velocity()
+
+print(define_policy(sol))
 
 print(temp_counter)

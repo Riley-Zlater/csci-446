@@ -50,7 +50,7 @@ class MarkovNode():
     def prune_poss_actions(self) -> None:
         for action in self.possible_actions:
             x_acc, y_acc = action
-            if -5 > self.x_velocity + x_acc or self.x_velocity + x_acc > 5 or -5 > self.y_velocity + y_acc or self.y_velocity + y_acc > 5:
+            if -5 >= self.x_velocity + x_acc or self.x_velocity + x_acc >= 5 or -5 >= self.y_velocity + y_acc or self.y_velocity + y_acc >= 5:
                 self.possible_actions.remove(action)
     
     def set_utility(self, value: float) -> None:
