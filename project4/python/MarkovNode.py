@@ -24,19 +24,16 @@ class MarkovNode():
         return self.condition
 
     def get_wall_condition(self) -> bool:
-        return self.condition == "w"
+        return self.condition == "#"
     
     def get_finish_condition(self) -> bool:
-        return self.condition == "f"
+        return self.condition == "F"
     
     def get_position(self) -> tuple:
         return (self.x_pos, self.y_pos)
     
     def get_velocity(self) -> tuple:
         return (self.x_velocity, self.y_velocity)
-    
-    def get_position(self) -> list:
-        return [self.x_pos, self.y_pos]
     
     def get_possible_actions(self) -> list:
         return self.possible_actions
@@ -56,6 +53,9 @@ class MarkovNode():
             if -5 >= self.x_velocity + x_acc or self.x_velocity + x_acc >= 5 or -5 >= self.y_velocity + y_acc or self.y_velocity + y_acc >= 5:
                 self.possible_actions.remove(action)
     
+    def set_condition(self, condition: str) -> None:
+        self.condition = condition
+
     def set_utility(self, value: float) -> None:
         self.utility = value
     
@@ -73,24 +73,15 @@ class MarkovNode():
     
     def set_velocity(self, velocity: tuple) -> None:
         input_x_velocity, input_y_velocity = velocity
-        limit = True
         if input_x_velocity <= -5:
-            self.x_velocity = -5
-            limit = False
+            input_x_velocity = -5
         if input_x_velocity >= 5:
-            self.x_velocity = 5
-            limit = False
+            input_x_velocity = 5
         if input_y_velocity <= -5:
-            self.y_velocity = -5
-            limit = False
+            input_y_velocity = -5
         if input_y_velocity >= 5:
-            self.y_velocity = 5
-            limit = False
+            input_y_velocity = 5
         
-        # if self.condition == 's':
-        #     self.x_velocity, self.y_velocity = 0, 0
-        #     limit = False
+        self.x_velocity = input_x_velocity
+        self.y_velocity = input_y_velocity
         
-        
-        if limit:
-            self.x_velocity, self.y_velocity = velocity

@@ -65,7 +65,7 @@ def value_iteration(mdp: MarkovList, e: float, discount_factor: float):
                     max_rel_change = u_diff
 
         # check for convergence
-        if max_rel_change <= (e*(1 - discount_factor))/discount_factor:
+        if max_rel_change <= (e*(1 - discount_factor))/discount_factor :
             U = copy.deepcopy(U_prime)
             break
 
@@ -90,19 +90,22 @@ def q_value(mdp: MarkovList, s: MarkovNode, a: tuple, discount_factor: float):
 def define_policy(U: MarkovList):
     steps = 0
     policy = list()
+    velocity = list()
     state_space = U.get_markov_list()
 
     state = find_start(state_space)
 
     while state.get_condition() != 'f':
         policy.append(state.get_position())
+        velocity.append(state.get_velocity())
         state = state.best_move
         steps += 1        
 
     policy.append(state.get_position())
+    velocity.append(state.get_velocity())
     steps += 1
 
-    return policy, steps
+    return policy, velocity, steps
 
 def find_start(state_space: list) -> MarkovNode:
     for state_line in state_space:
