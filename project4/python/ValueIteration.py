@@ -1,5 +1,5 @@
 #from os import curdir
-from ParseInput import generate_markov_list
+from ParseInput import generate_markov_list_for_markov_list
 from MarkovList import MarkovList
 from MarkovNode import MarkovNode
 import copy
@@ -113,7 +113,7 @@ def find_start(state_space: list) -> MarkovNode:
             if state.get_condition() == 's':
                 return state
 
-mdp = generate_markov_list(input_file)
+mdp = generate_markov_list_for_markov_list(input_file)
 sol = value_iteration(mdp, 1, 0.99)
 sol.display_markov_list_best_move()
 print()

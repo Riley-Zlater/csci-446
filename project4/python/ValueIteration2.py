@@ -1,5 +1,6 @@
 #from os import curdir
 from math import sqrt
+import numpy as np
 from ParseInput import generate_markov_list
 from MarkovList import MarkovList
 from MarkovNode import MarkovNode
@@ -122,10 +123,16 @@ def value_iteration(mdp: list, err: float, discount_factor: float):
     policy = list()
 
     U = [[[[0.0 for _ in range(-5, 6)] for _ in range(-5, 6)] for _ in row] for row in mdp]
+    U_prime = copy.deepcopy(U)
+
+    training_count = 0
     
-    
-    while True:
-        U_prime = copy.deepcopy(U)
+    while True and training_count < 100:
+        training_count += 1
+        U = copy.deepcopy(U_prime)
+        print_values(U, len(U), len(U[0]))
+
+
         max_rel_change = 0.0
 
         actions = [(0, 0),   (0, 1),  (0, -1), 
@@ -137,12 +144,13 @@ def value_iteration(mdp: list, err: float, discount_factor: float):
                 for x_velocity in range(-5,6):
                     for y_velocity in range(-5,6):
                         if mdp[row][col].get_wall_condition():
-                            U[row][col][x_velocity][y_velocity] = -5.0
+                            U_prime[row][col][x_velocity][y_velocity] = -5.0
                             continue
                         
                         
                         mdp[row][col].set_velocity((x_velocity, y_velocity))
                         new_U_prime, new_acceleration = q_value(mdp, mdp[row][col], actions, U, discount_factor)
+                        # print(new_U_prime)
                         U_prime[row][col][x_velocity][y_velocity] = new_U_prime
                         mdp[row][col].set_acceleration(new_acceleration)
         
@@ -167,7 +175,7 @@ def value_iteration(mdp: list, err: float, discount_factor: float):
 
 def q_value(mdp: list, state: MarkovNode, actions: list, U: list, discount_factor: float) -> float:
 
-    best_utility = 0.0
+    best_utility = -10.0
     best_action = (0,0)
     old_x, old_y = state.get_position()
     old_x_velocity, old_y_velocity = state.get_velocity()
@@ -189,31 +197,29 @@ def q_value(mdp: list, state: MarkovNode, actions: list, U: list, discount_facto
     return best_utility, best_action
 
 
+def print_values(utility_array: list, row: int, col: int) -> None:
+
+    utility_two_dim = np.zeros([row, col])
+    
+    for row in range(len(utility_array)):
+        for col in range(len(utility_array[0])):
+            max = -10
+            for x_velocity in range(-5,6):
+                for y_velocity in range(-5,6):
+                    if utility_array[row][col][x_velocity][y_velocity] > max:
+                        max = utility_array[row][col][x_velocity][y_velocity]
+            utility_two_dim[row][col] = max
+
+    for x in utility_two_dim:
+        line = ""
+        for y in x:
+            line += str(round(y,2))
+        print(line)
+
+    print()
+    return
+
 race_track = generate_markov_list("../inputFiles/O-track.txt")
 
-value_iteration(race_track, .01, .99)
+value_iteration(race_track, .001, .99)
 
-#########################
-####.................####
-###...................###
-###....###########....###
-##....#############....##
-#....###############....#
-#....###############....#
-#....###############....#
-#....###############....#
-#....###############....#
-#SSSS###############....#
-####################....#
-#FFFF###############....#
-#...S###############....#
-#....###############....#
-#....###############....#
-#....###############....#
-#....###############....#
-#....###############....#
-#....###############....#
-##....#############....##
-###....###########....###
-###...................###
-#########################
