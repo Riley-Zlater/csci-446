@@ -20,7 +20,7 @@ def new_starting_position(mdp: list) -> tuple:
     start_pos = random.choice(start_list)
     return start_pos
 
-def generate_new_velocity(velocity, acceleration):
+def generate_new_velocity(velocity: list, acceleration: list) -> int and int:
 
     xv = velocity[0] + acceleration[0]
     yv = velocity[1] + acceleration[1]
@@ -32,7 +32,7 @@ def generate_new_velocity(velocity, acceleration):
 
     return xv, yv
 
-def establish_new_position(position, velocity):
+def establish_new_position(position: tuple, velocity: tuple) -> list:
     x, y = position
 
     xv, yv = velocity
@@ -42,7 +42,7 @@ def establish_new_position(position, velocity):
 
     return [new_x, new_y]
 
-def crash_handler(mdp: list, state: MarkovNode, s_prime: MarkovNode, course_reset=False):
+def crash_handler(mdp: list, state: MarkovNode, s_prime: MarkovNode, course_reset=False) -> tuple:
 
     width = len(mdp) - 1
     height = len(mdp[0]) - 1
@@ -76,11 +76,11 @@ def crash_handler(mdp: list, state: MarkovNode, s_prime: MarkovNode, course_rese
 
     return min_position
 
-def euclidean_distance(x_pos, y_pos, state: MarkovNode):
+def euclidean_distance(x_pos: int, y_pos: int, state: MarkovNode) -> float:
     c_x, c_y = state.get_position()
     return sqrt(((x_pos - c_x)**2) + (y_pos - c_y)**2)
 
-def take_action(mdp: list, state: MarkovNode, acceleration: tuple):
+def take_action(mdp: list, state: MarkovNode, acceleration: tuple) -> MarkovNode:
     width = len(mdp) - 1
     height = len(mdp[0]) - 1
 
@@ -119,7 +119,7 @@ def take_action(mdp: list, state: MarkovNode, acceleration: tuple):
 
 
 
-def value_iteration(mdp: list, err: float, discount_factor: float):
+def value_iteration(mdp: list, err: float, discount_factor: float) -> list:
     policy = list()
 
     U = [[[[0.0 for _ in range(-5, 6)] for _ in range(-5, 6)] for _ in row] for row in mdp]
@@ -173,7 +173,7 @@ def value_iteration(mdp: list, err: float, discount_factor: float):
     return U
 
 
-def q_value(mdp: list, state: MarkovNode, actions: list, U: list, discount_factor: float) -> float:
+def q_value(mdp: list, state: MarkovNode, actions: list, U: list, discount_factor: float) -> float and tuple:
 
     best_utility = -10.0
     best_action = (0,0)
