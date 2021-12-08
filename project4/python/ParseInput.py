@@ -47,26 +47,25 @@ def display_markov_list(markov_list: list, pos=(0,0)):
     
     return
 
+def display_markov_accel(markov_list: list, state: MarkovNode):
 
-def generate_markov_list_for_markov_list(file) -> MarkovList:
+    current_x, current_y = state.get_position()
+    current_condition = markov_list[current_x][current_y].get_condition()
 
-    f_line = file[0]
-    h, w = int(f_line.split(",")[0]), int(f_line.split(",")[1])
+    markov_list[current_x][current_y].set_condition("C")
+
+    for row in markov_list:
+        out = ""
+
+        for node in row:
+            print(node.acceleration)
+            # out += 
+
+        print(out)
+
+    markov_list[current_x][current_y].set_condition(current_condition)
     
-    file = file[1:]
-    #print(h, w)
-
-    markov_list = MarkovList(w, h)
-    for i, line in enumerate(file):
-        line = line.strip()
-        line_list = list()
-        for j, cell in enumerate(line):
-            # condition = cell
-            line_list.append(MarkovNode(cell, i, j))
-
-        markov_list.insert_list(line_list)
-    
-    return markov_list
+    return
 
 # mdp = generate_markov_list("../inputFiles/O-track.txt")
 # display_markov_list(mdp)

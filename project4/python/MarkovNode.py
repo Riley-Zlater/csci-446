@@ -16,6 +16,7 @@ class MarkovNode():
                                      (1, 1),   (1, 0),  (-1, 0), 
                                      (-1, -1), (-1, 1), (1, -1)]
         # self.prune_poss_actions()
+        self.acceleration = dict()
 
     def get_acceleration(self):
         return (self.x_acceleration, self.y_acceleration)
@@ -40,6 +41,9 @@ class MarkovNode():
     
     def get_best_move_indices(self) -> list:
         return self.best_move.get_position()
+    
+    def get_best_acceleration(self, velocity) -> tuple:
+        return self.acceleration[velocity]
  
     def check_and_set_utility(self) -> None:
         if self.get_wall_condition():
@@ -70,6 +74,9 @@ class MarkovNode():
     
     def set_acceleration(self, acceleration: tuple) -> None:
         self.x_acceleration, self.y_acceleration = acceleration
+    
+    def add_acceleration(self, velocity: tuple, acceleration: tuple) -> None:
+        self.acceleration[velocity] = acceleration
     
     def set_velocity(self, velocity: tuple) -> None:
         input_x_velocity, input_y_velocity = velocity

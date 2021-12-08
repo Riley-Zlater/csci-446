@@ -1,11 +1,12 @@
 #from os import curdir
 from math import sqrt
 import numpy as np
-from ParseInput import generate_markov_list
+from ParseInput import generate_markov_list, display_markov_list, display_markov_accel
 from MarkovList import MarkovList
 from MarkovNode import MarkovNode
 import copy
 import random
+import time
 
 COURSE_RESET = False
 
@@ -14,7 +15,7 @@ def new_starting_position(mdp: list) -> tuple:
 
     for x, row in enumerate(mdp):
         for y, col in enumerate(row):
-            if mdp[row][col].get_condition() == 'S':
+            if mdp[x][y].get_condition() == 'S':
                 start_list.append((x, y))
     
     start_pos = random.choice(start_list)
@@ -40,10 +41,10 @@ def establish_new_position(position, velocity):
     new_x = x + xv
     new_y = y + yv
 
-    return [new_x, new_y]
+    return (new_x, new_y)
 
 def crash_handler(mdp: list, state: MarkovNode, s_prime: MarkovNode, course_reset=False):
-
+    # print("CRASH!!")
     width = len(mdp) - 1
     height = len(mdp[0]) - 1
 
@@ -117,8 +118,6 @@ def take_action(mdp: list, state: MarkovNode, acceleration: tuple):
 
     return s_prime
 
-
-
 def value_iteration(mdp: list, err: float, discount_factor: float):
     policy = list()
 
@@ -130,7 +129,7 @@ def value_iteration(mdp: list, err: float, discount_factor: float):
     while True and training_count < 100:
         training_count += 1
         U = copy.deepcopy(U_prime)
-        print_values(U, len(U), len(U[0]))
+        print_values(U, len(U), len(U[0]), training_count)
 
 
         max_rel_change = 0.0
@@ -150,9 +149,10 @@ def value_iteration(mdp: list, err: float, discount_factor: float):
                         
                         mdp[row][col].set_velocity((x_velocity, y_velocity))
                         new_U_prime, new_acceleration = q_value(mdp, mdp[row][col], actions, U, discount_factor)
-                        # print(new_U_prime)
+                        
                         U_prime[row][col][x_velocity][y_velocity] = new_U_prime
                         mdp[row][col].set_acceleration(new_acceleration)
+                        mdp[row][col].add_acceleration((x_velocity, y_velocity), new_acceleration)
         
         
         
@@ -168,6 +168,9 @@ def value_iteration(mdp: list, err: float, discount_factor: float):
         
         if max_rel_change < (err*(1 - discount_factor))/discount_factor:
             U = copy.deepcopy(U_prime)
+            mdp = update_mdp(mdp, U, len(U), len(U[0]))
+            policy = simulator(mdp)
+            print(policy)
             break
     
     return U
@@ -180,15 +183,18 @@ def q_value(mdp: list, state: MarkovNode, actions: list, U: list, discount_facto
     old_x, old_y = state.get_position()
     old_x_velocity, old_y_velocity = state.get_velocity()
 
+    actions = prune_actions(mdp, state, actions)
+
     for a in actions:
         s_prime = take_action(mdp, state, a)
         new_x, new_y = s_prime.get_position()
+
         new_x_velocity, new_y_velocity = s_prime.get_velocity()
         
-        reward = 0 if s_prime.get_finish_condition() else -1
+        reward = 0 if state.get_finish_condition() else -1
 
-        u_value = reward + (0.8 * discount_factor * U[new_x][new_y][new_x_velocity][new_y_velocity]) 
-        + (0.2 * discount_factor * U[old_x][old_y][old_x_velocity][old_y_velocity])
+        u_value = reward + (0.8 * discount_factor * U[new_x][new_y][new_x_velocity][new_y_velocity])  \
+            + (0.2 * discount_factor  * U[old_x][old_y][old_x_velocity][old_y_velocity])
 
         if u_value > best_utility:
             best_utility = u_value
@@ -197,7 +203,29 @@ def q_value(mdp: list, state: MarkovNode, actions: list, U: list, discount_facto
     return best_utility, best_action
 
 
-def print_values(utility_array: list, row: int, col: int) -> None:
+def prune_actions(mdp: list, state: MarkovNode, actions: list) -> list:
+    width = len(mdp) - 1
+    height = len(mdp[0]) - 1
+    pruned_actions = copy.deepcopy(actions)
+
+    for action in actions:
+        x_v, y_v = state.get_velocity()
+        x_p, y_p = state.get_position()
+        x_a, y_a = action
+        new_x = x_p + x_v + x_a
+        new_y = y_p + y_v + y_a
+
+        if new_x < 0: new_x = 0
+        if new_x > width: new_x = width
+        if new_y < 0: new_y = 0
+        if new_y > height: new_y = height
+
+        if mdp[new_x][new_y].get_condition() == '#':
+            pruned_actions.remove(action)
+
+    return pruned_actions
+
+def print_values(utility_array: list, row: int, col: int, i: int) -> None:
 
     utility_two_dim = np.zeros([row, col])
     
@@ -216,10 +244,67 @@ def print_values(utility_array: list, row: int, col: int) -> None:
             line += str(round(y,2))
         print(line)
 
+    print(i)
     print()
     return
 
-race_track = generate_markov_list("../inputFiles/O-track.txt")
+def update_mdp(mdp: list, utility_array: list, row: int, col: int) -> None:
+    for row in range(len(utility_array)):
+        for col in range(len(utility_array[0])):
+            max = -10
+            best_x_velocity = 0
+            best_y_velocity = 0
+            for x_velocity in range(-5,6):
+                for y_velocity in range(-5,6):
+                    if utility_array[row][col][x_velocity][y_velocity] > max:
+                        max = utility_array[row][col][x_velocity][y_velocity]
+                        best_x_velocity = x_velocity
+                        best_y_velocity = y_velocity
+            mdp[row][col].set_velocity((best_x_velocity, best_y_velocity))
 
-value_iteration(race_track, .001, .99)
+    return mdp
 
+def simulator(mdp: list) -> list:
+    policy = list()
+    
+    position = new_starting_position(mdp)
+    x_position, y_position = position
+    state = mdp[x_position][y_position]
+    velocity = (0,0)
+    state.set_velocity(velocity)
+
+    iter = 0
+
+    while state.get_condition() != 'F':
+        iter += 1
+        time.sleep(1)
+        display_markov_list(mdp, position)
+        
+        policy.append(position)
+
+        if iter == 1:
+            velocity = (0,0)
+            state.set_velocity(velocity)
+        else:
+            velocity = state.get_velocity()
+
+        # x_pos, y_pos = establish_new_position(position, velocity)
+
+        # state = mdp[x_pos][y_pos]
+        
+        acceleration = state.get_best_acceleration(velocity)
+        print("velocity: " + str(velocity))
+        print("acceleration: " + str(acceleration))
+        # print(state.acceleration)
+        print()
+        state = take_action(mdp, state, acceleration)
+        position = state.get_position()
+
+
+    policy.append(position)
+    return [policy, len(policy)]
+
+
+race_track = generate_markov_list("../inputFiles/R-track.txt")
+
+value_iteration(race_track, .001, .9)
