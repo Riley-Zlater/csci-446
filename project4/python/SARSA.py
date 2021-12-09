@@ -121,6 +121,9 @@ def take_action(mdp: list, state: MarkovNode, acceleration: tuple) -> MarkovNode
 
 
 def value_iteration(mdp: list, err: float, discount_factor: float, learning_rate: float) -> list:
+    if learning_rate < 1:
+        learning_rate += .01
+
     policy = list()
 
     U = [[[[random.random() for _ in range(-5, 6)] for _ in range(-5, 6)] for _ in row] for row in mdp]
@@ -128,7 +131,7 @@ def value_iteration(mdp: list, err: float, discount_factor: float, learning_rate
 
     training_count = 0
     
-    while True:
+    while True and training_count < 500:
         training_count += 1
         U = copy.deepcopy(U_prime)
         print_values(U, len(U), len(U[0]), training_count)
@@ -227,8 +230,8 @@ def q_value(mdp: list, state: MarkovNode, actions: list, U: list, discount_facto
         new_x_a, new_y_a = q_s_prime_a_prime.get_position()
         new_x_a_velocity, new_y_a_velocity = q_s_prime_a_prime.get_velocity()
 
-        # reward = 0 if state.get_finish_condition() else -1
-        reward = 0 if q_s_prime_a_prime.get_finish_condition() else -1
+        reward = 0 if state.get_finish_condition() else -1
+        # reward = 0 if q_s_prime_a_prime.get_finish_condition() else -1
 
         
 

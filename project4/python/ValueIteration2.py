@@ -8,6 +8,7 @@ import copy
 import random
 import time
 
+
 COURSE_RESET = False
 
 def new_starting_position(mdp: list) -> tuple:
@@ -174,34 +175,6 @@ def value_iteration(mdp: list, err: float, discount_factor: float) -> list:
                         change = abs(U[row][col][x_velocity][y_velocity] - U_prime[row][col][x_velocity][y_velocity])
                         if change > max_rel_change:
                             max_rel_change = change
-
-        # for row in range(len(mdp)):
-        #     for col in range(len(mdp[0])):
-        #         for x_velocity in range(-5,6):
-        #             for y_velocity in range(-5,6):
-        #                 if mdp[row][col].get_wall_condition():
-        #                     U_prime[row][col][x_velocity][y_velocity] = -5.0
-        #                     continue
-                        
-                        
-        #                 mdp[row][col].set_velocity((x_velocity, y_velocity))
-        #                 new_U_prime, new_acceleration = q_value(mdp, mdp[row][col], actions, U, discount_factor)
-                        
-        #                 U_prime[row][col][x_velocity][y_velocity] = new_U_prime
-        #                 mdp[row][col].set_acceleration(new_acceleration)
-        #                 mdp[row][col].add_acceleration((x_velocity, y_velocity), new_acceleration)
-        
-        
-        
-        # for row in range(len(mdp)):
-        #     for col in range(len(mdp[0])):
-        #         for x_velocity in range(-5,6):
-        #             for y_velocity in range(-5,6):
-        #                 if mdp[row][col].get_finish_condition() == 'F':
-        #                     U_prime[row][col][x_velocity][y_velocity] = 0.0
-        #                 change = abs(U[row][col][x_velocity][y_velocity] - U_prime[row][col][x_velocity][y_velocity])
-        #                 if change > max_rel_change:
-        #                     max_rel_change = change
         
         if max_rel_change < (err*(1 - discount_factor))/discount_factor:
             # U = copy.deepcopy(U_prime)
@@ -209,8 +182,10 @@ def value_iteration(mdp: list, err: float, discount_factor: float) -> list:
     
     U = copy.deepcopy(U_prime)
     mdp = update_mdp(mdp, U, len(U), len(U[0]))
-    policy = generate_policy(mdp)
+    policy = simulate(mdp)
     print(policy)
+
+    # policy = find_policy(mdp, U)
     return U
 
 
@@ -302,7 +277,30 @@ def update_mdp(mdp: list, utility_array: list, row: int, col: int) -> None:
 
     return mdp
 
-def generate_policy(mdp: list) -> list:
+def find_policy(mdp: list, utility_array: list) -> list:
+    
+    policy = list()
+
+    position = new_starting_position(mdp)
+    x_position, y_position = position
+    state = mdp[x_position][y_position]
+    policy.append(position)
+
+    while state.get_finish_condition() == False:
+        display_markov_list(mdp, position)
+        x_position, y_position = state.get_position()
+        x_vel, y_vel = state.get_velocity()
+        new_x = x_position + x_vel
+        new_y = x_position + y_vel
+
+        state = mdp[new_x][new_y]
+        policy.append(state.get_position())
+
+        pass
+
+    return policy
+
+def simulate(mdp: list) -> list:
     policy = list()
     
     position = new_starting_position(mdp)
@@ -335,9 +333,19 @@ def generate_policy(mdp: list) -> list:
         print("acceleration: " + str(acceleration))
         # print(state.acceleration)
         print()
+
+        failure_rate = random.random()
+
+        # if failure_rate > 0.8:
+        #     state = take_action(mdp, state, acceleration)
+        # else :
+        #     state = take_action(mdp, state, (0,0))
+        
         state = take_action(mdp, state, acceleration)
+        
         position = state.get_position()
 
+    display_markov_list(mdp, position)
 
     policy.append(position)
     return [policy, len(policy)]
