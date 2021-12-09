@@ -204,12 +204,13 @@ def value_iteration(mdp: list, err: float, discount_factor: float) -> list:
         #                     max_rel_change = change
         
         if max_rel_change < (err*(1 - discount_factor))/discount_factor:
-            U = copy.deepcopy(U_prime)
-            mdp = update_mdp(mdp, U, len(U), len(U[0]))
-            policy = simulator(mdp)
-            print(policy)
+            # U = copy.deepcopy(U_prime)
             break
     
+    U = copy.deepcopy(U_prime)
+    mdp = update_mdp(mdp, U, len(U), len(U[0]))
+    policy = generate_policy(mdp)
+    print(policy)
     return U
 
 
@@ -301,7 +302,7 @@ def update_mdp(mdp: list, utility_array: list, row: int, col: int) -> None:
 
     return mdp
 
-def simulator(mdp: list) -> list:
+def generate_policy(mdp: list) -> list:
     policy = list()
     
     position = new_starting_position(mdp)
