@@ -120,15 +120,15 @@ def take_action(mdp: list, state: MarkovNode, acceleration: tuple) -> MarkovNode
 
 
 
-def value_iteration(mdp: list, err: float, discount_factor: float) -> list:
+def value_iteration(mdp: list, err: float, discount_factor: float, learning_rate: float) -> list:
     policy = list()
 
-    U = [[[[0.0 for _ in range(-5, 6)] for _ in range(-5, 6)] for _ in row] for row in mdp]
+    U = [[[[random.random() for _ in range(-5, 6)] for _ in range(-5, 6)] for _ in row] for row in mdp]
     U_prime = copy.deepcopy(U)
 
     training_count = 0
     
-    while True and training_count < 100:
+    while True and training_count < 500:
         training_count += 1
         U = copy.deepcopy(U_prime)
         print_values(U, len(U), len(U[0]), training_count)
@@ -139,7 +139,6 @@ def value_iteration(mdp: list, err: float, discount_factor: float) -> list:
         actions = [(0, 0),   (0, 1),  (0, -1), 
                    (1, 1),   (1, 0),  (-1, 0), 
                    (-1, -1), (-1, 1), (1, -1)]
-        
 
         for row in range(len(mdp)):
             for col in range(len(mdp[0])):
@@ -158,7 +157,7 @@ def value_iteration(mdp: list, err: float, discount_factor: float) -> list:
                     for y_velocity in range(-5,6):
                         if mdp[row][col].get_wall_condition() == False and mdp[row][col].get_finish_condition() == False:
                             mdp[row][col].set_velocity((x_velocity, y_velocity))
-                            new_U_prime, new_acceleration = q_value(mdp, mdp[row][col], actions, U, discount_factor)
+                            new_U_prime, new_acceleration = q_value(mdp, mdp[row][col], actions, U, discount_factor, learning_rate)
                             U_prime[row][col][x_velocity][y_velocity] = new_U_prime
                             mdp[row][col].set_acceleration(new_acceleration)
                             mdp[row][col].add_acceleration((x_velocity, y_velocity), new_acceleration)
@@ -169,39 +168,11 @@ def value_iteration(mdp: list, err: float, discount_factor: float) -> list:
             for col in range(len(mdp[0])):
                 for x_velocity in range(-5,6):
                     for y_velocity in range(-5,6):
-                        if mdp[row][col].get_finish_condition():
+                        if mdp[row][col].get_finish_condition() == 'F':
                             U_prime[row][col][x_velocity][y_velocity] = 0.0
                         change = abs(U[row][col][x_velocity][y_velocity] - U_prime[row][col][x_velocity][y_velocity])
                         if change > max_rel_change:
                             max_rel_change = change
-
-        # for row in range(len(mdp)):
-        #     for col in range(len(mdp[0])):
-        #         for x_velocity in range(-5,6):
-        #             for y_velocity in range(-5,6):
-        #                 if mdp[row][col].get_wall_condition():
-        #                     U_prime[row][col][x_velocity][y_velocity] = -5.0
-        #                     continue
-                        
-                        
-        #                 mdp[row][col].set_velocity((x_velocity, y_velocity))
-        #                 new_U_prime, new_acceleration = q_value(mdp, mdp[row][col], actions, U, discount_factor)
-                        
-        #                 U_prime[row][col][x_velocity][y_velocity] = new_U_prime
-        #                 mdp[row][col].set_acceleration(new_acceleration)
-        #                 mdp[row][col].add_acceleration((x_velocity, y_velocity), new_acceleration)
-        
-        
-        
-        # for row in range(len(mdp)):
-        #     for col in range(len(mdp[0])):
-        #         for x_velocity in range(-5,6):
-        #             for y_velocity in range(-5,6):
-        #                 if mdp[row][col].get_finish_condition() == 'F':
-        #                     U_prime[row][col][x_velocity][y_velocity] = 0.0
-        #                 change = abs(U[row][col][x_velocity][y_velocity] - U_prime[row][col][x_velocity][y_velocity])
-        #                 if change > max_rel_change:
-        #                     max_rel_change = change
         
         if max_rel_change < (err*(1 - discount_factor))/discount_factor:
             U = copy.deepcopy(U_prime)
@@ -210,10 +181,14 @@ def value_iteration(mdp: list, err: float, discount_factor: float) -> list:
             print(policy)
             break
     
+    U = copy.deepcopy(U_prime)
+    mdp = update_mdp(mdp, U, len(U), len(U[0]))
+    policy = simulator(mdp)
+    print(policy)
     return U
 
 
-def q_value(mdp: list, state: MarkovNode, actions: list, U: list, discount_factor: float) -> float and tuple:
+def q_value(mdp: list, state: MarkovNode, actions: list, U: list, discount_factor: float, learning_rate: float) -> float and tuple:
 
     best_utility = -10.0
     best_action = (0,0)
@@ -223,15 +198,55 @@ def q_value(mdp: list, state: MarkovNode, actions: list, U: list, discount_facto
     actions = prune_actions(mdp, state, actions)
 
     for a in actions:
-        s_prime = take_action(mdp, state, a)
-        new_x, new_y = s_prime.get_position()
+        q_s_prime = take_action(mdp, state, a)
+        new_x, new_y = q_s_prime.get_position()
 
-        new_x_velocity, new_y_velocity = s_prime.get_velocity()
+        new_x_velocity, new_y_velocity = q_s_prime.get_velocity()
+
+        # implement epsilon learning
+
+        p = random.random()
+        if p < 0.3:
+            # select random action
+            a_prime = random.choice(actions)
+            pass
+        else:
+            # select best action
+            best_utility_prime = -10.0
+            a_prime = (0,0)
+            for a_iter in actions:
+                q_s_prime_a_prime = take_action(mdp, q_s_prime, a_iter)
+                new_x_a, new_y_a = q_s_prime_a_prime.get_position()
+                new_x_a_velocity, new_y_a_velocity = q_s_prime_a_prime.get_velocity()
+                
+                current_utility_prime = U[new_x_a][new_y_a][new_x_a_velocity][new_y_a_velocity]
+
+                if current_utility_prime > best_utility_prime:
+                    best_utility_prime = current_utility_prime
+                    a_prime = a_iter
+            pass
+
+        q_s_prime_a_prime = take_action(mdp, state, a_prime)
+        new_x_a, new_y_a = q_s_prime_a_prime.get_position()
+        new_x_a_velocity, new_y_a_velocity = q_s_prime_a_prime.get_velocity()
+
+        # reward = 0 if state.get_finish_condition() else -1
+        reward = 0 if q_s_prime_a_prime.get_finish_condition() else -1
+
         
-        reward = 0 if s_prime.get_finish_condition() else -1
 
-        u_value = reward + (0.8 * discount_factor * U[new_x][new_y][new_x_velocity][new_y_velocity])  \
-            + (0.2 * discount_factor  * U[old_x][old_y][old_x_velocity][old_y_velocity])
+        q_s_a =  U[old_x][old_y][old_x_velocity][old_y_velocity]
+
+        q_sp_ap = U[new_x_a][new_y_a][new_x_a_velocity][new_y_a_velocity]
+
+        target_q = learning_rate * (reward + ((discount_factor * q_sp_ap) - q_s_a))
+
+        u_value = q_s_a + target_q
+
+        # u_value = reward + discount_factor * ((0.8 *  U[new_x][new_y][new_x_velocity][new_y_velocity]) + (0.2 *  U[old_x][old_y][old_x_velocity][old_y_velocity]))
+
+        # u_value = reward + (0.8 * discount_factor * U[new_x][new_y][new_x_velocity][new_y_velocity])  \
+        #     + (0.2 * discount_factor  * U[old_x][old_y][old_x_velocity][old_y_velocity])
 
         if u_value > best_utility:
             best_utility = u_value
@@ -344,4 +359,4 @@ def simulator(mdp: list) -> list:
 
 race_track = generate_markov_list("../inputFiles/L-track.txt")
 
-value_iteration(race_track, .001, .9)
+value_iteration(race_track, .001, .9, .85)
