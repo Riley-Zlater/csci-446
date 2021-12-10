@@ -119,7 +119,6 @@ def take_action(mdp: list, state: MarkovNode, acceleration: tuple) -> MarkovNode
     return s_prime
 
 
-
 def value_iteration(mdp: list, err: float, discount_factor: float, learning_rate: float) -> list:
     
 

@@ -119,6 +119,71 @@ def take_action(mdp: list, state: MarkovNode, acceleration: tuple) -> MarkovNode
 
     return s_prime
 
+def determine_illegal_move(mdp: list, state: MarkovNode, s_prime: MarkovNode) -> bool:
+    width = len(mdp) - 1
+    height = len(mdp[0]) - 1
+
+    position_list = [state, s_prime]
+
+    state_x_pos, state_y_pos = state.get_position()
+    s_prime_x_pos, s_prime_y_pos = s_prime.get_position()
+
+    x_distance = s_prime_x_pos - state_x_pos 
+    y_distance = s_prime_y_pos - state_y_pos
+
+    x_factor = 1 if x_distance > 0 else -1 if x_distance < 0 else 0
+    y_factor = 1 if y_distance > 0 else -1 if y_distance < 0 else 0
+
+
+    current_x, current_y = state_x_pos, state_y_pos
+
+    x_iter = 1 * x_factor
+    y_iter = 1 * y_factor
+
+
+    # print("current")
+    # print(current_x, current_y)
+    # print("future")
+    # print(s_prime_x_pos, s_prime_y_pos)
+    # print()
+
+    while current_x != s_prime_x_pos or current_y != s_prime_y_pos:
+
+        if current_x == s_prime_x_pos:
+            x_iter = 0
+        
+        if current_y == s_prime_y_pos:
+            y_iter = 0
+
+
+        current_x += x_iter
+        current_y += y_iter
+
+        # print(width, height)
+        # print("current updated")
+        # print(current_x, current_y)
+
+        position_list.append(mdp[current_x][current_y])
+    
+    # print()
+    # if state_x_pos in range(7, 11) and s_prime_x_pos in range(12, 16) and \
+    #     state_y_pos in range(0,7) and s_prime_y_pos in range(0, 7):
+    #     print("state pos")
+    #     print(state_x_pos, state_y_pos)
+    #     print("state prime pos")
+    #     print(s_prime_x_pos, s_prime_y_pos)
+    #     print([x.get_condition() for x in position_list])
+    #     input("enter")
+    #     print()
+        # pass   
+
+    for node in position_list:
+        if node.get_wall_condition():
+            return True
+
+
+
+    return False
 
 
 def value_iteration(mdp: list, err: float, discount_factor: float) -> list:
@@ -201,13 +266,20 @@ def q_value(mdp: list, state: MarkovNode, actions: list, U: list, discount_facto
     for a in actions:
         s_prime = take_action(mdp, state, a)
         new_x, new_y = s_prime.get_position()
-
         new_x_velocity, new_y_velocity = s_prime.get_velocity()
         
         reward = 0 if s_prime.get_finish_condition() else -1
 
-        u_value = reward + (0.8 * discount_factor * U[new_x][new_y][new_x_velocity][new_y_velocity])  \
-            + (0.2 * discount_factor  * U[old_x][old_y][old_x_velocity][old_y_velocity])
+        # POSSIBLE U VALUE FIX FOR O TRACK
+        if determine_illegal_move(mdp, state, s_prime):
+            u_value = -10.0
+        else:
+            u_value = reward + (0.8 * discount_factor * U[new_x][new_y][new_x_velocity][new_y_velocity])  \
+                + (0.2 * discount_factor  * U[old_x][old_y][old_x_velocity][old_y_velocity])
+        
+        # ORIGINAL U VALUE CALCULATION
+        # u_value = reward + (0.8 * discount_factor * U[new_x][new_y][new_x_velocity][new_y_velocity])  \
+        #         + (0.2 * discount_factor  * U[old_x][old_y][old_x_velocity][old_y_velocity])
 
         if u_value > best_utility:
             best_utility = u_value
@@ -351,6 +423,15 @@ def simulate(mdp: list) -> list:
     return [policy, len(policy)]
 
 
-race_track = generate_markov_list("../inputFiles/L-track.txt")
+race_track = generate_markov_list("/Users/cooperstrahan/School/csci-446/project4/inputFiles/O-track.txt")
+
+
+# for line in race_track:
+#     printerstring = ""
+#     for cell in line:
+#         printerstring += str(cell.get_position()) + " "
+    
+#     print(printerstring)
+
 
 value_iteration(race_track, .001, .9)
