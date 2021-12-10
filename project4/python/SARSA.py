@@ -121,8 +121,7 @@ def take_action(mdp: list, state: MarkovNode, acceleration: tuple) -> MarkovNode
 
 
 def value_iteration(mdp: list, err: float, discount_factor: float, learning_rate: float) -> list:
-    if learning_rate < 1:
-        learning_rate += .01
+    
 
     policy = list()
 
@@ -131,7 +130,9 @@ def value_iteration(mdp: list, err: float, discount_factor: float, learning_rate
 
     training_count = 0
     
-    while True and training_count < 500:
+    while True:
+        if err > 0.1:
+            err -= .01
         training_count += 1
         U = copy.deepcopy(U_prime)
         print_values(U, len(U), len(U[0]), training_count)
@@ -160,7 +161,7 @@ def value_iteration(mdp: list, err: float, discount_factor: float, learning_rate
                     for y_velocity in range(-5,6):
                         if mdp[row][col].get_wall_condition() == False and mdp[row][col].get_finish_condition() == False:
                             mdp[row][col].set_velocity((x_velocity, y_velocity))
-                            new_U_prime, new_acceleration = q_value(mdp, mdp[row][col], actions, U, discount_factor, learning_rate)
+                            new_U_prime, new_acceleration = q_value(mdp, mdp[row][col], actions, U, err, discount_factor, learning_rate)
                             U_prime[row][col][x_velocity][y_velocity] = new_U_prime
                             mdp[row][col].set_acceleration(new_acceleration)
                             mdp[row][col].add_acceleration((x_velocity, y_velocity), new_acceleration)
@@ -188,7 +189,7 @@ def value_iteration(mdp: list, err: float, discount_factor: float, learning_rate
     return U
 
 
-def q_value(mdp: list, state: MarkovNode, actions: list, U: list, discount_factor: float, learning_rate: float) -> float and tuple:
+def q_value(mdp: list, state: MarkovNode, actions: list, U: list, err: float, discount_factor: float, learning_rate: float) -> float and tuple:
 
     best_utility = -10.0
     best_action = (0,0)
@@ -206,7 +207,7 @@ def q_value(mdp: list, state: MarkovNode, actions: list, U: list, discount_facto
         # implement epsilon learning
 
         p = random.random()
-        if p < 0.3:
+        if p < err:
             # select random action
             a_prime = random.choice(actions)
             pass
@@ -357,6 +358,8 @@ def generate_policy(mdp: list) -> list:
     return [policy, len(policy)]
 
 
-race_track = generate_markov_list("../inputFiles/L-track.txt")
+race_track = generate_markov_list("../inputFiles/R-track.txt")
 
-value_iteration(race_track, .001, .9, .85)
+value_iteration(race_track, 1, .9, .01)
+
+value_iteration()
