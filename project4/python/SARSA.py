@@ -204,7 +204,7 @@ def determine_overshoot_finish(mdp: list, state: MarkovNode, s_prime: MarkovNode
 
     return False
 
-def value_iteration(mdp: list, err: float, discount_factor: float, learning_rate: float, track=True) -> list:
+def value_iteration(mdp: list, err: float, discount_factor: float, learning_rate: float, counter:int, track=True) -> list:
     
 
     policy = list()
@@ -214,12 +214,12 @@ def value_iteration(mdp: list, err: float, discount_factor: float, learning_rate
 
     training_count = 0
     
-    while True:
+    while True and training_count < counter:
         if err > 0.1:
             err -= .01
         training_count += 1
         U = copy.deepcopy(U_prime)
-        print_values(U, len(U), len(U[0]), training_count)
+        # print_values(U, len(U), len(U[0]), training_count)
 
 
         max_rel_change = 0.0
@@ -269,8 +269,8 @@ def value_iteration(mdp: list, err: float, discount_factor: float, learning_rate
     U = copy.deepcopy(U_prime)
     mdp = update_mdp(mdp, U, len(U), len(U[0]))
     policy = simulate(mdp)
-    print(policy)
-    return U
+    # print(policy)
+    return U, policy
 
 
 def q_value(mdp: list, state: MarkovNode, actions: list, U: list, err: float, discount_factor: float, learning_rate: float, track=True) -> float and tuple:
@@ -429,7 +429,7 @@ def simulate(mdp: list) -> list:
     while state.get_condition() != 'F':
         iter += 1
         time.sleep(1)
-        display_markov_list(mdp, position)
+        # display_markov_list(mdp, position)
         
         policy.append(position)
 
@@ -444,10 +444,10 @@ def simulate(mdp: list) -> list:
         # state = mdp[x_pos][y_pos]
         
         acceleration = state.get_best_acceleration(velocity)
-        print("velocity: " + str(velocity))
-        print("acceleration: " + str(acceleration))
+        # print("velocity: " + str(velocity))
+        # print("acceleration: " + str(acceleration))
         # print(state.acceleration)
-        print()
+        # print()
 
         failure_rate = random.random()
 
@@ -471,10 +471,3 @@ def simulate(mdp: list) -> list:
 
     policy.append(position)
     return [policy, len(policy)]
-
-
-race_track = generate_markov_list("../inputFiles/R-track.txt")
-
-value_iteration(race_track, 1, .9, .01)
-
-value_iteration()
