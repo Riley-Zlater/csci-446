@@ -1,0 +1,49 @@
+L-track Results - Nearest Open Position After Crash
+Number of iters: 10 - Policy Length: 16
+Number of iters: 20 - Policy Length: 16
+Number of iters: 30 - Policy Length: 16
+Number of iters: 40 - Policy Length: 16
+Number of iters: 50 - Policy Length: 16
+Number of iters: 60 - Policy Length: 16
+Number of iters: 70 - Policy Length: 16
+Number of iters: 80 - Policy Length: 16
+Number of iters: 90 - Policy Length: 16
+Number of iters: 100 - Policy Length: 16
+
+
+R-track Results - Nearest Open Position After Crash
+Number of iters: 10 - Policy Length: Timed out greater than 200
+Number of iters: 20 - Policy Length: Timed out greater than 200
+Number of iters: 30 - Policy Length: 56
+Number of iters: 40 - Policy Length: 34
+Number of iters: 50 - Policy Length: 45
+Number of iters: 60 - Policy Length: 34
+Number of iters: 70 - Policy Length: 34
+Number of iters: 80 - Policy Length: 32
+Number of iters: 90 - Policy Length: 46
+Number of iters: 100 - Policy Length: 32
+
+
+R-track Results - Reset After Crash
+Number of iters: 10 - Policy Length: Timed out greater than 200
+Number of iters: 20 - Policy Length: Timed out greater than 200
+Number of iters: 30 - Policy Length: 46
+Number of iters: 40 - Policy Length: 34
+Number of iters: 50 - Policy Length: 56
+Number of iters: 60 - Policy Length: 56
+Number of iters: 70 - Policy Length: 46
+Number of iters: 80 - Policy Length: 32
+Number of iters: 90 - Policy Length: 46
+Number of iters: 100 - Policy Length: 56
+
+O-track Results - Nearest Open Position After Crash
+Number of iters: 10 - Policy Length: Timed out greater than 200
+Number of iters: 20 - Policy Length: 34
+Number of iters: 30 - Policy Length: 37
+Number of iters: 40 - Policy Length: 34
+Number of iters: 50 - Policy Length: 33
+Number of iters: 60 - Policy Length: 33
+Number of iters: 70 - Policy Length: 33
+Number of iters: 80 - Policy Length: 34
+Number of iters: 90 - Policy Length: 34
+Number of iters: 100 - Policy Length: 33
