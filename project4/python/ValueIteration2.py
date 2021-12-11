@@ -186,7 +186,7 @@ def determine_illegal_move(mdp: list, state: MarkovNode, s_prime: MarkovNode) ->
     return False
 
 
-def value_iteration(mdp: list, err: float, discount_factor: float) -> list:
+def value_iteration(mdp: list, err: float, discount_factor: float, track=True) -> list:
     policy = list()
 
     U = [[[[0.0 for _ in range(-5, 6)] for _ in range(-5, 6)] for _ in row] for row in mdp]
@@ -224,7 +224,7 @@ def value_iteration(mdp: list, err: float, discount_factor: float) -> list:
                     for y_velocity in range(-5,6):
                         if mdp[row][col].get_wall_condition() == False and mdp[row][col].get_finish_condition() == False:
                             mdp[row][col].set_velocity((x_velocity, y_velocity))
-                            new_U_prime, new_acceleration = q_value(mdp, mdp[row][col], actions, U, discount_factor)
+                            new_U_prime, new_acceleration = q_value(mdp, mdp[row][col], actions, U, discount_factor, track)
                             U_prime[row][col][x_velocity][y_velocity] = new_U_prime
                             mdp[row][col].set_acceleration(new_acceleration)
                             mdp[row][col].add_acceleration((x_velocity, y_velocity), new_acceleration)
@@ -254,7 +254,7 @@ def value_iteration(mdp: list, err: float, discount_factor: float) -> list:
     return U
 
 
-def q_value(mdp: list, state: MarkovNode, actions: list, U: list, discount_factor: float) -> float and tuple:
+def q_value(mdp: list, state: MarkovNode, actions: list, U: list, discount_factor: float, track=True) -> float and tuple:
 
     best_utility = -10.0
     best_action = (0,0)
@@ -281,9 +281,15 @@ def q_value(mdp: list, state: MarkovNode, actions: list, U: list, discount_facto
         # u_value = reward + (0.8 * discount_factor * U[new_x][new_y][new_x_velocity][new_y_velocity])  \
         #         + (0.2 * discount_factor  * U[old_x][old_y][old_x_velocity][old_y_velocity])
 
-        if u_value > best_utility:
-            best_utility = u_value
-            best_action = a
+        if track:
+            if u_value > best_utility:
+                best_utility = u_value
+                best_action = a
+        else:
+            if u_value >= best_utility:
+                best_utility = u_value
+                best_action = a
+            
 
     return best_utility, best_action
 
@@ -423,7 +429,10 @@ def simulate(mdp: list) -> list:
     return [policy, len(policy)]
 
 
-race_track = generate_markov_list("/Users/cooperstrahan/School/csci-446/project4/inputFiles/O-track.txt")
+# race_track = generate_markov_list("/Users/cooperstrahan/School/csci-446/project4/inputFiles/O-track.txt")
+O_track = generate_markov_list("../inputFiles/O-track.txt")
+L_track = generate_markov_list("../inputFiles/L-track.txt")
+R_track = generate_markov_list("../inputFiles/R-track.txt")
 
 
 # for line in race_track:
@@ -434,4 +443,4 @@ race_track = generate_markov_list("/Users/cooperstrahan/School/csci-446/project4
 #     print(printerstring)
 
 
-value_iteration(race_track, .001, .9)
+value_iteration(O_track, .0001, .9)
