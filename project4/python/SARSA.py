@@ -119,7 +119,92 @@ def take_action(mdp: list, state: MarkovNode, acceleration: tuple) -> MarkovNode
     return s_prime
 
 
-def value_iteration(mdp: list, err: float, discount_factor: float, learning_rate: float) -> list:
+def determine_illegal_move(mdp: list, state: MarkovNode, s_prime: MarkovNode) -> bool:
+    width = len(mdp) - 1
+    height = len(mdp[0]) - 1
+
+    position_list = [state, s_prime]
+
+    state_x_pos, state_y_pos = state.get_position()
+    s_prime_x_pos, s_prime_y_pos = s_prime.get_position()
+
+    x_distance = s_prime_x_pos - state_x_pos 
+    y_distance = s_prime_y_pos - state_y_pos
+
+    x_factor = 1 if x_distance > 0 else -1 if x_distance < 0 else 0
+    y_factor = 1 if y_distance > 0 else -1 if y_distance < 0 else 0
+
+
+    current_x, current_y = state_x_pos, state_y_pos
+
+    x_iter = 1 * x_factor
+    y_iter = 1 * y_factor
+
+    while current_x != s_prime_x_pos or current_y != s_prime_y_pos:
+
+        if current_x == s_prime_x_pos:
+            x_iter = 0
+        
+        if current_y == s_prime_y_pos:
+            y_iter = 0
+
+
+        current_x += x_iter
+        current_y += y_iter
+
+        position_list.append(mdp[current_x][current_y])
+
+    for node in position_list:
+        if node.get_wall_condition():
+            return True
+
+    return False
+
+def determine_overshoot_finish(mdp: list, state: MarkovNode, s_prime: MarkovNode) -> bool:
+    width = len(mdp) - 1
+    height = len(mdp[0]) - 1
+
+    position_list = [state, s_prime]
+
+    state_x_pos, state_y_pos = state.get_position()
+    s_prime_x_pos, s_prime_y_pos = s_prime.get_position()
+
+    x_distance = s_prime_x_pos - state_x_pos 
+    y_distance = s_prime_y_pos - state_y_pos
+
+    x_factor = 1 if x_distance > 0 else -1 if x_distance < 0 else 0
+    y_factor = 1 if y_distance > 0 else -1 if y_distance < 0 else 0
+
+
+    current_x, current_y = state_x_pos, state_y_pos
+
+    x_iter = 1 * x_factor
+    y_iter = 1 * y_factor
+
+    while current_x != s_prime_x_pos or current_y != s_prime_y_pos:
+
+        if current_x == s_prime_x_pos:
+            x_iter = 0
+        
+        if current_y == s_prime_y_pos:
+            y_iter = 0
+
+
+        current_x += x_iter
+        current_y += y_iter
+
+        position_list.append(mdp[current_x][current_y])
+
+    for node in position_list:
+        if node.get_finish_condition():
+            return True
+
+        if node.get_wall_condition():
+            return False
+
+    return False
+
+def value_iteration(mdp: list, err: float, discount_factor: float, learning_rate: float, track=True) -> list:
     
 
     policy = list()
@@ -160,7 +245,7 @@ def value_iteration(mdp: list, err: float, discount_factor: float, learning_rate
                     for y_velocity in range(-5,6):
                         if mdp[row][col].get_wall_condition() == False and mdp[row][col].get_finish_condition() == False:
                             mdp[row][col].set_velocity((x_velocity, y_velocity))
-                            new_U_prime, new_acceleration = q_value(mdp, mdp[row][col], actions, U, err, discount_factor, learning_rate)
+                            new_U_prime, new_acceleration = q_value(mdp, mdp[row][col], actions, U, err, discount_factor, learning_rate, track)
                             U_prime[row][col][x_velocity][y_velocity] = new_U_prime
                             mdp[row][col].set_acceleration(new_acceleration)
                             mdp[row][col].add_acceleration((x_velocity, y_velocity), new_acceleration)
@@ -183,12 +268,12 @@ def value_iteration(mdp: list, err: float, discount_factor: float, learning_rate
     
     U = copy.deepcopy(U_prime)
     mdp = update_mdp(mdp, U, len(U), len(U[0]))
-    policy = generate_policy(mdp)
+    policy = simulate(mdp)
     print(policy)
     return U
 
 
-def q_value(mdp: list, state: MarkovNode, actions: list, U: list, err: float, discount_factor: float, learning_rate: float) -> float and tuple:
+def q_value(mdp: list, state: MarkovNode, actions: list, U: list, err: float, discount_factor: float, learning_rate: float, track=True) -> float and tuple:
 
     best_utility = -10.0
     best_action = (0,0)
@@ -248,9 +333,23 @@ def q_value(mdp: list, state: MarkovNode, actions: list, U: list, err: float, di
         # u_value = reward + (0.8 * discount_factor * U[new_x][new_y][new_x_velocity][new_y_velocity])  \
         #     + (0.2 * discount_factor  * U[old_x][old_y][old_x_velocity][old_y_velocity])
 
-        if u_value > best_utility:
-            best_utility = u_value
-            best_action = a
+        if determine_illegal_move(mdp, state, q_s_prime):
+            u_value = -10.0            
+        
+        
+        # ORIGINAL U VALUE CALCULATION
+        # u_value = reward + (0.8 * discount_factor * U[new_x][new_y][new_x_velocity][new_y_velocity])  \
+        #         + (0.2 * discount_factor  * U[old_x][old_y][old_x_velocity][old_y_velocity])
+
+        if track:
+            if u_value > best_utility:
+                best_utility = u_value
+                best_action = a
+        else:
+            if u_value >= best_utility:
+                best_utility = u_value
+                best_action = a
+
 
     return best_utility, best_action
 
@@ -316,7 +415,7 @@ def update_mdp(mdp: list, utility_array: list, row: int, col: int) -> None:
 
     return mdp
 
-def generate_policy(mdp: list) -> list:
+def simulate(mdp: list) -> list:
     policy = list()
     
     position = new_starting_position(mdp)
@@ -349,9 +448,26 @@ def generate_policy(mdp: list) -> list:
         print("acceleration: " + str(acceleration))
         # print(state.acceleration)
         print()
-        state = take_action(mdp, state, acceleration)
+
+        failure_rate = random.random()
+
+        if failure_rate <= 0.8:
+            state = take_action(mdp, state, acceleration)
+        else :
+            state = take_action(mdp, state, (0,0))
+
+        
+        s_prime = take_action(mdp, state, acceleration)
+
+        if determine_overshoot_finish(mdp, state, s_prime):
+            state = s_prime
+            position = state.get_position()
+            break
+        
+        state = s_prime
         position = state.get_position()
 
+    display_markov_list(mdp, position)
 
     policy.append(position)
     return [policy, len(policy)]
