@@ -1,0 +1,6 @@
+
+For this project we pair programmed the bulk of the code using an extension for VSCode called Live Share
+
+Cooper handled the paper and the bulk of debugging our code
+
+Riley handled the video and helped with some of the debugging as well

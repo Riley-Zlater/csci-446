@@ -215,7 +215,7 @@ def value_iteration(mdp: list, err: float, discount_factor: float, counter: int,
     while True and training_count < counter:
         training_count += 1
         U = copy.deepcopy(U_prime)
-        # print_values(U, len(U), len(U[0]), training_count)
+        print_values(U, len(U), len(U[0]), training_count)
 
 
         max_rel_change = 0.0
@@ -266,7 +266,7 @@ def value_iteration(mdp: list, err: float, discount_factor: float, counter: int,
     U = copy.deepcopy(U_prime)
     mdp = update_mdp(mdp, U, len(U), len(U[0]))
     policy = simulate(mdp)
-    # print(policy)
+    print(policy)
 
     # policy = find_policy(mdp, U)
     return U, policy
@@ -387,7 +387,7 @@ def simulate(mdp: list) -> list:
     while state.get_condition() != 'F' and len(policy) < 200:
         iter += 1
         time.sleep(1)
-        # display_markov_list(mdp, position)
+        display_markov_list(mdp, position)
         
         policy.append(position)
 
@@ -402,10 +402,10 @@ def simulate(mdp: list) -> list:
         # state = mdp[x_pos][y_pos]
         
         acceleration = state.get_best_acceleration(velocity)
-        # print("velocity: " + str(velocity))
-        # print("acceleration: " + str(acceleration))
+        print("velocity: " + str(velocity))
+        print("acceleration: " + str(acceleration))
         # print(state.acceleration)
-        # print()
+        print()
 
         failure_rate = random.random()
 
@@ -425,10 +425,11 @@ def simulate(mdp: list) -> list:
         state = s_prime
         position = state.get_position()
 
-    # display_markov_list(mdp, position)
+    display_markov_list(mdp, position)
 
     policy.append(position)
     return [policy, len(policy)]
 
-
+L_track = generate_markov_list("../inputFiles/L-track.txt")
+value_iteration(L_track, .0001, .9, 200)
 
