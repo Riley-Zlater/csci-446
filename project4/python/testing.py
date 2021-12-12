@@ -26,7 +26,7 @@ for i in policy_list:
     else:
         print(f"Number of iters: {iters} - Policy Length: {i[1]}")
 """
-
+"""
 from SARSA import value_iteration
 from ParseInput import generate_markov_list
 
@@ -52,3 +52,22 @@ for i in policy_list:
         print(f"Number of iters: {iters} - Policy Length: Timed out greater than 200")
     else:
         print(f"Number of iters: {iters} - Policy Length: {i[1]}")
+"""
+
+
+num_iters = [i for i in range(10, 101, 10)]
+L_policies = [16 for _ in range(10)]
+R_policies = [200, 200, 56, 34, 45, 34, 34, 32, 46, 32]
+R_policies_reset = [200, 200, 46, 34, 56, 56, 46, 32, 46, 56]
+O_policies = [200, 34, 37, 34, 33, 33, 33, 34, 34, 33]
+
+import matplotlib.pyplot as plt
+
+plt.plot(num_iters, L_policies, marker="o", label="L-track")
+plt.plot(num_iters, R_policies, marker="o", label="R-track Soft Reset")
+plt.plot(num_iters, R_policies_reset, marker="o", label="R-track Hard Reset")
+plt.plot(num_iters, O_policies, marker="o", label="O-track")
+plt.xticks(num_iters)
+plt.title("Value Iteration")
+plt.legend()
+plt.show()
