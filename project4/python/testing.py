@@ -1,4 +1,4 @@
-
+"""
 from ValueIteration2 import value_iteration
 from ParseInput import generate_markov_list
 
@@ -25,9 +25,9 @@ for i in policy_list:
         print(f"Number of iters: {iters} - Policy Length: Timed out greater than 200")
     else:
         print(f"Number of iters: {iters} - Policy Length: {i[1]}")
-
 """
-from SARSA import value_iteration
+
+from SARSA import sarsa
 from ParseInput import generate_markov_list
 
 O_track = generate_markov_list("../inputFiles/O-track.txt")
@@ -38,21 +38,22 @@ iters = 0
 
 policy_list = list()
 
+
 for num_training in range(500, 2001, 500):
-    iters += 10
+    iters += 500
     print(f"training with {iters} iterations\n")
-    U, policy = value_iteration(L_track, 1, .9, .01, num_training)
+    U, policy = sarsa(L_track, 1, .9, .01, num_training)
     policy_list.append(policy)
 
 iters = 0
 
 for i in policy_list:
-    iters += 10
+    iters += 500
     if i[1] > 200:
         print(f"Number of iters: {iters} - Policy Length: Timed out greater than 200")
     else:
         print(f"Number of iters: {iters} - Policy Length: {i[1]}")
-"""
+
 
 
 num_iters = [i for i in range(10, 101, 10)]

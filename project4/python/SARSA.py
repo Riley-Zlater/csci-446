@@ -204,7 +204,7 @@ def determine_overshoot_finish(mdp: list, state: MarkovNode, s_prime: MarkovNode
 
     return False
 
-def value_iteration(mdp: list, err: float, discount_factor: float, learning_rate: float, counter:int, track=True) -> list:
+def sarsa(mdp: list, err: float, discount_factor: float, learning_rate: float, counter:int, track=True) -> list:
     
 
     policy = list()
@@ -219,6 +219,7 @@ def value_iteration(mdp: list, err: float, discount_factor: float, learning_rate
             err -= .01
         training_count += 1
         U = copy.deepcopy(U_prime)
+        # print(training_count)
         # print_values(U, len(U), len(U[0]), training_count)
 
 
@@ -426,7 +427,7 @@ def simulate(mdp: list) -> list:
 
     iter = 0
 
-    while state.get_condition() != 'F':
+    while state.get_condition() != 'F' and len(policy) < 200:
         iter += 1
         time.sleep(1)
         # display_markov_list(mdp, position)
@@ -471,3 +472,8 @@ def simulate(mdp: list) -> list:
 
     policy.append(position)
     return [policy, len(policy)]
+
+
+# L_track = generate_markov_list("../inputFiles/O-track.txt")
+# U, policy = sarsa(L_track, 1, .9, .01, 500)
+# print(policy)
