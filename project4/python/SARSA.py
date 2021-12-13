@@ -21,27 +21,6 @@ def new_starting_position(mdp: list) -> tuple:
     start_pos = random.choice(start_list)
     return start_pos
 
-def generate_new_velocity(velocity: list, acceleration: list) -> int and int:
-
-    xv = velocity[0] + acceleration[0]
-    yv = velocity[1] + acceleration[1]
-
-    if xv < -5: xv = -5
-    if xv > 5: xv = 5
-    if yv < -5: xv = -5
-    if yv > 5: xv = 5
-
-    return xv, yv
-
-def establish_new_position(position: tuple, velocity: tuple) -> list:
-    x, y = position
-
-    xv, yv = velocity
-
-    new_x = x + xv
-    new_y = y + yv
-
-    return (new_x, new_y)
 
 def crash_handler(mdp: list, state: MarkovNode, s_prime: MarkovNode, course_reset=False):
     # print("CRASH!!")
@@ -329,18 +308,9 @@ def q_value(mdp: list, state: MarkovNode, actions: list, U: list, err: float, di
 
         u_value = q_s_a + target_q
 
-        # u_value = reward + discount_factor * ((0.8 *  U[new_x][new_y][new_x_velocity][new_y_velocity]) + (0.2 *  U[old_x][old_y][old_x_velocity][old_y_velocity]))
-
-        # u_value = reward + (0.8 * discount_factor * U[new_x][new_y][new_x_velocity][new_y_velocity])  \
-        #     + (0.2 * discount_factor  * U[old_x][old_y][old_x_velocity][old_y_velocity])
-
         if determine_illegal_move(mdp, state, q_s_prime):
             u_value = -10.0            
         
-        
-        # ORIGINAL U VALUE CALCULATION
-        # u_value = reward + (0.8 * discount_factor * U[new_x][new_y][new_x_velocity][new_y_velocity])  \
-        #         + (0.2 * discount_factor  * U[old_x][old_y][old_x_velocity][old_y_velocity])
 
         if track:
             if u_value > best_utility:
@@ -439,16 +409,8 @@ def simulate(mdp: list) -> list:
             state.set_velocity(velocity)
         else:
             velocity = state.get_velocity()
-
-        # x_pos, y_pos = establish_new_position(position, velocity)
-
-        # state = mdp[x_pos][y_pos]
         
         acceleration = state.get_best_acceleration(velocity)
-        # print("velocity: " + str(velocity))
-        # print("acceleration: " + str(acceleration))
-        # print(state.acceleration)
-        # print()
 
         failure_rate = random.random()
 
@@ -472,8 +434,3 @@ def simulate(mdp: list) -> list:
 
     policy.append(position)
     return [policy, len(policy)]
-
-
-# L_track = generate_markov_list("../inputFiles/O-track.txt")
-# U, policy = sarsa(L_track, 1, .9, .01, 500)
-# print(policy)

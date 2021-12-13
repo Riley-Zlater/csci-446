@@ -42,7 +42,7 @@ policy_list = list()
 for num_training in range(500, 2001, 500):
     iters += 500
     print(f"training with {iters} iterations\n")
-    U, policy = sarsa(L_track, 1, .9, .01, num_training)
+    U, policy = sarsa(O_track, 1, .9, .01, num_training, track=False)
     policy_list.append(policy)
 
 iters = 0
