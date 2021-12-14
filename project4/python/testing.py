@@ -1,5 +1,11 @@
+#Written by Cooper Strahan and Riley Slater
 """
-from ValueIteration2 import value_iteration
+Testing Value Iteration algorithm
+
+to test value iteration we have it iterate 
+from 10 to 100 times stepping by 10
+
+from ValueIteration import value_iteration
 from ParseInput import generate_markov_list
 
 
@@ -26,6 +32,12 @@ for i in policy_list:
     else:
         print(f"Number of iters: {iters} - Policy Length: {i[1]}")
 """
+
+"""
+Testing SARSA Algorithm
+
+to test the sarsa algorithm we have iterate
+from 500 to 2000 stepping by 500
 """
 from SARSA import sarsa
 from ParseInput import generate_markov_list
@@ -94,3 +106,4 @@ plt.xlabel("Number of Training Iterations")
 plt.ylabel("Length of Policy")
 plt.legend()
 plt.show()
+"""

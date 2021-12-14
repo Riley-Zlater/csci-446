@@ -1,20 +1,21 @@
-#from os import curdir
+# Written by Cooper Strahan and Riley Slater
 from math import sqrt
 import numpy as np
-from ParseInput import generate_markov_list, display_markov_list, display_markov_accel
-from MarkovList import MarkovList
+from ParseInput import  display_markov_list, generate_markov_list
 from MarkovNode import MarkovNode
 import copy
 import random
 import time
 
-COURSE_RESET = False
 
 def new_starting_position(mdp: list) -> tuple:
+    """
+    Randomly choose a new start state
+    """
     start_list = list()
 
     for x, row in enumerate(mdp):
-        for y, col in enumerate(row):
+        for y, _ in enumerate(row):
             if mdp[x][y].get_condition() == 'S':
                 start_list.append((x, y))
     
@@ -22,8 +23,12 @@ def new_starting_position(mdp: list) -> tuple:
     return start_pos
 
 
-def crash_handler(mdp: list, state: MarkovNode, s_prime: MarkovNode, course_reset=True):
-    # print("CRASH!!")
+def crash_handler(mdp: list, state: MarkovNode, s_prime: MarkovNode, course_reset=False):
+    """
+    This function resets the car to the finish line if course_reset is true 
+    otherwise uses the euclidian distance to find the nearest safe state.
+    Resets car velocity to (0, 0)
+    """
     width = len(mdp) - 1
     height = len(mdp[0]) - 1
 
@@ -57,10 +62,17 @@ def crash_handler(mdp: list, state: MarkovNode, s_prime: MarkovNode, course_rese
     return min_position
 
 def euclidean_distance(x_pos: int, y_pos: int, state: MarkovNode) -> float:
+    """
+    Calculate euclidian distance
+    """    
     c_x, c_y = state.get_position()
     return sqrt(((x_pos - c_x)**2) + (y_pos - c_y)**2)
 
 def take_action(mdp: list, state: MarkovNode, acceleration: tuple) -> MarkovNode:
+    """
+    this function will apply an acceleration to the velocity determining
+    where the car will be after current velocity + acceleration
+    """
     width = len(mdp) - 1
     height = len(mdp[0]) - 1
 
@@ -99,8 +111,10 @@ def take_action(mdp: list, state: MarkovNode, acceleration: tuple) -> MarkovNode
 
 
 def determine_illegal_move(mdp: list, state: MarkovNode, s_prime: MarkovNode) -> bool:
-    width = len(mdp) - 1
-    height = len(mdp[0]) - 1
+    """
+    This function checks to see if the next state given the 
+    current velocity and acceleration is a wall or not
+    """
 
     position_list = [state, s_prime]
 
@@ -140,8 +154,9 @@ def determine_illegal_move(mdp: list, state: MarkovNode, s_prime: MarkovNode) ->
     return False
 
 def determine_overshoot_finish(mdp: list, state: MarkovNode, s_prime: MarkovNode) -> bool:
-    width = len(mdp) - 1
-    height = len(mdp[0]) - 1
+    """
+    This function checks to see if the car over shoots the finish
+    """
 
     position_list = [state, s_prime]
 
@@ -184,7 +199,10 @@ def determine_overshoot_finish(mdp: list, state: MarkovNode, s_prime: MarkovNode
     return False
 
 def sarsa(mdp: list, err: float, discount_factor: float, learning_rate: float, counter:int, track=True) -> list:
-    
+    """
+    This function uses the sarsa algorithm to learn the optimal policy
+    for the race track
+    """
 
     policy = list()
 
@@ -198,8 +216,8 @@ def sarsa(mdp: list, err: float, discount_factor: float, learning_rate: float, c
             err -= .01
         training_count += 1
         U = copy.deepcopy(U_prime)
-        # print(training_count)
-        # print_values(U, len(U), len(U[0]), training_count)
+        print(training_count)
+        print_values(U, len(U), len(U[0]), training_count)
 
 
         max_rel_change = 0.0
@@ -254,6 +272,9 @@ def sarsa(mdp: list, err: float, discount_factor: float, learning_rate: float, c
 
 
 def q_value(mdp: list, state: MarkovNode, actions: list, U: list, err: float, discount_factor: float, learning_rate: float, track=True) -> float and tuple:
+    """
+    This function determines the utility value of a state action pair
+    """
 
     best_utility = -10.0
     best_action = (0,0)
@@ -295,10 +316,7 @@ def q_value(mdp: list, state: MarkovNode, actions: list, U: list, err: float, di
         new_x_a, new_y_a = q_s_prime_a_prime.get_position()
         new_x_a_velocity, new_y_a_velocity = q_s_prime_a_prime.get_velocity()
 
-        reward = 0 if state.get_finish_condition() else -1
-        # reward = 0 if q_s_prime_a_prime.get_finish_condition() else -1
-
-        
+        reward = 0 if state.get_finish_condition() else -1 
 
         q_s_a =  U[old_x][old_y][old_x_velocity][old_y_velocity]
 
@@ -310,7 +328,6 @@ def q_value(mdp: list, state: MarkovNode, actions: list, U: list, err: float, di
 
         if determine_illegal_move(mdp, state, q_s_prime):
             u_value = -10.0            
-        
 
         if track:
             if u_value > best_utility:
@@ -321,11 +338,13 @@ def q_value(mdp: list, state: MarkovNode, actions: list, U: list, err: float, di
                 best_utility = u_value
                 best_action = a
 
-
     return best_utility, best_action
 
 
 def prune_actions(mdp: list, state: MarkovNode, actions: list) -> list:
+    """
+    This function removes poor utility actions from a state
+    """
     width = len(mdp) - 1
     height = len(mdp[0]) - 1
     pruned_actions = copy.deepcopy(actions)
@@ -348,6 +367,9 @@ def prune_actions(mdp: list, state: MarkovNode, actions: list) -> list:
     return pruned_actions
 
 def print_values(utility_array: list, row: int, col: int, i: int) -> None:
+    """
+    This function prints the utility values of the states
+    """
 
     utility_two_dim = np.zeros([row, col])
     
@@ -371,6 +393,9 @@ def print_values(utility_array: list, row: int, col: int, i: int) -> None:
     return
 
 def update_mdp(mdp: list, utility_array: list, row: int, col: int) -> None:
+    """
+    This function provides a state a velocity and chooses the largest utility
+    """
     for row in range(len(utility_array)):
         for col in range(len(utility_array[0])):
             max = -10
@@ -387,6 +412,10 @@ def update_mdp(mdp: list, utility_array: list, row: int, col: int) -> None:
     return mdp
 
 def simulate(mdp: list) -> list:
+    """
+    This function simulates the car driving the track
+    according to the policy chosen by the sarsa function
+    """
     policy = list()
     
     position = new_starting_position(mdp)
@@ -400,7 +429,7 @@ def simulate(mdp: list) -> list:
     while state.get_condition() != 'F' and len(policy) < 200:
         iter += 1
         time.sleep(1)
-        # display_markov_list(mdp, position)
+        display_markov_list(mdp, position)
         
         policy.append(position)
 
@@ -434,3 +463,6 @@ def simulate(mdp: list) -> list:
 
     policy.append(position)
     return [policy, len(policy)]
+
+L_track = generate_markov_list("../inputFiles/L-track.txt")
+sarsa(L_track, 1, .9, .01, 50)
