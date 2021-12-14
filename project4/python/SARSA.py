@@ -22,7 +22,7 @@ def new_starting_position(mdp: list) -> tuple:
     return start_pos
 
 
-def crash_handler(mdp: list, state: MarkovNode, s_prime: MarkovNode, course_reset=False):
+def crash_handler(mdp: list, state: MarkovNode, s_prime: MarkovNode, course_reset=True):
     # print("CRASH!!")
     width = len(mdp) - 1
     height = len(mdp[0]) - 1

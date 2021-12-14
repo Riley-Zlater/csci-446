@@ -53,3 +53,21 @@ Number of iters: 500 - Policy Length: Timed out greater than 200
 Number of iters: 1000 - Policy Length: Timed out greater than 200
 Number of iters: 1500 - Policy Length: Timed out greater than 200
 Number of iters: 2000 - Policy Length: Timed out greater than 200
+
+O-track Results - Nearest Open Position After Crash - SARSA
+Number of iters: 500 - Policy Length: Timed out greater than 200
+Number of iters: 1000 - Policy Length: Timed out greater than 200
+Number of iters: 1500 - Policy Length: 20
+Number of iters: 2000 - Policy Length: Timed out greater than 200
+
+R-track Results - Nearest Open Position After Crash - SARSA
+Number of iters: 500 - Policy Length: Timed out greater than 200
+Number of iters: 1000 - Policy Length: Timed out greater than 200
+Number of iters: 1500 - Policy Length: Timed out greater than 200
+Number of iters: 2000 - Policy Length: Timed out greater than 200
+
+R-track Results - Reset After Crash - SARSA
+Number of iters: 500 - Policy Length: Timed out greater than 200
+Number of iters: 1000 - Policy Length: Timed out greater than 200
+Number of iters: 1500 - Policy Length: Timed out greater than 200
+Number of iters: 2000 - Policy Length: Timed out greater than 200

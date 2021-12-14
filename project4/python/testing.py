@@ -26,7 +26,7 @@ for i in policy_list:
     else:
         print(f"Number of iters: {iters} - Policy Length: {i[1]}")
 """
-
+"""
 from SARSA import sarsa
 from ParseInput import generate_markov_list
 
@@ -42,7 +42,7 @@ policy_list = list()
 for num_training in range(500, 2001, 500):
     iters += 500
     print(f"training with {iters} iterations\n")
-    U, policy = sarsa(O_track, 1, .9, .01, num_training, track=False)
+    U, policy = sarsa(R_track, 1, .9, .01, num_training)
     policy_list.append(policy)
 
 iters = 0
@@ -53,9 +53,9 @@ for i in policy_list:
         print(f"Number of iters: {iters} - Policy Length: Timed out greater than 200")
     else:
         print(f"Number of iters: {iters} - Policy Length: {i[1]}")
+"""
 
-
-
+"""
 num_iters = [i for i in range(10, 101, 10)]
 L_policies = [16 for _ in range(10)]
 R_policies = [200, 200, 56, 34, 45, 34, 34, 32, 46, 32]
@@ -70,6 +70,26 @@ plt.plot(num_iters, R_policies_reset, marker="o", label="R-track Hard Reset")
 plt.plot(num_iters, O_policies, marker="o", label="O-track")
 plt.xticks(num_iters)
 plt.title("Value Iteration")
+plt.xlabel("Number of Training Iterations")
+plt.ylabel("Length of Policy")
+plt.legend()
+plt.show()
+
+"""
+num_iters = [i for i in range(500, 2001, 500)]
+L_policies = [200 for _ in range(4)]
+R_policies = [200, 200, 200, 200]
+R_policies_reset = [200, 200, 200, 200]
+O_policies = [200, 200, 20, 200]
+
+import matplotlib.pyplot as plt
+
+plt.plot(num_iters, L_policies, marker="o", label="L-track")
+plt.plot(num_iters, R_policies, marker="o", label="R-track Soft Reset")
+plt.plot(num_iters, R_policies_reset, marker="o", label="R-track Hard Reset")
+plt.plot(num_iters, O_policies, marker="o", label="O-track")
+plt.xticks(num_iters)
+plt.title("SARSA")
 plt.xlabel("Number of Training Iterations")
 plt.ylabel("Length of Policy")
 plt.legend()
