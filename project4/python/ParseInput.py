@@ -1,21 +1,17 @@
-
+# Written by Cooper Strahan
 
 from MarkovNode import MarkovNode
-from MarkovList import MarkovList
 
-
-input_file = None
-
-# with open("../inputFiles/L-track.txt", "r") as file:
-#         input_file = file.readlines()
     
 def generate_markov_list(file_name) -> list:
+    """
+    Pass the race track to create a list of states
+    """
 
     with open(file_name, "r") as file:
         input_file = file.readlines()
     
     input_file = input_file[1:]
-    #print(h, w)
 
     markov_list = []
     for i, line in enumerate(input_file):
@@ -28,7 +24,10 @@ def generate_markov_list(file_name) -> list:
     
     return markov_list
 
-def display_markov_list(markov_list: list, pos=(0,0)):
+def display_markov_list(markov_list: list, pos=(0,0)) -> None:
+    """
+    Display all the states
+    """
 
     current_x, current_y = pos
     current_condition = markov_list[current_x][current_y].get_condition()
@@ -47,7 +46,10 @@ def display_markov_list(markov_list: list, pos=(0,0)):
     
     return
 
-def display_markov_accel(markov_list: list, state: MarkovNode):
+def display_markov_accel(markov_list: list, state: MarkovNode) -> None:
+    """
+    Display the accelerations of all the states
+    """
 
     current_x, current_y = state.get_position()
     current_condition = markov_list[current_x][current_y].get_condition()
@@ -66,6 +68,3 @@ def display_markov_accel(markov_list: list, state: MarkovNode):
     markov_list[current_x][current_y].set_condition(current_condition)
     
     return
-
-# mdp = generate_markov_list("../inputFiles/O-track.txt")
-# display_markov_list(mdp)
